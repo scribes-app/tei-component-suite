@@ -51,6 +51,7 @@
     "@stencil/angular-output-target": "^0.8.4",
     "@stencil/react-output-target": "^0.5.3",
     "@stencil/sass": "^3.0.12",
+    "classnames": "^2.5.1",
     "quill": "^2.0.2"
   }
 }

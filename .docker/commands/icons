@@ -1,0 +1,18 @@
+#!/usr/bin/env /bin/bash
+
+set -e
+
+TASK=$@
+
+docker exec -it ${PROJECT_NAME}_node /bin/bash -c "
+umask g=rwx,u=rwx,o=rwx && cd /var/www/icons
+
+if [[ ! -d \"/var/www/icons/node_modules/ts-node\" ]]; then
+  echo -e \"📦 Missing node_modules, install packages...\"
+  npm ci &> /dev/null
+fi
+
+npx ts-node generate-icons.ts $TASK
+
+echo -e \"Icons successfully generated!\""
+

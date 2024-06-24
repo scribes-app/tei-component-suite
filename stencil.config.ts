@@ -40,6 +40,9 @@ export const config: Config = {
     {
       type: 'www',
       serviceWorker: null,
+      copy: [
+        { src: 'symbols.svg', dest: 'symbols.svg' },
+      ]
     },
   ],
   testing: {

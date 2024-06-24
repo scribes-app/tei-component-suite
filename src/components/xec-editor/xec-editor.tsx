@@ -1,4 +1,5 @@
 import { Component, Host, h } from '@stencil/core';
+import { JSX } from '@stencil/core/internal';
 import Quill from 'quill';
 
 @Component({
@@ -40,7 +41,7 @@ export class XecEditor {
   /**
    * Render the component
    */
-  render() {
+  render(): JSX.Element {
     return (
       <Host>
         <div

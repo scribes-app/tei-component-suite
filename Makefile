@@ -19,6 +19,11 @@ stop:
 install:
 	$(eval export $(shell cat .docker/.env | xargs))
 	bash .docker/commands/npm ci
+	bash .docker/commands/icons
+
+build-icons:
+	$(eval export $(shell cat .docker/.env | xargs))
+	bash .docker/commands/icons
 
 shell:
 	$(eval export $(shell cat .docker/.env | xargs))
@@ -34,6 +39,7 @@ dev:
 
 build:
 	$(eval export $(shell cat .docker/.env | xargs))
+	bash .docker/commands/icons
 	bash .docker/commands/stencil build
 
 npm:
