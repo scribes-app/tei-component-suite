@@ -1,0 +1,11 @@
+#!/usr/bin/env /bin/bash
+
+set -e
+
+TASK=$@
+
+docker exec -it ${PROJECT_NAME}_node /bin/bash -c "\
+umask g=rwx,u=rwx,o=rwx &&\
+cd /var/www &&\
+npm $TASK"
+
