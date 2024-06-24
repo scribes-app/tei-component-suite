@@ -1,5 +1,6 @@
 import { Component, Host, h } from '@stencil/core';
-import { JSX } from '@stencil/core/internal';
+import { JSX, Method, Prop } from '@stencil/core/internal';
+import { QuillInstance, ToolbarConfig } from '../../lib/types';
 import Quill from 'quill';
 
 @Component({
@@ -21,8 +22,16 @@ import Quill from 'quill';
 })
 export class XecEditor {
 
-  private quillInstance?: Quill;
+  private quillInstance?: QuillInstance;
   private editorElement?: HTMLDivElement;
+
+  @Prop()
+  public readonly config: ToolbarConfig = defaultToolbarConfig;
+
+  @Method()
+  public async getQuillInstance(): Promise<QuillInstance> {
+    return this.quillInstance;
+  }
 
   /**
    * Lifecycle hook called when the component has rendered
@@ -41,15 +50,27 @@ export class XecEditor {
   /**
    * Render the component
    */
-  render(): JSX.Element {
+  public render(): JSX.Element {
     return (
       <Host>
         <div
           class="xec-editor"
           ref={el => this.editorElement = el}
         />
+        <xec-toolbar config={{
+          controls: {
+            viewRaw: true
+          }
+        }} />
       </Host>
     );
   }
 
 }
+
+
+const defaultToolbarConfig: ToolbarConfig = {
+  controls: {
+    viewRaw: false
+  }
+};

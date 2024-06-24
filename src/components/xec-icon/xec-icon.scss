@@ -1,3 +1,10 @@
 :host {
+  --color: red;
+  position: relative;
   display: block;
+  color: var(--color);
+  svg {
+    position: absolute;
+    inset: 0;
+  }
 }

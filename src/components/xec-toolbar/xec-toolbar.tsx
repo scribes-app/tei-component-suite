@@ -1,5 +1,7 @@
 import { Component, Host, h } from '@stencil/core';
-import { JSX } from '@stencil/core/internal';
+import { JSX, Prop, Watch } from '@stencil/core/internal';
+import { isEqual } from '../../lib/helper';
+import { ToolbarConfig } from '../../lib/types';
 
 @Component({
   tag: 'xec-toolbar',
@@ -8,10 +10,29 @@ import { JSX } from '@stencil/core/internal';
 })
 export class XecToolbar {
 
-  render(): JSX.Element {
+  @Prop()
+  public readonly config: ToolbarConfig;
+
+  @Watch('config')
+  public watchConfig(next: ToolbarConfig, prev: ToolbarConfig): void {
+    if (!isEqual(next, prev)) this.initConfig();
+  }
+
+  private initConfig(): void {
+    // Do something with the config
+  }
+
+  public render(): JSX.Element {
+    const {
+      config
+    } = this;
     return (
       <Host>
-        <slot></slot>
+        <div class="controls">
+          {config.controls.viewRaw && (
+            <xec-button icon="arrow-left" />
+          )}
+        </div>
       </Host>
     );
   }

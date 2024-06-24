@@ -1,0 +1,16 @@
+:host {
+  cursor: pointer;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  height: 20px;
+  width: 20px;
+  border: 1px solid red;
+  .icon {
+    display: block;
+    height: 10px;
+    width: 10px;
+    --color: blue;
+  }
+}

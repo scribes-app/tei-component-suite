@@ -7,6 +7,11 @@
 
     <script type="module" src="/build/xml-editor-cmp.esm.js"></script>
     <script nomodule src="/build/xml-editor-cmp.js"></script>
+    <script>
+      globalThis.XecConfig = {
+        symbolsPath: '/symbols.svg',
+      }
+    </script>
   </head>
   <body>
     <xec-editor></xec-editor>
