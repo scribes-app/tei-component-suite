@@ -6,8 +6,21 @@ import * as Quill from 'quill';
  */
 export type UnionIcons = (
   'message-code' |
-  'code-simple'
+  'code-simple' |
+  'align-left' |
+  'align-right'
 )
+
+export type UnionEditorType = (
+  'transcribe' |
+  'translate' |
+  'comment'
+)
+
+export type EditorState = {
+  viewType: 'default'|'raw';
+  textDirection: 'LTR'|'RTL';
+}
 
 /**
  * @todo: Define the toolbar configuration
@@ -15,6 +28,7 @@ export type UnionIcons = (
 export type ToolbarConfig = {
   controls: {
     viewRaw?: boolean;
+    textDirection?: boolean;
   }
 }
 

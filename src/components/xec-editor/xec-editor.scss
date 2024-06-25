@@ -1,25 +1,98 @@
+@use 'sass:math';
 @import 'manifest';
 
 xec-editor {
   @import 'quill/dist/quill.core';
   @include component;
 
+  --xec-editor-title-color: #{$color-slate-500};
+  --xec-editor-text-color: #{$color-slate-700};
   --xec-editor-border-color: #{$color-slate-400};
   --xec-editor-border-radius: 5px;
 
-  --xec-editor-focus-border-color: #{$color-slate-400};
+  --xec-editor-focus-border-color: #{$color-slate-700};
 
-  .editor {
-    border: {
-      width: 1px;
-      style: solid;
-      color: var(--xec-editor-border-color);
-      bottom-left-radius: var(--xec-editor-border-radius);
-      bottom-right-radius: var(--xec-editor-border-radius);
-    }
-    transition: border-color 0.2s ease;
-    &:focus-within {
-      border-color: var(--xec-editor-focus-border-color);
+
+  .editors {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    .editor {
+      flex: 0 0 math.div(100%, 3);
+      border: {
+        width: 1px;
+        style: solid;
+        color: var(--xec-editor-border-color);
+      }
+      color: var(--xec-editor-text-color);
+      transition: border-color 0.2s ease;
+      &::before {
+        position: absolute;
+        pointer-events: none;
+        top: 10px;
+        left: 15px;
+        color: var(--xec-editor-title-color);
+        font-weight: 700;
+        font-size: 8px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      &.active {
+        border-color: var(--xec-editor-focus-border-color);
+      }
+
+      &.transcribe {
+        border-bottom-left-radius: var(--xec-editor-border-radius);
+        border-right-color: transparent;
+        &.active {
+          border-right-color: var(--xec-editor-focus-border-color);
+          + .editor {
+            border-left-color: transparent;
+          }
+        }
+        &::before {
+          content: 'Transcribe';
+        }
+      }
+
+      &.translate {
+        border-right-color: transparent;
+        &.active {
+          border-right-color: var(--xec-editor-focus-border-color);;
+          border-left-color: var(--xec-editor-focus-border-color);
+          + .editor {
+            border-left-color: transparent;
+          }
+        }
+        &::before {
+          content: 'Translate';
+        }
+      }
+
+      &.comment {
+        border-bottom-right-radius: var(--xec-editor-border-radius);
+        &.active {
+          border-left-color: var(--xec-editor-focus-border-color);
+        }
+        &::before {
+          content: 'Comments';
+        }
+      }
+
+      // Quill Editor override
+      .ql-editor {
+        position: relative;
+        padding-top: 30px;
+        &.direction-rtl {
+          direction: rtl;
+          text-align: right;
+        }
+        &.direction-ltr {
+          direction: ltr;
+          text-align: right;
+        }
+      }
     }
   }
+
 }

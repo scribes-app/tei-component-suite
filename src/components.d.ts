@@ -5,10 +5,11 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { QuillInstance, ToolbarConfig, UnionIcons } from "./lib/types";
-export { QuillInstance, ToolbarConfig, UnionIcons } from "./lib/types";
+import { QuillInstance, ToolbarConfig, UnionEditorType, UnionIcons } from "./lib/types";
+export { QuillInstance, ToolbarConfig, UnionEditorType, UnionIcons } from "./lib/types";
 export namespace Components {
     interface XecButton {
+        "active"?: boolean;
         "icon"?: UnionIcons;
         "iconOnly"?: boolean;
         "outlined"?: boolean;
@@ -17,7 +18,9 @@ export namespace Components {
     }
     interface XecEditor {
         "config": ToolbarConfig;
-        "getQuillInstance": () => Promise<QuillInstance>;
+        "getQuillInstances": () => Promise<Map<UnionEditorType, QuillInstance>>;
+        "lock": () => Promise<void>;
+        "unlock": () => Promise<void>;
     }
     interface XecIcon {
         "icon": UnionIcons;
@@ -26,6 +29,9 @@ export namespace Components {
     }
     interface XecToolbar {
         "config": ToolbarConfig;
+        "disabled": boolean;
+        "textDirection": 'LTR'|'RTL';
+        "viewRaw": boolean;
     }
 }
 export interface XecButtonCustomEvent<T> extends CustomEvent<T> {
@@ -83,6 +89,8 @@ declare global {
     };
     interface HTMLXecToolbarElementEventMap {
         "clickViewRaw": void;
+        "clickRTL": void;
+        "clickLTR": void;
     }
     interface HTMLXecToolbarElement extends Components.XecToolbar, HTMLStencilElement {
         addEventListener<K extends keyof HTMLXecToolbarElementEventMap>(type: K, listener: (this: HTMLXecToolbarElement, ev: XecToolbarCustomEvent<HTMLXecToolbarElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -107,6 +115,7 @@ declare global {
 }
 declare namespace LocalJSX {
     interface XecButton {
+        "active"?: boolean;
         "icon"?: UnionIcons;
         "iconOnly"?: boolean;
         "onClickButton"?: (event: XecButtonCustomEvent<HTMLDivElement>) => void;
@@ -125,7 +134,12 @@ declare namespace LocalJSX {
     }
     interface XecToolbar {
         "config"?: ToolbarConfig;
+        "disabled"?: boolean;
+        "onClickLTR"?: (event: XecToolbarCustomEvent<void>) => void;
+        "onClickRTL"?: (event: XecToolbarCustomEvent<void>) => void;
         "onClickViewRaw"?: (event: XecToolbarCustomEvent<void>) => void;
+        "textDirection"?: 'LTR'|'RTL';
+        "viewRaw"?: boolean;
     }
     interface IntrinsicElements {
         "xec-button": XecButton;

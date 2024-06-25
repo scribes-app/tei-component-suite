@@ -18,9 +18,11 @@
   justify-content: center;
   align-items: center;
   background-color: var(--xec-button-background-color);
-  transition: border-color 0.2s ease;
   padding: 10px 12px;
   color: var(--xec-button-color);
+  transition: border-color 0.2s ease,
+              background-color 0.2s ease,
+              color 0.2s ease;
   .icon {
     display: block;
     height: 12px;
@@ -30,7 +32,8 @@
   }
 }
 
-:host(:hover) {
+:host(:hover),
+:host(.active) {
   color: var(--xec-button-hover-color);
   background-color: var(--xec-button-hover-background-color);
   .icon {

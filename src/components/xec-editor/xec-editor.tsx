@@ -1,8 +1,9 @@
 import { Component, Host, h } from '@stencil/core';
 import { JSX, Method, Prop, State } from '@stencil/core/internal';
-import { QuillInstance, ToolbarConfig } from '../../lib/types';
+import { EditorState, QuillInstance, ToolbarConfig, UnionEditorType } from '../../lib/types';
 import Quill from 'quill';
 import * as escaper from 'html-escaper';
+import classNames from 'classnames';
 
 @Component({
   tag: 'xec-editor',
@@ -23,32 +24,65 @@ import * as escaper from 'html-escaper';
 })
 export class XecEditor {
 
-  private quillInstance?: QuillInstance;
-  private editorElement?: HTMLDivElement;
+  private activeInstance: QuillInstance;
+  private editorInstances: Map<UnionEditorType, QuillInstance> = new Map();
+  private editorElements: Map<UnionEditorType, HTMLDivElement> = new Map();
 
   @Prop()
   public readonly config: ToolbarConfig = defaultToolbarConfig;
 
   @State()
-  private viewType: 'default'|'raw' = 'default';
+  private editorStates: Map<UnionEditorType, EditorState> = new Map([
+    ['transcribe', { viewType: 'default', textDirection: 'LTR' }],
+    ['translate', { viewType: 'default', textDirection: 'LTR' }],
+    ['comment', { viewType: 'default', textDirection: 'LTR' }],
+  ]);
+
+  @State()
+  private activeEditor: UnionEditorType = 'transcribe';
 
   @Method()
-  public async getQuillInstance(): Promise<QuillInstance> {
-    return this.quillInstance;
+  public async getQuillInstances(): Promise<Map<UnionEditorType, QuillInstance>> {
+    return this.editorInstances;
+  }
+
+  @Method()
+  public async lock(): Promise<void> {
+    Array.from(this.editorInstances.values())
+      .forEach(instance => instance.disable());
+  }
+
+  @Method()
+  public async unlock(): Promise<void> {
+    Array.from(this.editorInstances.values())
+      .forEach(instance => instance.enable());
   }
 
   /**
    * Lifecycle hook called when the component has rendered
    */
   public componentDidLoad(): void {
-    this.initQuill();
+    this.initQuillInstances();
   }
 
   /**
    * Initialize the Quill editor
    */
-  private initQuill(): void {
-    this.quillInstance = new Quill(this.editorElement);
+  private initQuillInstances(): void {
+    for (const [editorType, editorElement] of Array.from(this.editorElements.entries())) {
+      const instance = new Quill(editorElement);
+      instance.root.addEventListener('focus', this.onFocusEditor.bind(this, editorType));
+      this.editorInstances.set(editorType, instance);
+      this.activeInstance = this.editorInstances.get(this.activeEditor);
+    }
+  }
+
+  /**
+   * Switch active instance according to the current focused editor
+   */
+  private onFocusEditor(editorType: UnionEditorType): void {
+    this.activeInstance = this.editorInstances.get(editorType);
+    this.activeEditor = editorType;
   }
 
   /**
@@ -56,10 +90,37 @@ export class XecEditor {
    * Toggle the view between raw and default
    */
   private onClickViewRaw(): void {
-    const method = this.viewType === 'raw' ? 'unescape' : 'escape';
-    this.quillInstance.clipboard.dangerouslyPasteHTML(escaper[method](this.quillInstance.getSemanticHTML()));
-    if (method === 'unescape') this.quillInstance.deleteText(0, 1);
-    this.viewType = this.viewType === 'default' ? 'raw' : 'default';
+    const editorState = this.editorStates.get(this.activeEditor);
+    const method = editorState.viewType === 'raw' ? 'unescape' : 'escape';
+    this.activeInstance.clipboard.dangerouslyPasteHTML(escaper[method](this.activeInstance.getSemanticHTML()));
+    if (method === 'unescape') this.activeInstance.deleteText(0, 1);
+    this.setActiveEditorState('viewType', editorState.viewType === 'raw' ? 'default' : 'raw');
+  }
+
+  private onClickRTL(): void {
+    this.activeInstance.root.classList.add('direction-rtl');
+    this.activeInstance.focus();
+    this.setActiveEditorState('textDirection', 'RTL');
+  }
+
+  private onClickLTR(): void {
+    this.editorStates.get(this.activeEditor).textDirection = 'LTR';
+    this.activeInstance.root.classList.remove('direction-rtl');
+    this.activeInstance.focus();
+    this.setActiveEditorState('textDirection', 'LTR');
+  }
+
+  /**
+   * Set the active editor state
+   * This solve the issue of the state not being updated when using deep properties
+   */
+  private setActiveEditorState(property: keyof EditorState, value: EditorState[keyof EditorState]): void {
+    const editorState = this.editorStates.get(this.activeEditor);
+    // @ts-ignore uncomptabile typescript
+    editorState[property] = value;
+    this.editorStates.set(this.activeEditor, editorState);
+    // Force re-render
+    this.editorStates = structuredClone(this.editorStates);
   }
 
   /**
@@ -67,8 +128,12 @@ export class XecEditor {
    */
   public render(): JSX.Element {
     const {
+      onClickLTR,
+      onClickRTL,
       onClickViewRaw,
       config,
+      activeEditor,
+      editorStates,
     } = this;
     return (
       <Host>
@@ -76,11 +141,37 @@ export class XecEditor {
           class="toolbar"
           config={config}
           onClickViewRaw={onClickViewRaw.bind(this)}
+          onClickRTL={onClickRTL.bind(this)}
+          onClickLTR={onClickLTR.bind(this)}
+          textDirection={editorStates.get(activeEditor).textDirection}
+          viewRaw={editorStates.get(activeEditor).viewType === 'raw'}
         />
-        <div
-          class="editor"
-          ref={el => this.editorElement = el}
-        />
+        <div class="editors">
+          <div
+            class={classNames({
+              editor: true,
+              transcribe: true,
+              active: activeEditor === 'transcribe'
+            })}
+            ref={el => this.editorElements.set('transcribe', el)}
+          />
+          <div
+            class={classNames({
+              editor: true,
+              translate: true,
+              active: activeEditor === 'translate'
+            })}
+            ref={el => this.editorElements.set('translate', el)}
+          />
+          <div
+            class={classNames({
+              editor: true,
+              comment: true,
+              active: activeEditor === 'comment'
+            })}
+            ref={el => this.editorElements.set('comment', el)}
+          />
+        </div>
       </Host>
     );
   }
@@ -90,6 +181,7 @@ export class XecEditor {
 
 const defaultToolbarConfig: ToolbarConfig = {
   controls: {
-    viewRaw: true
-  }
+    viewRaw: true,
+    textDirection: true,
+  },
 };
