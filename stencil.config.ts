@@ -10,7 +10,8 @@ export const config: Config = {
   plugins: [
     sass({
       includePaths: [
-        resolve(__dirname, 'node_modules')
+        resolve(__dirname, 'node_modules'),
+        resolve(__dirname, 'src')
       ]
     })
   ],
