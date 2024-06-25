@@ -1,7 +1,8 @@
 import { Component, Host, h } from '@stencil/core';
-import { JSX, Method, Prop } from '@stencil/core/internal';
+import { JSX, Method, Prop, State } from '@stencil/core/internal';
 import { QuillInstance, ToolbarConfig } from '../../lib/types';
 import Quill from 'quill';
+import * as escaper from 'html-escaper';
 
 @Component({
   tag: 'xec-editor',
@@ -28,6 +29,9 @@ export class XecEditor {
   @Prop()
   public readonly config: ToolbarConfig = defaultToolbarConfig;
 
+  @State()
+  private viewType: 'default'|'raw' = 'default';
+
   @Method()
   public async getQuillInstance(): Promise<QuillInstance> {
     return this.quillInstance;
@@ -48,16 +52,35 @@ export class XecEditor {
   }
 
   /**
+   * Handle the click on the view raw button
+   * Toggle the view between raw and default
+   */
+  private onClickViewRaw(): void {
+    const method = this.viewType === 'raw' ? 'unescape' : 'escape';
+    this.quillInstance.clipboard.dangerouslyPasteHTML(escaper[method](this.quillInstance.getSemanticHTML()));
+    if (method === 'unescape') this.quillInstance.deleteText(0, 1);
+    this.viewType = this.viewType === 'default' ? 'raw' : 'default';
+  }
+
+  /**
    * Render the component
    */
   public render(): JSX.Element {
     const {
-      config
+      onClickViewRaw,
+      config,
     } = this;
     return (
       <Host>
-        <xec-toolbar class="toolbar" config={config} />
-        <div class="editor" ref={el => this.editorElement = el} />
+        <xec-toolbar
+          class="toolbar"
+          config={config}
+          onClickViewRaw={onClickViewRaw.bind(this)}
+        />
+        <div
+          class="editor"
+          ref={el => this.editorElement = el}
+        />
       </Host>
     );
   }

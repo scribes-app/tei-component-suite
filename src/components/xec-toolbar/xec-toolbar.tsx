@@ -1,5 +1,5 @@
 import { Component, Host, h } from '@stencil/core';
-import { JSX, Prop, Watch } from '@stencil/core/internal';
+import { Event, EventEmitter, JSX, Prop, Watch } from '@stencil/core/internal';
 import { isEqual } from '../../lib/helper';
 import { ToolbarConfig } from '../../lib/types';
 
@@ -9,6 +9,9 @@ import { ToolbarConfig } from '../../lib/types';
   shadow: true,
 })
 export class XecToolbar {
+
+  @Event()
+  clickViewRaw: EventEmitter<void>;
 
   @Prop()
   public readonly config: ToolbarConfig;
@@ -24,12 +27,13 @@ export class XecToolbar {
 
   public render(): JSX.Element {
     const {
+      clickViewRaw,
       config
     } = this;
     return (
       <Host>
         <div class="controls">
-          {config.controls.viewRaw && (<xec-button iconOnly icon="code-simple" />)}
+          {config.controls.viewRaw && (<xec-button onClickButton={clickViewRaw.emit.bind(this)} iconOnly icon="code-simple" />)}
         </div>
       </Host>
     );

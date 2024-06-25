@@ -36,6 +36,10 @@ export interface XecIconCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLXecIconElement;
 }
+export interface XecToolbarCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLXecToolbarElement;
+}
 declare global {
     interface HTMLXecButtonElementEventMap {
         "clickButton": HTMLDivElement;
@@ -77,7 +81,18 @@ declare global {
         prototype: HTMLXecIconElement;
         new (): HTMLXecIconElement;
     };
+    interface HTMLXecToolbarElementEventMap {
+        "clickViewRaw": void;
+    }
     interface HTMLXecToolbarElement extends Components.XecToolbar, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLXecToolbarElementEventMap>(type: K, listener: (this: HTMLXecToolbarElement, ev: XecToolbarCustomEvent<HTMLXecToolbarElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLXecToolbarElementEventMap>(type: K, listener: (this: HTMLXecToolbarElement, ev: XecToolbarCustomEvent<HTMLXecToolbarElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLXecToolbarElement: {
         prototype: HTMLXecToolbarElement;
@@ -110,6 +125,7 @@ declare namespace LocalJSX {
     }
     interface XecToolbar {
         "config"?: ToolbarConfig;
+        "onClickViewRaw"?: (event: XecToolbarCustomEvent<void>) => void;
     }
     interface IntrinsicElements {
         "xec-button": XecButton;
