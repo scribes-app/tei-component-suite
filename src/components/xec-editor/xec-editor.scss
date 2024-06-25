@@ -1,3 +1,25 @@
+@import 'manifest';
+
 xec-editor {
   @import 'quill/dist/quill.core';
+  @include component;
+
+  --xec-editor-border-color: #{$color-slate-400};
+  --xec-editor-border-radius: 5px;
+
+  --xec-editor-focus-border-color: #{$color-slate-400};
+
+  .editor {
+    border: {
+      width: 1px;
+      style: solid;
+      color: var(--xec-editor-border-color);
+      bottom-left-radius: var(--xec-editor-border-radius);
+      bottom-right-radius: var(--xec-editor-border-radius);
+    }
+    transition: border-color 0.2s ease;
+    &:focus-within {
+      border-color: var(--xec-editor-focus-border-color);
+    }
+  }
 }

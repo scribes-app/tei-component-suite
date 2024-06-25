@@ -1,8 +1,13 @@
+@import 'manifest';
+
 :host {
-  --color: red;
+  @include component;
+
+  --xec-icon-color: #{$color-slate-400};
+
   position: relative;
   display: block;
-  color: var(--color);
+  color: var(--xec-icon-color);
   svg {
     position: absolute;
     inset: 0;

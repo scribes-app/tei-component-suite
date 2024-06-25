@@ -1,3 +1,30 @@
+@import 'manifest';
+
 :host {
-  display: block;
+  @include component;
+
+  --xec-toolbar-background-color: white;
+  --xec-toolbar-border-color: #{$color-slate-400};
+  --xec-toolbar-border-radius: 5px;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  border: {
+    top: 1px solid var(--xec-toolbar-border-color);
+    right: 1px solid var(--xec-toolbar-border-color);
+    left: 1px solid var(--xec-toolbar-border-color);
+    top-left-radius: var(--xec-toolbar-border-radius);
+    top-right-radius: var(--xec-toolbar-border-radius);
+  };
+  background-color: var(--xec-toolbar-background-color);
+
+  .controls {
+    xec-button {
+      &:first-child {
+        border-top-left-radius: var(--xec-toolbar-border-radius);
+      }
+    }
+  }
 }

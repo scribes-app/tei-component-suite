@@ -16,6 +16,12 @@ export class XecButton {
   public readonly variation?: 'default' = 'default';
   @Prop()
   public readonly icon?: UnionIcons;
+  @Prop()
+  public readonly outlined?: boolean;
+  @Prop()
+  public readonly rounded?: boolean;
+  @Prop()
+  public readonly iconOnly?: boolean;
 
   public onClickButton(): void {
     this.clickButton.emit();
@@ -25,15 +31,22 @@ export class XecButton {
     const {
       onClickButton,
       variation,
+      icon,
+      outlined,
+      rounded,
+      iconOnly
     } = this;
 
     return (
       <Host
         onClick={onClickButton.bind(this)}
         class={classNames({
+          outlined,
+          rounded,
+          iconOnly,
           [`variation-${variation}`]: true
         })}>
-        {this.icon && (<xec-icon icon={this.icon} class="icon" />)}
+        {icon && (<xec-icon icon={icon} class="icon" />)}
         <slot />
       </Host>
     );

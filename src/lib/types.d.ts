@@ -2,10 +2,11 @@ import * as Quill from 'quill';
 
 /**
  * @todo: This union could be generated automatically by the icons command
+ * @see: https://www.flaticon.com for choosing icons and downloading them as svg (use the fi-rr- prefixed icons to keep consistency)
  */
 export type UnionIcons = (
-  'arrow-left' |
-  'arrow-right'
+  'message-code' |
+  'code-simple'
 )
 
 /**

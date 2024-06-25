@@ -51,17 +51,13 @@ export class XecEditor {
    * Render the component
    */
   public render(): JSX.Element {
+    const {
+      config
+    } = this;
     return (
       <Host>
-        <div
-          class="xec-editor"
-          ref={el => this.editorElement = el}
-        />
-        <xec-toolbar config={{
-          controls: {
-            viewRaw: true
-          }
-        }} />
+        <xec-toolbar class="toolbar" config={config} />
+        <div class="editor" ref={el => this.editorElement = el} />
       </Host>
     );
   }
@@ -71,6 +67,6 @@ export class XecEditor {
 
 const defaultToolbarConfig: ToolbarConfig = {
   controls: {
-    viewRaw: false
+    viewRaw: true
   }
 };

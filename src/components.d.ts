@@ -10,6 +10,9 @@ export { QuillInstance, ToolbarConfig, UnionIcons } from "./lib/types";
 export namespace Components {
     interface XecButton {
         "icon"?: UnionIcons;
+        "iconOnly"?: boolean;
+        "outlined"?: boolean;
+        "rounded"?: boolean;
         "variation"?: 'default';
     }
     interface XecEditor {
@@ -90,7 +93,10 @@ declare global {
 declare namespace LocalJSX {
     interface XecButton {
         "icon"?: UnionIcons;
+        "iconOnly"?: boolean;
         "onClickButton"?: (event: XecButtonCustomEvent<HTMLDivElement>) => void;
+        "outlined"?: boolean;
+        "rounded"?: boolean;
         "variation"?: 'default';
     }
     interface XecEditor {

@@ -29,9 +29,7 @@ export class XecToolbar {
     return (
       <Host>
         <div class="controls">
-          {config.controls.viewRaw && (
-            <xec-button icon="arrow-left" />
-          )}
+          {config.controls.viewRaw && (<xec-button iconOnly icon="code-simple" />)}
         </div>
       </Host>
     );
