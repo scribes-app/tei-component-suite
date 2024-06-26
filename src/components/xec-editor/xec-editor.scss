@@ -7,6 +7,7 @@ xec-editor {
 
   --xec-editor-title-color: #{$color-slate-400};
   --xec-editor-text-color: #{$color-slate-700};
+  --xec-editor-line-number-color: #{$color-slate-400};
   --xec-editor-border-color: #{$color-slate-400};
   --xec-editor-border-radius: 5px;
   --xec-editor-height: 300px;
@@ -40,8 +41,8 @@ xec-editor {
       &::before {
         position: absolute;
         pointer-events: none;
-        top: 10px;
-        left: 15px;
+        top: 15px;
+        right: 30px;
         color: var(--xec-editor-title-color);
         font-weight: 700;
         font-size: 8px;
@@ -97,7 +98,8 @@ xec-editor {
       // Quill Editor override
       .ql-editor {
         position: relative;
-        padding-top: 30px;
+        padding: 30px;
+        counter-set: line 0;
         &.direction-rtl {
           direction: rtl;
           text-align: right;
@@ -106,7 +108,25 @@ xec-editor {
           direction: ltr;
           text-align: right;
         }
+        // Custom tags
+        line {
+          position: relative;
+          display: block;
+          counter-increment: line;
+          &::before {
+            content: counter(line);
+            position: absolute;
+            left: -20px;
+            top: 3px;
+            display: block;
+            text-align: right;
+            color: var(--xec-editor-line-number-color);
+            font-size: 10px;
+            font-weight: 700;
+          }
+        }
       }
+
     }
   }
 

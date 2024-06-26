@@ -18,6 +18,14 @@ export type UnionEditorType = (
   'comment'
 )
 
+
+export type UnionUnclearReason = (
+  'legible_incomplete'|
+  'uncertain'|
+  'faded'|
+  'background_noise'
+);
+
 export type EditorState = {
   viewType: 'default'|'raw';
   textDirection: 'LTR'|'RTL';
@@ -28,6 +36,7 @@ export type EditorState = {
  */
 export type ToolbarConfig = {
   controls: {
+    unclear?: boolean;
     viewXML?: boolean;
     viewRaw?: boolean;
     textDirection?: boolean;

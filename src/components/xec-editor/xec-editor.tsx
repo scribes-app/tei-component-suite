@@ -3,7 +3,9 @@ import { JSX, Method, Prop, State } from '@stencil/core/internal';
 import classNames from 'classnames';
 import * as escaper from 'html-escaper';
 import Quill from 'quill';
+import { registerBlots } from '../../lib/helper';
 import { EditorState, QuillInstance, ToolbarConfig, UnionEditorType } from '../../lib/types';
+import { XmlTransformerService } from '../../lib/services/xml-transformer.service';
 
 @Component({
   tag: 'xec-editor',
@@ -70,12 +72,15 @@ export class XecEditor {
    * Initialize the Quill editor
    */
   private initQuillInstances(): void {
+    registerBlots();
+
     for (const [editorType, editorElement] of Array.from(this.editorElements.entries())) {
       const instance = new Quill(editorElement);
       instance.root.addEventListener('focus', this.onFocusEditor.bind(this, editorType));
       this.editorInstances.set(editorType, instance);
-      this.activeInstance = this.editorInstances.get(this.activeEditor);
     }
+
+    this.activeInstance = this.editorInstances.get(this.activeEditor);
   }
 
   /**
@@ -93,8 +98,8 @@ export class XecEditor {
   private onClickViewRaw(): void {
     const editorState = this.editorStates.get(this.activeEditor);
     const method = editorState.viewType === 'raw' ? 'unescape' : 'escape';
-    this.activeInstance.clipboard.dangerouslyPasteHTML(escaper[method](this.activeInstance.getSemanticHTML()));
-    if (method === 'unescape') this.activeInstance.deleteText(0, 1);
+    const sanitizedHTML = XmlTransformerService.sanitizeXMLFromEditor(this.activeInstance.root.innerHTML);
+    this.activeInstance.clipboard.dangerouslyPasteHTML(escaper[method](sanitizedHTML));
     this.setActiveEditorState('viewType', editorState.viewType === 'raw' ? 'default' : 'raw');
   }
 
@@ -121,6 +126,9 @@ export class XecEditor {
     this.popupElement.openPopup();
   }
 
+  private onClickUnclear(): void {
+  }
+
   /**
    * Set the active editor state
    * This solve the issue of the state not being updated when using deep properties
@@ -143,6 +151,7 @@ export class XecEditor {
       onClickRTL,
       onClickViewRaw,
       onClickViewXML,
+      onClickUnclear,
       config,
       activeEditor,
       editorStates,
@@ -156,6 +165,7 @@ export class XecEditor {
           onClickRTL={onClickRTL.bind(this)}
           onClickLTR={onClickLTR.bind(this)}
           onClickViewXML={onClickViewXML.bind(this)}
+          onClickUnclear={onClickUnclear.bind(this)}
           textDirection={editorStates.get(activeEditor).textDirection}
           viewRaw={editorStates.get(activeEditor).viewType === 'raw'}
         />
@@ -195,6 +205,7 @@ export class XecEditor {
 
 const defaultToolbarConfig: ToolbarConfig = {
   controls: {
+    unclear: true,
     viewRaw: true,
     viewXML: true,
     textDirection: true,

@@ -101,6 +101,7 @@ declare global {
     interface HTMLXecToolbarElementEventMap {
         "clickViewRaw": void;
         "clickViewXML": void;
+        "clickUnclear": void;
         "clickRTL": void;
         "clickLTR": void;
     }
@@ -152,6 +153,7 @@ declare namespace LocalJSX {
         "disabled"?: boolean;
         "onClickLTR"?: (event: XecToolbarCustomEvent<void>) => void;
         "onClickRTL"?: (event: XecToolbarCustomEvent<void>) => void;
+        "onClickUnclear"?: (event: XecToolbarCustomEvent<void>) => void;
         "onClickViewRaw"?: (event: XecToolbarCustomEvent<void>) => void;
         "onClickViewXML"?: (event: XecToolbarCustomEvent<void>) => void;
         "textDirection"?: 'LTR'|'RTL';
