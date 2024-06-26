@@ -4,9 +4,8 @@ import classNames from 'classnames';
 import * as escaper from 'html-escaper';
 import Quill from 'quill';
 import { registerBlots } from '../../lib/helper';
-import { EditorState, QuillInstance, ToolbarConfig, UnionEditorType, UnionUnclearReason } from '../../lib/types';
 import { XmlTransformerService } from '../../lib/services/xml-transformer.service';
-import { XecToolbarCustomEvent } from '../../components';
+import { EditorState, QuillInstance, ToolbarConfig, UnionEditorType, UnionUnclearReason } from '../../lib/types';
 
 @Component({
   tag: 'xec-editor',
