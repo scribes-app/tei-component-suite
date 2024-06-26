@@ -1,9 +1,9 @@
 import { Component, Host, h } from '@stencil/core';
 import { JSX, Method, Prop, State } from '@stencil/core/internal';
-import { EditorState, QuillInstance, ToolbarConfig, UnionEditorType } from '../../lib/types';
-import Quill from 'quill';
-import * as escaper from 'html-escaper';
 import classNames from 'classnames';
+import * as escaper from 'html-escaper';
+import Quill from 'quill';
+import { EditorState, QuillInstance, ToolbarConfig, UnionEditorType } from '../../lib/types';
 
 @Component({
   tag: 'xec-editor',
@@ -27,6 +27,7 @@ export class XecEditor {
   private activeInstance: QuillInstance;
   private editorInstances: Map<UnionEditorType, QuillInstance> = new Map();
   private editorElements: Map<UnionEditorType, HTMLDivElement> = new Map();
+  private popupElement: HTMLXecPopupElement;
 
   @Prop()
   public readonly config: ToolbarConfig = defaultToolbarConfig;
@@ -97,17 +98,27 @@ export class XecEditor {
     this.setActiveEditorState('viewType', editorState.viewType === 'raw' ? 'default' : 'raw');
   }
 
+  /**
+   * Handle the click on the text direction buttons
+   */
   private onClickRTL(): void {
     this.activeInstance.root.classList.add('direction-rtl');
     this.activeInstance.focus();
     this.setActiveEditorState('textDirection', 'RTL');
   }
 
+  /**
+   * Handle the click on the text direction buttons
+   */
   private onClickLTR(): void {
     this.editorStates.get(this.activeEditor).textDirection = 'LTR';
     this.activeInstance.root.classList.remove('direction-rtl');
     this.activeInstance.focus();
     this.setActiveEditorState('textDirection', 'LTR');
+  }
+
+  private onClickViewXML(): void {
+    this.popupElement.openPopup();
   }
 
   /**
@@ -131,6 +142,7 @@ export class XecEditor {
       onClickLTR,
       onClickRTL,
       onClickViewRaw,
+      onClickViewXML,
       config,
       activeEditor,
       editorStates,
@@ -143,6 +155,7 @@ export class XecEditor {
           onClickViewRaw={onClickViewRaw.bind(this)}
           onClickRTL={onClickRTL.bind(this)}
           onClickLTR={onClickLTR.bind(this)}
+          onClickViewXML={onClickViewXML.bind(this)}
           textDirection={editorStates.get(activeEditor).textDirection}
           viewRaw={editorStates.get(activeEditor).viewType === 'raw'}
         />
@@ -172,6 +185,7 @@ export class XecEditor {
             ref={el => this.editorElements.set('comment', el)}
           />
         </div>
+        <xec-popup ref={el => this.popupElement = el} />
       </Host>
     );
   }
@@ -182,6 +196,7 @@ export class XecEditor {
 const defaultToolbarConfig: ToolbarConfig = {
   controls: {
     viewRaw: true,
+    viewXML: true,
     textDirection: true,
   },
 };

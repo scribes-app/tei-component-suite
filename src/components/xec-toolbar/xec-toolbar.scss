@@ -21,6 +21,10 @@
   background-color: var(--xec-toolbar-background-color);
 
   .controls {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: stretch;
     xec-button {
       &:first-child {
         border-top-left-radius: var(--xec-toolbar-border-radius);

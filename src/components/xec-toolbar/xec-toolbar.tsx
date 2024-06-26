@@ -15,6 +15,9 @@ export class XecToolbar {
   clickViewRaw: EventEmitter<void>;
 
   @Event()
+  clickViewXML: EventEmitter<void>;
+
+  @Event()
   clickRTL: EventEmitter<void>;
 
   @Event()
@@ -46,6 +49,7 @@ export class XecToolbar {
       clickViewRaw,
       clickRTL,
       clickLTR,
+      clickViewXML,
       textDirection,
       viewRaw,
       disabled,
@@ -64,6 +68,11 @@ export class XecToolbar {
               <xec-button active={textDirection === 'LTR'} onClickButton={clickLTR.emit.bind(this)} iconOnly icon="align-left" />
               <xec-button active={textDirection === 'RTL'} onClickButton={clickRTL.emit.bind(this)} iconOnly icon="align-right" />
             </Fragment>
+          )}
+          {config.controls.viewXML && (
+            <xec-button onClickButton={clickViewXML.emit.bind(this)}>
+              View XML
+            </xec-button>
           )}
         </div>
       </Host>

@@ -8,7 +8,8 @@ export type UnionIcons = (
   'message-code' |
   'code-simple' |
   'align-left' |
-  'align-right'
+  'align-right' |
+  'cross'
 )
 
 export type UnionEditorType = (
@@ -27,6 +28,7 @@ export type EditorState = {
  */
 export type ToolbarConfig = {
   controls: {
+    viewXML?: boolean;
     viewRaw?: boolean;
     textDirection?: boolean;
   }

@@ -27,6 +27,11 @@ export namespace Components {
         "library"?: string;
         "viewBox"?: string;
     }
+    interface XecPopup {
+        "closePopup": () => Promise<void>;
+        "openPopup": () => Promise<void>;
+        "setContent": (content: string) => Promise<void>;
+    }
     interface XecToolbar {
         "config": ToolbarConfig;
         "disabled": boolean;
@@ -87,8 +92,15 @@ declare global {
         prototype: HTMLXecIconElement;
         new (): HTMLXecIconElement;
     };
+    interface HTMLXecPopupElement extends Components.XecPopup, HTMLStencilElement {
+    }
+    var HTMLXecPopupElement: {
+        prototype: HTMLXecPopupElement;
+        new (): HTMLXecPopupElement;
+    };
     interface HTMLXecToolbarElementEventMap {
         "clickViewRaw": void;
+        "clickViewXML": void;
         "clickRTL": void;
         "clickLTR": void;
     }
@@ -110,6 +122,7 @@ declare global {
         "xec-button": HTMLXecButtonElement;
         "xec-editor": HTMLXecEditorElement;
         "xec-icon": HTMLXecIconElement;
+        "xec-popup": HTMLXecPopupElement;
         "xec-toolbar": HTMLXecToolbarElement;
     }
 }
@@ -132,12 +145,15 @@ declare namespace LocalJSX {
         "onClickIcon"?: (event: XecIconCustomEvent<SVGElement>) => void;
         "viewBox"?: string;
     }
+    interface XecPopup {
+    }
     interface XecToolbar {
         "config"?: ToolbarConfig;
         "disabled"?: boolean;
         "onClickLTR"?: (event: XecToolbarCustomEvent<void>) => void;
         "onClickRTL"?: (event: XecToolbarCustomEvent<void>) => void;
         "onClickViewRaw"?: (event: XecToolbarCustomEvent<void>) => void;
+        "onClickViewXML"?: (event: XecToolbarCustomEvent<void>) => void;
         "textDirection"?: 'LTR'|'RTL';
         "viewRaw"?: boolean;
     }
@@ -145,6 +161,7 @@ declare namespace LocalJSX {
         "xec-button": XecButton;
         "xec-editor": XecEditor;
         "xec-icon": XecIcon;
+        "xec-popup": XecPopup;
         "xec-toolbar": XecToolbar;
     }
 }
@@ -155,6 +172,7 @@ declare module "@stencil/core" {
             "xec-button": LocalJSX.XecButton & JSXBase.HTMLAttributes<HTMLXecButtonElement>;
             "xec-editor": LocalJSX.XecEditor & JSXBase.HTMLAttributes<HTMLXecEditorElement>;
             "xec-icon": LocalJSX.XecIcon & JSXBase.HTMLAttributes<HTMLXecIconElement>;
+            "xec-popup": LocalJSX.XecPopup & JSXBase.HTMLAttributes<HTMLXecPopupElement>;
             "xec-toolbar": LocalJSX.XecToolbar & JSXBase.HTMLAttributes<HTMLXecToolbarElement>;
         }
     }

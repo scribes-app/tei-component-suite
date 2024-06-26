@@ -5,18 +5,29 @@ xec-editor {
   @import 'quill/dist/quill.core';
   @include component;
 
-  --xec-editor-title-color: #{$color-slate-500};
+  --xec-editor-title-color: #{$color-slate-400};
   --xec-editor-text-color: #{$color-slate-700};
   --xec-editor-border-color: #{$color-slate-400};
   --xec-editor-border-radius: 5px;
+  --xec-editor-height: 300px;
 
   --xec-editor-focus-border-color: #{$color-slate-700};
+  --xec-editor-focus-title-color: #{$color-slate-700};
 
+  position: relative;
 
   .editors {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
+    align-content: stretch;
+    align-items: stretch;
+    height: var(--xec-editor-height);
+    background-color: white;
+    border: {
+      bottom-left-radius: var(--xec-editor-border-radius);
+      bottom-right-radius: var(--xec-editor-border-radius);
+    };
     .editor {
       flex: 0 0 math.div(100%, 3);
       border: {
@@ -36,9 +47,13 @@ xec-editor {
         font-size: 8px;
         text-transform: uppercase;
         letter-spacing: 1px;
+        transition: color 0.2s ease;
       }
       &.active {
         border-color: var(--xec-editor-focus-border-color);
+        &::before {
+          color: var(--xec-editor-focus-title-color);
+        }
       }
 
       &.transcribe {
