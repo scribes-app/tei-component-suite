@@ -19,6 +19,12 @@ export class XecButton {
   public readonly icon?: UnionIcons;
 
   @Prop()
+  public readonly iconPosition?: 'leading' | 'trailing' = 'leading';
+
+  @Prop()
+  public readonly stretched?: boolean;
+
+  @Prop()
   public readonly outlined?: boolean;
 
   @Prop()
@@ -30,6 +36,9 @@ export class XecButton {
   @Prop()
   public readonly active?: boolean;
 
+  @Prop()
+  public readonly rotateOnActive?: boolean;
+
   public onClickButton(): void {
     this.clickButton.emit();
   }
@@ -39,9 +48,12 @@ export class XecButton {
       onClickButton,
       variation,
       icon,
+      iconPosition,
       outlined,
       rounded,
+      stretched,
       iconOnly,
+      rotateOnActive,
       active
     } = this;
 
@@ -53,10 +65,14 @@ export class XecButton {
           rounded,
           iconOnly,
           active,
+          rotateOnActive,
+          stretched,
+          [`icon-position-${iconPosition}`]: true,
           [`variation-${variation}`]: true
         })}>
-        {icon && (<xec-icon icon={icon} class="icon" />)}
+        {icon && iconPosition === 'leading' && (<xec-icon icon={icon} class="icon" />)}
         <slot />
+        {icon && iconPosition === 'trailing' && (<xec-icon icon={icon} class="icon" />)}
       </Host>
     );
   }

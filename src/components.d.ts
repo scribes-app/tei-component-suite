@@ -5,16 +5,22 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { QuillInstance, ToolbarConfig, UnionEditorType, UnionIcons } from "./lib/types";
-export { QuillInstance, ToolbarConfig, UnionEditorType, UnionIcons } from "./lib/types";
+import { DropdownConfig, QuillInstance, ToolbarConfig, UnionEditorType, UnionIcons, UnionUnclearReason } from "./lib/types";
+export { DropdownConfig, QuillInstance, ToolbarConfig, UnionEditorType, UnionIcons, UnionUnclearReason } from "./lib/types";
 export namespace Components {
     interface XecButton {
         "active"?: boolean;
         "icon"?: UnionIcons;
         "iconOnly"?: boolean;
+        "iconPosition"?: 'leading' | 'trailing';
         "outlined"?: boolean;
+        "rotateOnActive"?: boolean;
         "rounded"?: boolean;
+        "stretched"?: boolean;
         "variation"?: 'default';
+    }
+    interface XecDropdown {
+        "config": DropdownConfig;
     }
     interface XecEditor {
         "config": ToolbarConfig;
@@ -69,6 +75,12 @@ declare global {
         prototype: HTMLXecButtonElement;
         new (): HTMLXecButtonElement;
     };
+    interface HTMLXecDropdownElement extends Components.XecDropdown, HTMLStencilElement {
+    }
+    var HTMLXecDropdownElement: {
+        prototype: HTMLXecDropdownElement;
+        new (): HTMLXecDropdownElement;
+    };
     interface HTMLXecEditorElement extends Components.XecEditor, HTMLStencilElement {
     }
     var HTMLXecEditorElement: {
@@ -101,7 +113,7 @@ declare global {
     interface HTMLXecToolbarElementEventMap {
         "clickViewRaw": void;
         "clickViewXML": void;
-        "clickUnclear": void;
+        "clickUnclear": UnionUnclearReason;
         "clickRTL": void;
         "clickLTR": void;
     }
@@ -121,6 +133,7 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "xec-button": HTMLXecButtonElement;
+        "xec-dropdown": HTMLXecDropdownElement;
         "xec-editor": HTMLXecEditorElement;
         "xec-icon": HTMLXecIconElement;
         "xec-popup": HTMLXecPopupElement;
@@ -132,10 +145,16 @@ declare namespace LocalJSX {
         "active"?: boolean;
         "icon"?: UnionIcons;
         "iconOnly"?: boolean;
+        "iconPosition"?: 'leading' | 'trailing';
         "onClickButton"?: (event: XecButtonCustomEvent<HTMLDivElement>) => void;
         "outlined"?: boolean;
+        "rotateOnActive"?: boolean;
         "rounded"?: boolean;
+        "stretched"?: boolean;
         "variation"?: 'default';
+    }
+    interface XecDropdown {
+        "config"?: DropdownConfig;
     }
     interface XecEditor {
         "config"?: ToolbarConfig;
@@ -153,7 +172,7 @@ declare namespace LocalJSX {
         "disabled"?: boolean;
         "onClickLTR"?: (event: XecToolbarCustomEvent<void>) => void;
         "onClickRTL"?: (event: XecToolbarCustomEvent<void>) => void;
-        "onClickUnclear"?: (event: XecToolbarCustomEvent<void>) => void;
+        "onClickUnclear"?: (event: XecToolbarCustomEvent<UnionUnclearReason>) => void;
         "onClickViewRaw"?: (event: XecToolbarCustomEvent<void>) => void;
         "onClickViewXML"?: (event: XecToolbarCustomEvent<void>) => void;
         "textDirection"?: 'LTR'|'RTL';
@@ -161,6 +180,7 @@ declare namespace LocalJSX {
     }
     interface IntrinsicElements {
         "xec-button": XecButton;
+        "xec-dropdown": XecDropdown;
         "xec-editor": XecEditor;
         "xec-icon": XecIcon;
         "xec-popup": XecPopup;
@@ -172,6 +192,7 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "xec-button": LocalJSX.XecButton & JSXBase.HTMLAttributes<HTMLXecButtonElement>;
+            "xec-dropdown": LocalJSX.XecDropdown & JSXBase.HTMLAttributes<HTMLXecDropdownElement>;
             "xec-editor": LocalJSX.XecEditor & JSXBase.HTMLAttributes<HTMLXecEditorElement>;
             "xec-icon": LocalJSX.XecIcon & JSXBase.HTMLAttributes<HTMLXecIconElement>;
             "xec-popup": LocalJSX.XecPopup & JSXBase.HTMLAttributes<HTMLXecPopupElement>;

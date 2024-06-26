@@ -15,7 +15,7 @@
 
   cursor: pointer;
   display: inline-flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   font: { size: 12px; }
   background-color: var(--xec-button-background-color);
@@ -26,8 +26,8 @@
               color 0.2s ease;
   .icon {
     display: block;
-    height: 12px;
-    width: 12px;
+    height: 10px;
+    width: 10px;
     color: var(--xec-button-icon-color);
     transition: color 0.2s ease;
   }
@@ -42,8 +42,24 @@
   }
 }
 
+:host(.rotateOnActive) {
+  .icon {
+    transition: transform 0.2s ease;
+  }
+  &:host(.active) {
+    .icon {
+      backface-visibility: visible;
+      transform: rotate3d(1, 0, 0, 180deg);
+    }
+  }
+}
+
 :host(.iconOnly) {
   padding: 10px;
+  .icon {
+    height: 12px;
+    width: 12px;
+  }
 }
 
 :host(.rounded) {
@@ -53,5 +69,22 @@
 :host(.outlined) {
   border: 1px solid var(--xec-button-border-color);
   &:hover {
-    border-color: var(--xec-button-hover-border-color);}
+    border-color: var(--xec-button-hover-border-color);
+  }
+}
+
+:host(.stretched) {
+  width: 100%;
+}
+
+:host(.icon-position-leading:not(.iconOnly)) {
+  .icon {
+    margin-right: 8px;
+  }
+}
+
+:host(.icon-position-trailing:not(.iconOnly)) {
+  .icon {
+    margin-left: 8px;
+  }
 }

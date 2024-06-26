@@ -4,8 +4,9 @@ import classNames from 'classnames';
 import * as escaper from 'html-escaper';
 import Quill from 'quill';
 import { registerBlots } from '../../lib/helper';
-import { EditorState, QuillInstance, ToolbarConfig, UnionEditorType } from '../../lib/types';
+import { EditorState, QuillInstance, ToolbarConfig, UnionEditorType, UnionUnclearReason } from '../../lib/types';
 import { XmlTransformerService } from '../../lib/services/xml-transformer.service';
+import { XecToolbarCustomEvent } from '../../components';
 
 @Component({
   tag: 'xec-editor',
@@ -126,7 +127,9 @@ export class XecEditor {
     this.popupElement.openPopup();
   }
 
-  private onClickUnclear(): void {
+  private onClickUnclear(event: CustomEvent<UnionUnclearReason>): void {
+    const { detail: reason } = event;
+    this.activeInstance.format('unclear', reason);
   }
 
   /**

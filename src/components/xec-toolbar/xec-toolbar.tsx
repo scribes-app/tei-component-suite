@@ -1,7 +1,7 @@
 import { Component, Host, h } from '@stencil/core';
 import { Event, EventEmitter, Fragment, JSX, Prop, Watch } from '@stencil/core/internal';
 import { isEqual } from '../../lib/helper';
-import { ToolbarConfig } from '../../lib/types';
+import { ToolbarConfig, UnionUnclearReason } from '../../lib/types';
 import classNames from 'classnames';
 
 @Component({
@@ -18,7 +18,7 @@ export class XecToolbar {
   clickViewXML: EventEmitter<void>;
 
   @Event()
-  clickUnclear: EventEmitter<void>;
+  clickUnclear: EventEmitter<UnionUnclearReason>;
 
   @Event()
   clickRTL: EventEmitter<void>;
@@ -74,9 +74,31 @@ export class XecToolbar {
             </Fragment>
           )}
           {config.controls.unclear && (
-            <xec-button onClickButton={clickUnclear.emit.bind(this)}>
-              Unclear
-            </xec-button>
+            <xec-dropdown config={{
+              label: 'Unclear',
+              items: [
+                {
+                  id: 'legible_incomplete',
+                  label: 'Legible incomplete',
+                  onClick: clickUnclear.emit.bind(this, 'legible_incomplete')
+                },
+                {
+                  id: 'uncertain',
+                  label: 'Uncertain',
+                  onClick: clickUnclear.emit.bind(this, 'uncertain')
+                },
+                {
+                  id: 'faded',
+                  label: 'Faded',
+                  onClick: clickUnclear.emit.bind(this, 'faded')
+                },
+                {
+                  id: 'background_noise',
+                  label: 'Background noise',
+                  onClick: clickUnclear.emit.bind(this, 'background_noise')
+                }
+              ]
+            }} />
           )}
           {config.controls.viewXML && (
             <xec-button onClickButton={clickViewXML.emit.bind(this)}>

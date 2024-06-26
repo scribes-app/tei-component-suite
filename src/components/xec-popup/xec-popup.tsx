@@ -44,7 +44,7 @@ export class XecPopup {
       <Host class={classNames({
         open
       })}>
-        <xec-button class="close" icon="cross" onClickButton={onClickClose.bind(this)} rounded />
+        <xec-button class="close" icon="cross" onClickButton={onClickClose.bind(this)} rounded iconOnly />
         <div class="content">
           <slot>
             {content}

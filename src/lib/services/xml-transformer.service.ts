@@ -8,7 +8,7 @@ export class XmlTransformerService {
     const tree = document.createElement('div');
     tree.innerHTML = xml;
     Array.from(tree.children)
-      .forEach((node, i) => node.setAttribute('n', (i++).toString()));
+      .forEach((node, i) => node.setAttribute('n', (++i).toString()));
 
     return tree.innerHTML;
   }

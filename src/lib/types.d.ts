@@ -9,7 +9,8 @@ export type UnionIcons = (
   'code-simple' |
   'align-left' |
   'align-right' |
-  'cross'
+  'cross' |
+  'angle-down'
 )
 
 export type UnionEditorType = (
@@ -31,9 +32,18 @@ export type EditorState = {
   textDirection: 'LTR'|'RTL';
 }
 
-/**
- * @todo: Define the toolbar configuration
- */
+export type DropdownConfig = {
+  label: string;
+  items: DropdownItem[]
+}
+
+export type DropdownItem = {
+  id: string;
+  label: string;
+  onClick?: () => any;
+  items?: DropdownItem[];
+}
+
 export type ToolbarConfig = {
   controls: {
     unclear?: boolean;
