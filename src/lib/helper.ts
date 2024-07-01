@@ -1,6 +1,7 @@
 import Quill from 'quill';
 import { BlockBlot } from './blots/BlockBlot';
 import { UnclearBlot } from './blots/UnclearBlot';
+import { HighlightBlot } from './blots/HighlightBlot';
 
 /**
  * Check if two objects are equal (this is the fastest way with JSON.stringify do not use lodash anymore)
@@ -14,7 +15,8 @@ export const isEqual = (base: any, comp: any) => {
 export const registerBlots = () => {
   [
     BlockBlot,
-    UnclearBlot
+    UnclearBlot,
+    HighlightBlot
   ].forEach(blot => Quill.register(blot, blot instanceof BlockBlot));
 }
 
@@ -32,14 +34,17 @@ export const delayed = async (fn: Function, ms: number) => {
   fn();
 }
 
-
 /**
  * Add a listener to know whenever an element is clicked outside
  */
-export const onClickOutside = (element: HTMLElement, callback: Function, shouldRun?: (e: MouseEvent) => boolean): ((this: Window, ev: MouseEvent) => any) => {
+export const onClickOutside = (element: HTMLElement, callback: Function, trigger?: HTMLElement): ((this: Window, ev: MouseEvent) => any) => {
   let _listener = (e: MouseEvent) => {
-    if (shouldRun && !shouldRun(e)) return;
-    if (!element?.contains(e.target as HTMLElement) && !element?.isSameNode(e.target as HTMLElement)) callback();
+    const eventPaths: HTMLElement[] = (e.composedPath() as HTMLElement[]).filter(n => n.isSameNode);
+    const isTriggerElement = trigger && eventPaths.some(n => n.isSameNode(trigger));
+    if (isTriggerElement) return;
+    const isCurrentElement = eventPaths.some(n => n.isSameNode(element));
+    const isElementChild = eventPaths.some(n => element.contains(n));
+    if (!isCurrentElement && !isElementChild) callback();
   }
   globalThis.addEventListener('click', _listener);
   return _listener;

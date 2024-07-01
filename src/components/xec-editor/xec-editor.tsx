@@ -131,6 +131,11 @@ export class XecEditor {
     this.activeInstance.format('unclear', reason);
   }
 
+  private onClickHighlight(event: CustomEvent<UnionUnclearReason>): void {
+    const { detail: rend } = event;
+    this.activeInstance.format('highlight', rend);
+  }
+
   /**
    * Set the active editor state
    * This solve the issue of the state not being updated when using deep properties
@@ -154,6 +159,7 @@ export class XecEditor {
       onClickViewRaw,
       onClickViewXML,
       onClickUnclear,
+      onClickHighlight,
       config,
       activeEditor,
       editorStates,
@@ -168,6 +174,7 @@ export class XecEditor {
           onClickLTR={onClickLTR.bind(this)}
           onClickViewXML={onClickViewXML.bind(this)}
           onClickUnclear={onClickUnclear.bind(this)}
+          onClickHighlight={onClickHighlight.bind(this)}
           textDirection={editorStates.get(activeEditor).textDirection}
           viewRaw={editorStates.get(activeEditor).viewType === 'raw'}
         />
@@ -207,6 +214,7 @@ export class XecEditor {
 
 const defaultToolbarConfig: ToolbarConfig = {
   controls: {
+    highlight: true,
     unclear: true,
     viewRaw: true,
     viewXML: true,

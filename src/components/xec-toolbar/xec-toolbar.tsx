@@ -1,8 +1,8 @@
 import { Component, Host, h } from '@stencil/core';
-import { Element, Event, EventEmitter, Fragment, JSX, Prop, Watch } from '@stencil/core/internal';
-import { isEqual } from '../../lib/helper';
-import { ToolbarConfig, UnionUnclearReason } from '../../lib/types';
+import { Event, EventEmitter, Fragment, JSX, Prop, Watch } from '@stencil/core/internal';
 import classNames from 'classnames';
+import { isEqual } from '../../lib/helper';
+import { ToolbarConfig, UnionHighlightReason, UnionUnclearReason } from '../../lib/types';
 
 @Component({
   tag: 'xec-toolbar',
@@ -10,9 +10,6 @@ import classNames from 'classnames';
   shadow: true,
 })
 export class XecToolbar {
-
-  @Element()
-  private element: HTMLElement;
 
   @Event()
   private readonly clickViewRaw: EventEmitter<void>;
@@ -22,6 +19,9 @@ export class XecToolbar {
 
   @Event()
   private readonly clickUnclear: EventEmitter<UnionUnclearReason>;
+
+  @Event()
+  private readonly clickHighlight: EventEmitter<UnionHighlightReason>;
 
   @Event()
   private readonly clickRTL: EventEmitter<void>;
@@ -50,30 +50,24 @@ export class XecToolbar {
     // Do something with the config
   }
 
-  /**
-   * Check if the dropdown should close on click outside
-   */
-  private shouldCloseOnClickOutside(e: MouseEvent): boolean {
-    return e.target !== this.element;
-  }
-
   public render(): JSX.Element {
     const {
-      shouldCloseOnClickOutside,
       clickViewRaw,
       clickRTL,
       clickLTR,
       clickViewXML,
       clickUnclear,
+      clickHighlight,
       textDirection,
       viewRaw,
       disabled,
       config
     } = this;
     return (
-      <Host class={classNames({
-        disabled
-      })}>
+      <Host
+        class={classNames({
+          disabled
+        })}>
         <div class="controls">
           {config.controls.viewRaw && (
             <xec-button active={viewRaw} onClickButton={clickViewRaw.emit.bind(this)} iconOnly icon="code-simple" />
@@ -86,7 +80,6 @@ export class XecToolbar {
           )}
           {config.controls.unclear && (
             <xec-dropdown
-              shouldCloseOnClickOutside={shouldCloseOnClickOutside.bind(this)}
               config={{
                 label: 'Unclear',
                 items: [
@@ -109,6 +102,50 @@ export class XecToolbar {
                     id: 'background_noise',
                     label: 'Background noise',
                     onClick: clickUnclear.emit.bind(this, 'background_noise')
+                  }
+                ]
+              }}
+            />
+          )}
+          {config.controls.highlight && (
+            <xec-dropdown
+              config={{
+                label: 'Highlight',
+                items: [
+                  {
+                    id: 'enlarged',
+                    label: 'Enlarged',
+                    onClick: clickHighlight.emit.bind(this, 'enlarged')
+                  },
+                  {
+                    id: 'displaced-above',
+                    label: 'Displaced above',
+                    onClick: clickHighlight.emit.bind(this, 'displaced-above')
+                  },
+                  {
+                    id: 'displaced-below',
+                    label: 'Displaced below',
+                    onClick: clickHighlight.emit.bind(this, 'displaced-below')
+                  },
+                  {
+                    id: 'supralinear',
+                    label: 'Supralinear',
+                    onClick: clickHighlight.emit.bind(this, 'supralinear')
+                  },
+                  {
+                    id: 'infralinear',
+                    label: 'Infralinear',
+                    onClick: clickHighlight.emit.bind(this, 'infralinear')
+                  },
+                  {
+                    id: 'doted',
+                    label: 'Doted',
+                    onClick: clickHighlight.emit.bind(this, 'doted')
+                  },
+                  {
+                    id: 'bigger',
+                    label: 'Bigger',
+                    onClick: clickHighlight.emit.bind(this, 'bigger')
                   }
                 ]
               }}

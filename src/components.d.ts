@@ -5,8 +5,8 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { DropdownConfig, QuillInstance, ToolbarConfig, UnionEditorType, UnionIcons, UnionUnclearReason } from "./lib/types";
-export { DropdownConfig, QuillInstance, ToolbarConfig, UnionEditorType, UnionIcons, UnionUnclearReason } from "./lib/types";
+import { DropdownConfig, QuillInstance, ToolbarConfig, UnionEditorType, UnionHighlightReason, UnionIcons, UnionUnclearReason } from "./lib/types";
+export { DropdownConfig, QuillInstance, ToolbarConfig, UnionEditorType, UnionHighlightReason, UnionIcons, UnionUnclearReason } from "./lib/types";
 export namespace Components {
     interface XecButton {
         "active"?: boolean;
@@ -20,8 +20,9 @@ export namespace Components {
         "variation"?: 'default';
     }
     interface XecDropdown {
+        "close": () => Promise<void>;
         "config": DropdownConfig;
-        "shouldCloseOnClickOutside"?: (e: MouseEvent) => boolean;
+        "open": () => Promise<void>;
     }
     interface XecEditor {
         "config": ToolbarConfig;
@@ -115,6 +116,7 @@ declare global {
         "clickViewRaw": void;
         "clickViewXML": void;
         "clickUnclear": UnionUnclearReason;
+        "clickHighlight": UnionHighlightReason;
         "clickRTL": void;
         "clickLTR": void;
     }
@@ -156,7 +158,6 @@ declare namespace LocalJSX {
     }
     interface XecDropdown {
         "config"?: DropdownConfig;
-        "shouldCloseOnClickOutside"?: (e: MouseEvent) => boolean;
     }
     interface XecEditor {
         "config"?: ToolbarConfig;
@@ -172,6 +173,7 @@ declare namespace LocalJSX {
     interface XecToolbar {
         "config"?: ToolbarConfig;
         "disabled"?: boolean;
+        "onClickHighlight"?: (event: XecToolbarCustomEvent<UnionHighlightReason>) => void;
         "onClickLTR"?: (event: XecToolbarCustomEvent<void>) => void;
         "onClickRTL"?: (event: XecToolbarCustomEvent<void>) => void;
         "onClickUnclear"?: (event: XecToolbarCustomEvent<UnionUnclearReason>) => void;

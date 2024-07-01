@@ -27,6 +27,16 @@ export type UnionUnclearReason = (
   'background_noise'
 );
 
+export type UnionHighlightReason = (
+  'enlarged'|
+  'displaced-above'|
+  'displaced-below'|
+  'supralinear'|
+  'infralinear'|
+  'doted'|
+  'bigger'
+);
+
 export type EditorState = {
   viewType: 'default'|'raw';
   textDirection: 'LTR'|'RTL';
@@ -46,6 +56,7 @@ export type DropdownItem = {
 
 export type ToolbarConfig = {
   controls: {
+    highlight?: boolean;
     unclear?: boolean;
     viewXML?: boolean;
     viewRaw?: boolean;

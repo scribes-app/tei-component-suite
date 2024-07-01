@@ -1,4 +1,4 @@
-import { Component, Element, Host, Prop, State, h } from '@stencil/core';
+import { Component, Element, Host, Method, Prop, State, h } from '@stencil/core';
 import { DropdownConfig } from '../../lib/types';
 import classNames from 'classnames';
 import { onClickOutside, removeClickOutside } from '../../lib/helper';
@@ -21,11 +21,18 @@ export class XecDropdown {
     items: []
   };
 
-  @Prop()
-  public readonly shouldCloseOnClickOutside?: (e: MouseEvent) => boolean;
-
   @State()
-  private open = false;
+  private isOpen = false;
+
+  @Method()
+  public async close(): Promise<void> {
+    this.isOpen = false;
+  }
+
+  @Method()
+  public async open(): Promise<void> {
+    this.isOpen = true;
+  }
 
   public componentDidLoad() {
     this.setOnClickOutside();
@@ -37,28 +44,28 @@ export class XecDropdown {
 
   private setOnClickOutside(): void {
     this._listener = this.onClickOutside.bind(this);
-    onClickOutside(this.element, this._listener, this.shouldCloseOnClickOutside);
+    onClickOutside(this.element, this._listener);
   }
 
   private onClickDropdown(): void {
-    this.open = !this.open;
+    this.isOpen = !this.isOpen;
   }
 
   private onClickOutside(): void {
-    if (this.open) this.open = false;
+    this.isOpen = false;
   }
 
   render() {
     const {
       onClickDropdown,
       config: { items, label },
-      open
+      isOpen
     } = this;
     return (
       <Host>
         <xec-button
           onClickButton={onClickDropdown.bind(this)}
-          active={open}
+          active={isOpen}
           icon="angle-down"
           iconPosition="trailing"
           rotateOnActive>
@@ -66,7 +73,7 @@ export class XecDropdown {
         </xec-button>
         <div class={classNames({
           wrapper: true,
-          open
+          open: isOpen
         })}>
           {items.map(({ label, items, onClick }) => (
             <xec-button stretched class="item" onClickButton={onClick}>
