@@ -131,9 +131,9 @@ export class XecEditor {
     this.activeInstance.format('unclear', reason);
   }
 
-  private onClickHighlight(event: CustomEvent<UnionUnclearReason>): void {
+  private onClickHighlighted(event: CustomEvent<UnionUnclearReason>): void {
     const { detail: rend } = event;
-    this.activeInstance.format('highlight', rend);
+    this.activeInstance.format('highlighted', rend);
   }
 
   /**
@@ -159,7 +159,7 @@ export class XecEditor {
       onClickViewRaw,
       onClickViewXML,
       onClickUnclear,
-      onClickHighlight,
+      onClickHighlighted,
       config,
       activeEditor,
       editorStates,
@@ -174,7 +174,7 @@ export class XecEditor {
           onClickLTR={onClickLTR.bind(this)}
           onClickViewXML={onClickViewXML.bind(this)}
           onClickUnclear={onClickUnclear.bind(this)}
-          onClickHighlight={onClickHighlight.bind(this)}
+          onClickHighlighted={onClickHighlighted.bind(this)}
           textDirection={editorStates.get(activeEditor).textDirection}
           viewRaw={editorStates.get(activeEditor).viewType === 'raw'}
         />

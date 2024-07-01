@@ -27,7 +27,7 @@ export type UnionUnclearReason = (
   'background_noise'
 );
 
-export type UnionHighlightReason = (
+export type UnionHighlightedReason = (
   'enlarged'|
   'displaced-above'|
   'displaced-below'|

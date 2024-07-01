@@ -2,7 +2,7 @@ import { Component, Host, h } from '@stencil/core';
 import { Event, EventEmitter, Fragment, JSX, Prop, Watch } from '@stencil/core/internal';
 import classNames from 'classnames';
 import { isEqual } from '../../lib/helper';
-import { ToolbarConfig, UnionHighlightReason, UnionUnclearReason } from '../../lib/types';
+import { ToolbarConfig, UnionHighlightedReason, UnionUnclearReason } from '../../lib/types';
 
 @Component({
   tag: 'xec-toolbar',
@@ -21,7 +21,10 @@ export class XecToolbar {
   private readonly clickUnclear: EventEmitter<UnionUnclearReason>;
 
   @Event()
-  private readonly clickHighlight: EventEmitter<UnionHighlightReason>;
+  private readonly clickHighlighted: EventEmitter<UnionHighlightedReason>;
+
+  @Event()
+  private readonly clickDeleted: EventEmitter<UnionHighlightedReason>;
 
   @Event()
   private readonly clickRTL: EventEmitter<void>;
@@ -57,7 +60,7 @@ export class XecToolbar {
       clickLTR,
       clickViewXML,
       clickUnclear,
-      clickHighlight,
+      clickHighlighted,
       textDirection,
       viewRaw,
       disabled,
@@ -115,37 +118,37 @@ export class XecToolbar {
                   {
                     id: 'enlarged',
                     label: 'Enlarged',
-                    onClick: clickHighlight.emit.bind(this, 'enlarged')
+                    onClick: clickHighlighted.emit.bind(this, 'enlarged')
                   },
                   {
                     id: 'displaced-above',
                     label: 'Displaced above',
-                    onClick: clickHighlight.emit.bind(this, 'displaced-above')
+                    onClick: clickHighlighted.emit.bind(this, 'displaced-above')
                   },
                   {
                     id: 'displaced-below',
                     label: 'Displaced below',
-                    onClick: clickHighlight.emit.bind(this, 'displaced-below')
+                    onClick: clickHighlighted.emit.bind(this, 'displaced-below')
                   },
                   {
                     id: 'supralinear',
                     label: 'Supralinear',
-                    onClick: clickHighlight.emit.bind(this, 'supralinear')
+                    onClick: clickHighlighted.emit.bind(this, 'supralinear')
                   },
                   {
                     id: 'infralinear',
                     label: 'Infralinear',
-                    onClick: clickHighlight.emit.bind(this, 'infralinear')
+                    onClick: clickHighlighted.emit.bind(this, 'infralinear')
                   },
                   {
                     id: 'doted',
                     label: 'Doted',
-                    onClick: clickHighlight.emit.bind(this, 'doted')
+                    onClick: clickHighlighted.emit.bind(this, 'doted')
                   },
                   {
                     id: 'bigger',
                     label: 'Bigger',
-                    onClick: clickHighlight.emit.bind(this, 'bigger')
+                    onClick: clickHighlighted.emit.bind(this, 'bigger')
                   }
                 ]
               }}
