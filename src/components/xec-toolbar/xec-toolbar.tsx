@@ -1,5 +1,5 @@
 import { Component, Host, h } from '@stencil/core';
-import { Event, EventEmitter, Fragment, JSX, Prop, Watch } from '@stencil/core/internal';
+import { Element, Event, EventEmitter, Fragment, JSX, Prop, Watch } from '@stencil/core/internal';
 import { isEqual } from '../../lib/helper';
 import { ToolbarConfig, UnionUnclearReason } from '../../lib/types';
 import classNames from 'classnames';
@@ -11,20 +11,23 @@ import classNames from 'classnames';
 })
 export class XecToolbar {
 
-  @Event()
-  clickViewRaw: EventEmitter<void>;
+  @Element()
+  private element: HTMLElement;
 
   @Event()
-  clickViewXML: EventEmitter<void>;
+  private readonly clickViewRaw: EventEmitter<void>;
 
   @Event()
-  clickUnclear: EventEmitter<UnionUnclearReason>;
+  private readonly clickViewXML: EventEmitter<void>;
 
   @Event()
-  clickRTL: EventEmitter<void>;
+  private readonly clickUnclear: EventEmitter<UnionUnclearReason>;
 
   @Event()
-  clickLTR: EventEmitter<void>;
+  private readonly clickRTL: EventEmitter<void>;
+
+  @Event()
+  private readonly clickLTR: EventEmitter<void>;
 
   @Prop()
   public readonly config: ToolbarConfig;
@@ -47,8 +50,16 @@ export class XecToolbar {
     // Do something with the config
   }
 
+  /**
+   * Check if the dropdown should close on click outside
+   */
+  private shouldCloseOnClickOutside(e: MouseEvent): boolean {
+    return e.target !== this.element;
+  }
+
   public render(): JSX.Element {
     const {
+      shouldCloseOnClickOutside,
       clickViewRaw,
       clickRTL,
       clickLTR,
@@ -74,31 +85,34 @@ export class XecToolbar {
             </Fragment>
           )}
           {config.controls.unclear && (
-            <xec-dropdown config={{
-              label: 'Unclear',
-              items: [
-                {
-                  id: 'legible_incomplete',
-                  label: 'Legible incomplete',
-                  onClick: clickUnclear.emit.bind(this, 'legible_incomplete')
-                },
-                {
-                  id: 'uncertain',
-                  label: 'Uncertain',
-                  onClick: clickUnclear.emit.bind(this, 'uncertain')
-                },
-                {
-                  id: 'faded',
-                  label: 'Faded',
-                  onClick: clickUnclear.emit.bind(this, 'faded')
-                },
-                {
-                  id: 'background_noise',
-                  label: 'Background noise',
-                  onClick: clickUnclear.emit.bind(this, 'background_noise')
-                }
-              ]
-            }} />
+            <xec-dropdown
+              shouldCloseOnClickOutside={shouldCloseOnClickOutside.bind(this)}
+              config={{
+                label: 'Unclear',
+                items: [
+                  {
+                    id: 'legible_incomplete',
+                    label: 'Legible incomplete',
+                    onClick: clickUnclear.emit.bind(this, 'legible_incomplete')
+                  },
+                  {
+                    id: 'uncertain',
+                    label: 'Uncertain',
+                    onClick: clickUnclear.emit.bind(this, 'uncertain')
+                  },
+                  {
+                    id: 'faded',
+                    label: 'Faded',
+                    onClick: clickUnclear.emit.bind(this, 'faded')
+                  },
+                  {
+                    id: 'background_noise',
+                    label: 'Background noise',
+                    onClick: clickUnclear.emit.bind(this, 'background_noise')
+                  }
+                ]
+              }}
+            />
           )}
           {config.controls.viewXML && (
             <xec-button onClickButton={clickViewXML.emit.bind(this)}>

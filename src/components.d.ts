@@ -21,6 +21,7 @@ export namespace Components {
     }
     interface XecDropdown {
         "config": DropdownConfig;
+        "shouldCloseOnClickOutside"?: (e: MouseEvent) => boolean;
     }
     interface XecEditor {
         "config": ToolbarConfig;
@@ -155,6 +156,7 @@ declare namespace LocalJSX {
     }
     interface XecDropdown {
         "config"?: DropdownConfig;
+        "shouldCloseOnClickOutside"?: (e: MouseEvent) => boolean;
     }
     interface XecEditor {
         "config"?: ToolbarConfig;

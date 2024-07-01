@@ -10,7 +10,7 @@ import { UnionIcons } from '../../lib/types';
 export class XecButton {
 
   @Event()
-  public readonly clickButton: EventEmitter<HTMLDivElement>;
+  private readonly clickButton: EventEmitter<HTMLDivElement>;
 
   @Prop()
   public readonly variation?: 'default' = 'default';

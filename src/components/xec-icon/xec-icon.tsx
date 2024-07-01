@@ -10,7 +10,7 @@ import { JSX } from '@stencil/core/internal';
 export class XecIcon {
 
   @Event()
-  public readonly clickIcon: EventEmitter<SVGElement>;
+  private readonly clickIcon: EventEmitter<SVGElement>;
 
   @Prop()
   public readonly viewBox?: string;

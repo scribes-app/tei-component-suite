@@ -31,3 +31,23 @@ export const delayed = async (fn: Function, ms: number) => {
   await tick(ms);
   fn();
 }
+
+
+/**
+ * Add a listener to know whenever an element is clicked outside
+ */
+export const onClickOutside = (element: HTMLElement, callback: Function, shouldRun?: (e: MouseEvent) => boolean): ((this: Window, ev: MouseEvent) => any) => {
+  let _listener = (e: MouseEvent) => {
+    if (shouldRun && !shouldRun(e)) return;
+    if (!element?.contains(e.target as HTMLElement) && !element?.isSameNode(e.target as HTMLElement)) callback();
+  }
+  globalThis.addEventListener('click', _listener);
+  return _listener;
+}
+
+/**
+ * Add a listener to know whenever an element is clicked outside
+ */
+export const removeClickOutside = (listener: (this: Window, ev: MouseEvent) => any) => {
+  globalThis.removeEventListener('click', listener);
+}
