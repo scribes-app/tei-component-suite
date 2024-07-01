@@ -37,6 +37,14 @@ export type UnionHighlightedReason = (
   'bigger'
 );
 
+export type UnionDeletedReason = (
+  'erased'|
+  'strikethrough'|
+  'dotted'|
+  'underline'|
+  'other'
+);
+
 export type EditorState = {
   viewType: 'default'|'raw';
   textDirection: 'LTR'|'RTL';
@@ -56,7 +64,8 @@ export type DropdownItem = {
 
 export type ToolbarConfig = {
   controls: {
-    highlight?: boolean;
+    deleted?: boolean;
+    highlighted?: boolean;
     unclear?: boolean;
     viewXML?: boolean;
     viewRaw?: boolean;

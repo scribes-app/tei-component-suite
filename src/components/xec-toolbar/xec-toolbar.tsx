@@ -2,7 +2,7 @@ import { Component, Host, h } from '@stencil/core';
 import { Event, EventEmitter, Fragment, JSX, Prop, Watch } from '@stencil/core/internal';
 import classNames from 'classnames';
 import { isEqual } from '../../lib/helper';
-import { ToolbarConfig, UnionHighlightedReason, UnionUnclearReason } from '../../lib/types';
+import { ToolbarConfig, UnionDeletedReason, UnionHighlightedReason, UnionUnclearReason } from '../../lib/types';
 
 @Component({
   tag: 'xec-toolbar',
@@ -24,7 +24,7 @@ export class XecToolbar {
   private readonly clickHighlighted: EventEmitter<UnionHighlightedReason>;
 
   @Event()
-  private readonly clickDeleted: EventEmitter<UnionHighlightedReason>;
+  private readonly clickDeleted: EventEmitter<UnionDeletedReason>;
 
   @Event()
   private readonly clickRTL: EventEmitter<void>;
@@ -61,6 +61,7 @@ export class XecToolbar {
       clickViewXML,
       clickUnclear,
       clickHighlighted,
+      clickDeleted,
       textDirection,
       viewRaw,
       disabled,
@@ -110,10 +111,10 @@ export class XecToolbar {
               }}
             />
           )}
-          {config.controls.highlight && (
+          {config.controls.highlighted && (
             <xec-dropdown
               config={{
-                label: 'Highlight',
+                label: 'Highlighted',
                 items: [
                   {
                     id: 'enlarged',
@@ -149,6 +150,40 @@ export class XecToolbar {
                     id: 'bigger',
                     label: 'Bigger',
                     onClick: clickHighlighted.emit.bind(this, 'bigger')
+                  }
+                ]
+              }}
+            />
+          )}
+          {config.controls.deleted && (
+            <xec-dropdown
+              config={{
+                label: 'Deleted',
+                items: [
+                  {
+                    id: 'erased',
+                    label: 'Erased',
+                    onClick: clickDeleted.emit.bind(this, 'erased')
+                  },
+                  {
+                    id: 'strikethrough',
+                    label: 'Strikethrough',
+                    onClick: clickDeleted.emit.bind(this, 'strikethrough')
+                  },
+                  {
+                    id: 'dotted',
+                    label: 'Dotted',
+                    onClick: clickDeleted.emit.bind(this, 'dotted')
+                  },
+                  {
+                    id: 'underline',
+                    label: 'Underline',
+                    onClick: clickDeleted.emit.bind(this, 'underline')
+                  },
+                  {
+                    id: 'other',
+                    label: 'Other',
+                    onClick: clickDeleted.emit.bind(this, 'other')
                   }
                 ]
               }}

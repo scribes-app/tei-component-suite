@@ -5,7 +5,7 @@ import * as escaper from 'html-escaper';
 import Quill from 'quill';
 import { registerBlots } from '../../lib/helper';
 import { XmlTransformerService } from '../../lib/services/xml-transformer.service';
-import { EditorState, QuillInstance, ToolbarConfig, UnionEditorType, UnionUnclearReason } from '../../lib/types';
+import { EditorState, QuillInstance, ToolbarConfig, UnionDeletedReason, UnionEditorType, UnionHighlightedReason, UnionUnclearReason } from '../../lib/types';
 
 @Component({
   tag: 'xec-editor',
@@ -131,9 +131,14 @@ export class XecEditor {
     this.activeInstance.format('unclear', reason);
   }
 
-  private onClickHighlighted(event: CustomEvent<UnionUnclearReason>): void {
+  private onClickHighlighted(event: CustomEvent<UnionHighlightedReason>): void {
     const { detail: rend } = event;
     this.activeInstance.format('highlighted', rend);
+  }
+
+  private onClickDeleted(event: CustomEvent<UnionDeletedReason>): void {
+    const { detail: rend } = event;
+    this.activeInstance.format('deleted', rend);
   }
 
   /**
@@ -160,6 +165,7 @@ export class XecEditor {
       onClickViewXML,
       onClickUnclear,
       onClickHighlighted,
+      onClickDeleted,
       config,
       activeEditor,
       editorStates,
@@ -175,6 +181,7 @@ export class XecEditor {
           onClickViewXML={onClickViewXML.bind(this)}
           onClickUnclear={onClickUnclear.bind(this)}
           onClickHighlighted={onClickHighlighted.bind(this)}
+          onClickDeleted={onClickDeleted.bind(this)}
           textDirection={editorStates.get(activeEditor).textDirection}
           viewRaw={editorStates.get(activeEditor).viewType === 'raw'}
         />
@@ -214,7 +221,8 @@ export class XecEditor {
 
 const defaultToolbarConfig: ToolbarConfig = {
   controls: {
-    highlight: true,
+    deleted: true,
+    highlighted: true,
     unclear: true,
     viewRaw: true,
     viewXML: true,

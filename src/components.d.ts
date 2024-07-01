@@ -5,8 +5,8 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { DropdownConfig, QuillInstance, ToolbarConfig, UnionEditorType, UnionHighlightedReason, UnionIcons, UnionUnclearReason } from "./lib/types";
-export { DropdownConfig, QuillInstance, ToolbarConfig, UnionEditorType, UnionHighlightedReason, UnionIcons, UnionUnclearReason } from "./lib/types";
+import { DropdownConfig, QuillInstance, ToolbarConfig, UnionDeletedReason, UnionEditorType, UnionHighlightedReason, UnionIcons, UnionUnclearReason } from "./lib/types";
+export { DropdownConfig, QuillInstance, ToolbarConfig, UnionDeletedReason, UnionEditorType, UnionHighlightedReason, UnionIcons, UnionUnclearReason } from "./lib/types";
 export namespace Components {
     interface XecButton {
         "active"?: boolean;
@@ -117,7 +117,7 @@ declare global {
         "clickViewXML": void;
         "clickUnclear": UnionUnclearReason;
         "clickHighlighted": UnionHighlightedReason;
-        "clickDeleted": UnionHighlightedReason;
+        "clickDeleted": UnionDeletedReason;
         "clickRTL": void;
         "clickLTR": void;
     }
@@ -174,7 +174,7 @@ declare namespace LocalJSX {
     interface XecToolbar {
         "config"?: ToolbarConfig;
         "disabled"?: boolean;
-        "onClickDeleted"?: (event: XecToolbarCustomEvent<UnionHighlightedReason>) => void;
+        "onClickDeleted"?: (event: XecToolbarCustomEvent<UnionDeletedReason>) => void;
         "onClickHighlighted"?: (event: XecToolbarCustomEvent<UnionHighlightedReason>) => void;
         "onClickLTR"?: (event: XecToolbarCustomEvent<void>) => void;
         "onClickRTL"?: (event: XecToolbarCustomEvent<void>) => void;
