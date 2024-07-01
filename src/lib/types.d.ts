@@ -27,7 +27,7 @@ export type UnionUnclearReason = (
   'background_noise'
 );
 
-export type UnionHighlightedReason = (
+export type UnionHighlightedRend = (
   'enlarged'|
   'displaced-above'|
   'displaced-below'|
@@ -37,11 +37,16 @@ export type UnionHighlightedReason = (
   'bigger'
 );
 
-export type UnionDeletedReason = (
+export type UnionDeletedRend = (
   'erased'|
   'strikethrough'|
   'dotted'|
   'underline'|
+  'other'
+);
+
+export type UnionAbbreviationType = (
+  'nomSac'|
   'other'
 );
 
@@ -64,6 +69,7 @@ export type DropdownItem = {
 
 export type ToolbarConfig = {
   controls: {
+    abbreviation?: boolean;
     deleted?: boolean;
     highlighted?: boolean;
     unclear?: boolean;

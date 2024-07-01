@@ -1,11 +1,11 @@
 import Inline from 'quill/blots/inline';
-import { UnionDeletedRend } from '../types';
+import { UnionAbbreviationType } from '../types';
 
-export class DeletedBlot extends Inline {
-  static blotName = 'deleted';
-  static tagName = 'del';
+export class AbbreviationBlot extends Inline {
+  static blotName = 'abbreviation';
+  static tagName = 'abbr';
 
-  static create(rend: UnionDeletedRend) {
+  static create(rend: UnionAbbreviationType) {
     const node = super.create();
     node.setAttribute('rend', rend);
     return node;

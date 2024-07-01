@@ -5,8 +5,8 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { DropdownConfig, QuillInstance, ToolbarConfig, UnionDeletedReason, UnionEditorType, UnionHighlightedReason, UnionIcons, UnionUnclearReason } from "./lib/types";
-export { DropdownConfig, QuillInstance, ToolbarConfig, UnionDeletedReason, UnionEditorType, UnionHighlightedReason, UnionIcons, UnionUnclearReason } from "./lib/types";
+import { DropdownConfig, QuillInstance, ToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionIcons, UnionUnclearReason } from "./lib/types";
+export { DropdownConfig, QuillInstance, ToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionIcons, UnionUnclearReason } from "./lib/types";
 export namespace Components {
     interface XecButton {
         "active"?: boolean;
@@ -116,8 +116,9 @@ declare global {
         "clickViewRaw": void;
         "clickViewXML": void;
         "clickUnclear": UnionUnclearReason;
-        "clickHighlighted": UnionHighlightedReason;
-        "clickDeleted": UnionDeletedReason;
+        "clickHighlighted": UnionHighlightedRend;
+        "clickDeleted": UnionDeletedRend;
+        "clickAbbreviation": UnionAbbreviationType;
         "clickRTL": void;
         "clickLTR": void;
     }
@@ -174,8 +175,9 @@ declare namespace LocalJSX {
     interface XecToolbar {
         "config"?: ToolbarConfig;
         "disabled"?: boolean;
-        "onClickDeleted"?: (event: XecToolbarCustomEvent<UnionDeletedReason>) => void;
-        "onClickHighlighted"?: (event: XecToolbarCustomEvent<UnionHighlightedReason>) => void;
+        "onClickAbbreviation"?: (event: XecToolbarCustomEvent<UnionAbbreviationType>) => void;
+        "onClickDeleted"?: (event: XecToolbarCustomEvent<UnionDeletedRend>) => void;
+        "onClickHighlighted"?: (event: XecToolbarCustomEvent<UnionHighlightedRend>) => void;
         "onClickLTR"?: (event: XecToolbarCustomEvent<void>) => void;
         "onClickRTL"?: (event: XecToolbarCustomEvent<void>) => void;
         "onClickUnclear"?: (event: XecToolbarCustomEvent<UnionUnclearReason>) => void;

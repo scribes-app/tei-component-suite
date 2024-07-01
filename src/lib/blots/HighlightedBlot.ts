@@ -1,11 +1,11 @@
 import Inline from 'quill/blots/inline';
-import { UnionHighlightedReason } from '../types';
+import { UnionHighlightedRend } from '../types';
 
 export class HighlightedBlot extends Inline {
   static blotName = 'highlighted';
   static tagName = 'h';
 
-  static create(rend: UnionHighlightedReason) {
+  static create(rend: UnionHighlightedRend) {
     const node = super.create();
     node.setAttribute('rend', rend);
     return node;

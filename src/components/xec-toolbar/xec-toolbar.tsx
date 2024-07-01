@@ -2,7 +2,7 @@ import { Component, Host, h } from '@stencil/core';
 import { Event, EventEmitter, Fragment, JSX, Prop, Watch } from '@stencil/core/internal';
 import classNames from 'classnames';
 import { isEqual } from '../../lib/helper';
-import { ToolbarConfig, UnionDeletedReason, UnionHighlightedReason, UnionUnclearReason } from '../../lib/types';
+import { ToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionHighlightedRend, UnionUnclearReason } from '../../lib/types';
 
 @Component({
   tag: 'xec-toolbar',
@@ -21,10 +21,13 @@ export class XecToolbar {
   private readonly clickUnclear: EventEmitter<UnionUnclearReason>;
 
   @Event()
-  private readonly clickHighlighted: EventEmitter<UnionHighlightedReason>;
+  private readonly clickHighlighted: EventEmitter<UnionHighlightedRend>;
 
   @Event()
-  private readonly clickDeleted: EventEmitter<UnionDeletedReason>;
+  private readonly clickDeleted: EventEmitter<UnionDeletedRend>;
+
+  @Event()
+  private readonly clickAbbreviation: EventEmitter<UnionAbbreviationType>;
 
   @Event()
   private readonly clickRTL: EventEmitter<void>;
@@ -62,6 +65,7 @@ export class XecToolbar {
       clickUnclear,
       clickHighlighted,
       clickDeleted,
+      clickAbbreviation,
       textDirection,
       viewRaw,
       disabled,
@@ -184,6 +188,25 @@ export class XecToolbar {
                     id: 'other',
                     label: 'Other',
                     onClick: clickDeleted.emit.bind(this, 'other')
+                  }
+                ]
+              }}
+            />
+          )}
+          {config.controls.abbreviation && (
+            <xec-dropdown
+              config={{
+                label: 'Abbreviation',
+                items: [
+                  {
+                    id: 'nomSac',
+                    label: 'Nom. sac.',
+                    onClick: clickAbbreviation.emit.bind(this, 'nomSac')
+                  },
+                  {
+                    id: 'other',
+                    label: 'Other',
+                    onClick: clickAbbreviation.emit.bind(this, 'other')
                   }
                 ]
               }}

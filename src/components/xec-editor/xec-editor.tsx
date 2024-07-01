@@ -5,7 +5,7 @@ import * as escaper from 'html-escaper';
 import Quill from 'quill';
 import { registerBlots } from '../../lib/helper';
 import { XmlTransformerService } from '../../lib/services/xml-transformer.service';
-import { EditorState, QuillInstance, ToolbarConfig, UnionDeletedReason, UnionEditorType, UnionHighlightedReason, UnionUnclearReason } from '../../lib/types';
+import { EditorState, QuillInstance, ToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionUnclearReason } from '../../lib/types';
 
 @Component({
   tag: 'xec-editor',
@@ -131,14 +131,19 @@ export class XecEditor {
     this.activeInstance.format('unclear', reason);
   }
 
-  private onClickHighlighted(event: CustomEvent<UnionHighlightedReason>): void {
+  private onClickHighlighted(event: CustomEvent<UnionHighlightedRend>): void {
     const { detail: rend } = event;
     this.activeInstance.format('highlighted', rend);
   }
 
-  private onClickDeleted(event: CustomEvent<UnionDeletedReason>): void {
+  private onClickDeleted(event: CustomEvent<UnionDeletedRend>): void {
     const { detail: rend } = event;
     this.activeInstance.format('deleted', rend);
+  }
+
+  private onClickAbbreviation(event: CustomEvent<UnionAbbreviationType>): void {
+    const { detail: type } = event;
+    this.activeInstance.format('abbreviation', type);
   }
 
   /**
@@ -166,6 +171,7 @@ export class XecEditor {
       onClickUnclear,
       onClickHighlighted,
       onClickDeleted,
+      onClickAbbreviation,
       config,
       activeEditor,
       editorStates,
@@ -182,6 +188,7 @@ export class XecEditor {
           onClickUnclear={onClickUnclear.bind(this)}
           onClickHighlighted={onClickHighlighted.bind(this)}
           onClickDeleted={onClickDeleted.bind(this)}
+          onClickAbbreviation={onClickAbbreviation.bind(this)}
           textDirection={editorStates.get(activeEditor).textDirection}
           viewRaw={editorStates.get(activeEditor).viewType === 'raw'}
         />
@@ -221,6 +228,7 @@ export class XecEditor {
 
 const defaultToolbarConfig: ToolbarConfig = {
   controls: {
+    abbreviation: true,
     deleted: true,
     highlighted: true,
     unclear: true,
