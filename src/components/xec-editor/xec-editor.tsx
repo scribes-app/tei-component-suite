@@ -1,5 +1,5 @@
 import { Component, Host, h } from '@stencil/core';
-import { JSX, Method, Prop, State } from '@stencil/core/internal';
+import { Fragment, JSX, Method, Prop, State } from '@stencil/core/internal';
 import classNames from 'classnames';
 import * as escaper from 'html-escaper';
 import Quill from 'quill';
@@ -126,6 +126,27 @@ export class XecEditor {
     this.popupElement.openPopup();
   }
 
+  private onClickBlankSpace(): void {
+    this.popupElement.setContent(
+      <Fragment>
+        <xec-select
+          placeholder="Unit"
+          entries={[
+            { id: 'cm', label: 'cm' },
+            { id: 'char', label: 'char' },
+          ]}
+        />
+        <xec-textfield
+          placeholder="Value"
+          type="number"
+          integer
+        />
+        <xec-button outlined rounded onClickButton={() => this.popupElement.closePopup()}>Insert</xec-button>
+      </Fragment>
+    )
+    this.popupElement.openPopup();
+  }
+
   private onClickUnclear(event: CustomEvent<UnionUnclearReason>): void {
     const { detail: reason } = event;
     this.activeInstance.format('unclear', reason);
@@ -172,6 +193,7 @@ export class XecEditor {
       onClickHighlighted,
       onClickDeleted,
       onClickAbbreviation,
+      onClickBlankSpace,
       config,
       activeEditor,
       editorStates,
@@ -189,6 +211,7 @@ export class XecEditor {
           onClickHighlighted={onClickHighlighted.bind(this)}
           onClickDeleted={onClickDeleted.bind(this)}
           onClickAbbreviation={onClickAbbreviation.bind(this)}
+          onClickBlankSpace={onClickBlankSpace.bind(this)}
           textDirection={editorStates.get(activeEditor).textDirection}
           viewRaw={editorStates.get(activeEditor).viewType === 'raw'}
         />
@@ -235,5 +258,6 @@ const defaultToolbarConfig: ToolbarConfig = {
     viewRaw: true,
     viewXML: true,
     textDirection: true,
+    blankSpace: true,
   },
 };

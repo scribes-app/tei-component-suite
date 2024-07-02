@@ -10,7 +10,8 @@ export type UnionIcons = (
   'align-left' |
   'align-right' |
   'cross' |
-  'angle-down'
+  'angle-down' |
+  'white-space'
 )
 
 export type UnionEditorType = (
@@ -50,6 +51,16 @@ export type UnionAbbreviationType = (
   'other'
 );
 
+export type UnionBlankSpaceUnit = (
+  'char'|
+  'cm'
+)
+
+export type BlankSpaceAttributes = {
+  unit: UnionBlankSpaceUnit;
+  value: number;
+}
+
 export type EditorState = {
   viewType: 'default'|'raw';
   textDirection: 'LTR'|'RTL';
@@ -69,6 +80,7 @@ export type DropdownItem = {
 
 export type ToolbarConfig = {
   controls: {
+    blankSpace?: boolean;
     abbreviation?: boolean;
     deleted?: boolean;
     highlighted?: boolean;
@@ -83,3 +95,9 @@ export type ToolbarConfig = {
  * @description Quill doesnt export it global types, so we need to define it here as a workaround
  */
 export type QuillInstance = Quill.default;
+
+export type XecSelectEntry = {
+  label: string;
+  id: string|number;
+  normalized?: string;
+};

@@ -1,0 +1,95 @@
+@import 'manifest';
+
+:host {
+  @include component;
+  --xec-select-color: #{$color-slate-500};
+  --xec-select-border-color: #{$color-slate-200};
+  --xec-select-focus-border-color: #{$color-slate-300};
+  --xec-select-background-color: white;
+  --xec-select-placeholder-color: #{$color-slate-300};
+  --xec-select-down-icon-color: #{$color-slate-500};
+  --xec-select-choices-border-radius: 5px;
+  --xec-select-choice-color: #{$color-slate-400};
+  --xec-select-choice-hover-color: #{$color-slate-500};
+
+  .wrapper {
+    position: relative;
+    cursor: pointer;
+    .input {
+      appearance: none;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      display: block;
+      width: 100%;
+      padding: 5px 0;
+      text-overflow: ellipsis;
+      font: { size: 12px }
+      color: var(--xec-select-color);
+      border-bottom: 2px solid var(--xec-select-border-color);
+      &:focus {
+        border-color: var(--xec-select-focus-border-color);
+      }
+      &.selected {
+        pointer-events: none;
+      }
+      &::placeholder {
+        color: var(--xec-select-placeholder-color);
+      }
+    }
+  }
+
+  .down {
+    position: absolute;
+    top: calc(50% - 4px);
+    right: 0;
+    transform: translateZ(0);
+    .icon {
+      cursor: pointer;
+      height: 8px;
+      width: 8px;
+      color: var(--xec-select-down-icon-color);
+      transition: transform .2s ease;
+    }
+  }
+  .choices {
+    @include shadow;
+    @include scrollbar;
+    position: absolute;
+    top: calc(100% - 20px);
+    pointer-events: none;
+    left: 0;
+    opacity: 0;
+    width: 100%;
+    max-height: 256px;
+    overflow-y: scroll;
+    border-bottom-left-radius: var(--xec-select-choices-border-radius);
+    border-bottom-right-radius: var(--xec-select-choices-border-radius);
+    background-color: white;
+    z-index: 5;
+    transition: top .2s ease,
+                opacity .2s ease;
+  }
+  .choice {
+    font: { size: 12px; }
+    cursor: pointer;
+    padding: 5px;
+    color: var(--xec-select-choice-color);
+    transition: color .2s ease;
+    &:hover {
+      color: var(--xec-select-choice-hover-color);
+    }
+  }
+}
+
+
+:host(.open) {
+  .down .icon {
+    transform: rotate3d(1, 0, 0, 180deg);
+  }
+  .choices {
+    top: 100%;
+    pointer-events: initial;
+    opacity: 1;
+  }
+}

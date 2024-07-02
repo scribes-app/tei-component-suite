@@ -5,8 +5,8 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { DropdownConfig, QuillInstance, ToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionIcons, UnionUnclearReason } from "./lib/types";
-export { DropdownConfig, QuillInstance, ToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionIcons, UnionUnclearReason } from "./lib/types";
+import { DropdownConfig, QuillInstance, ToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionIcons, UnionUnclearReason, XecSelectEntry } from "./lib/types";
+export { DropdownConfig, QuillInstance, ToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionIcons, UnionUnclearReason, XecSelectEntry } from "./lib/types";
 export namespace Components {
     interface XecButton {
         "active"?: boolean;
@@ -40,6 +40,27 @@ export namespace Components {
         "openPopup": () => Promise<void>;
         "setContent": (content: string) => Promise<void>;
     }
+    interface XecSelect {
+        "entries": XecSelectEntry[];
+        "inputId": string;
+        "inputName": string;
+        "isValid": () => Promise<boolean>;
+        "placeholder"?: string;
+        "required"?: boolean;
+    }
+    interface XecTextfield {
+        "allowedValues"?: (string|number)[];
+        "inputId": string;
+        "inputName": string;
+        "integer"?: boolean;
+        "isValid": () => Promise<boolean>;
+        "max"?: number;
+        "min"?: number;
+        "pattern"?: string;
+        "placeholder"?: string;
+        "required"?: boolean;
+        "type": 'text'|'password'|'number'|'email';
+    }
     interface XecToolbar {
         "config": ToolbarConfig;
         "disabled": boolean;
@@ -54,6 +75,14 @@ export interface XecButtonCustomEvent<T> extends CustomEvent<T> {
 export interface XecIconCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLXecIconElement;
+}
+export interface XecSelectCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLXecSelectElement;
+}
+export interface XecTextfieldCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLXecTextfieldElement;
 }
 export interface XecToolbarCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -112,6 +141,40 @@ declare global {
         prototype: HTMLXecPopupElement;
         new (): HTMLXecPopupElement;
     };
+    interface HTMLXecSelectElementEventMap {
+        "selectChange": XecSelectEntry|undefined;
+    }
+    interface HTMLXecSelectElement extends Components.XecSelect, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLXecSelectElementEventMap>(type: K, listener: (this: HTMLXecSelectElement, ev: XecSelectCustomEvent<HTMLXecSelectElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLXecSelectElementEventMap>(type: K, listener: (this: HTMLXecSelectElement, ev: XecSelectCustomEvent<HTMLXecSelectElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLXecSelectElement: {
+        prototype: HTMLXecSelectElement;
+        new (): HTMLXecSelectElement;
+    };
+    interface HTMLXecTextfieldElementEventMap {
+        "inputTextfield": string;
+    }
+    interface HTMLXecTextfieldElement extends Components.XecTextfield, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLXecTextfieldElementEventMap>(type: K, listener: (this: HTMLXecTextfieldElement, ev: XecTextfieldCustomEvent<HTMLXecTextfieldElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLXecTextfieldElementEventMap>(type: K, listener: (this: HTMLXecTextfieldElement, ev: XecTextfieldCustomEvent<HTMLXecTextfieldElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLXecTextfieldElement: {
+        prototype: HTMLXecTextfieldElement;
+        new (): HTMLXecTextfieldElement;
+    };
     interface HTMLXecToolbarElementEventMap {
         "clickViewRaw": void;
         "clickViewXML": void;
@@ -119,6 +182,7 @@ declare global {
         "clickHighlighted": UnionHighlightedRend;
         "clickDeleted": UnionDeletedRend;
         "clickAbbreviation": UnionAbbreviationType;
+        "clickBlankSpace": void;
         "clickRTL": void;
         "clickLTR": void;
     }
@@ -142,6 +206,8 @@ declare global {
         "xec-editor": HTMLXecEditorElement;
         "xec-icon": HTMLXecIconElement;
         "xec-popup": HTMLXecPopupElement;
+        "xec-select": HTMLXecSelectElement;
+        "xec-textfield": HTMLXecTextfieldElement;
         "xec-toolbar": HTMLXecToolbarElement;
     }
 }
@@ -172,10 +238,32 @@ declare namespace LocalJSX {
     }
     interface XecPopup {
     }
+    interface XecSelect {
+        "entries"?: XecSelectEntry[];
+        "inputId"?: string;
+        "inputName"?: string;
+        "onSelectChange"?: (event: XecSelectCustomEvent<XecSelectEntry|undefined>) => void;
+        "placeholder"?: string;
+        "required"?: boolean;
+    }
+    interface XecTextfield {
+        "allowedValues"?: (string|number)[];
+        "inputId"?: string;
+        "inputName"?: string;
+        "integer"?: boolean;
+        "max"?: number;
+        "min"?: number;
+        "onInputTextfield"?: (event: XecTextfieldCustomEvent<string>) => void;
+        "pattern"?: string;
+        "placeholder"?: string;
+        "required"?: boolean;
+        "type"?: 'text'|'password'|'number'|'email';
+    }
     interface XecToolbar {
         "config"?: ToolbarConfig;
         "disabled"?: boolean;
         "onClickAbbreviation"?: (event: XecToolbarCustomEvent<UnionAbbreviationType>) => void;
+        "onClickBlankSpace"?: (event: XecToolbarCustomEvent<void>) => void;
         "onClickDeleted"?: (event: XecToolbarCustomEvent<UnionDeletedRend>) => void;
         "onClickHighlighted"?: (event: XecToolbarCustomEvent<UnionHighlightedRend>) => void;
         "onClickLTR"?: (event: XecToolbarCustomEvent<void>) => void;
@@ -192,6 +280,8 @@ declare namespace LocalJSX {
         "xec-editor": XecEditor;
         "xec-icon": XecIcon;
         "xec-popup": XecPopup;
+        "xec-select": XecSelect;
+        "xec-textfield": XecTextfield;
         "xec-toolbar": XecToolbar;
     }
 }
@@ -204,6 +294,8 @@ declare module "@stencil/core" {
             "xec-editor": LocalJSX.XecEditor & JSXBase.HTMLAttributes<HTMLXecEditorElement>;
             "xec-icon": LocalJSX.XecIcon & JSXBase.HTMLAttributes<HTMLXecIconElement>;
             "xec-popup": LocalJSX.XecPopup & JSXBase.HTMLAttributes<HTMLXecPopupElement>;
+            "xec-select": LocalJSX.XecSelect & JSXBase.HTMLAttributes<HTMLXecSelectElement>;
+            "xec-textfield": LocalJSX.XecTextfield & JSXBase.HTMLAttributes<HTMLXecTextfieldElement>;
             "xec-toolbar": LocalJSX.XecToolbar & JSXBase.HTMLAttributes<HTMLXecToolbarElement>;
         }
     }

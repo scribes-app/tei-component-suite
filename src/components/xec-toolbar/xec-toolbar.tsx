@@ -30,6 +30,9 @@ export class XecToolbar {
   private readonly clickAbbreviation: EventEmitter<UnionAbbreviationType>;
 
   @Event()
+  private readonly clickBlankSpace: EventEmitter<void>;
+
+  @Event()
   private readonly clickRTL: EventEmitter<void>;
 
   @Event()
@@ -66,6 +69,7 @@ export class XecToolbar {
       clickHighlighted,
       clickDeleted,
       clickAbbreviation,
+      clickBlankSpace,
       textDirection,
       viewRaw,
       disabled,
@@ -85,6 +89,9 @@ export class XecToolbar {
               <xec-button active={textDirection === 'LTR'} onClickButton={clickLTR.emit.bind(this)} iconOnly icon="align-left" />
               <xec-button active={textDirection === 'RTL'} onClickButton={clickRTL.emit.bind(this)} iconOnly icon="align-right" />
             </Fragment>
+          )}
+          {config.controls.blankSpace && (
+            <xec-button onClickButton={clickBlankSpace.emit.bind(this)} iconOnly icon="white-space" />
           )}
           {config.controls.unclear && (
             <xec-dropdown
