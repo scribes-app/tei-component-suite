@@ -10,7 +10,7 @@ export class XecTextfield {
   private inputRef: HTMLInputElement;
 
   @Event()
-  public readonly inputTextfield: EventEmitter<string>;
+  public readonly textfieldChange: EventEmitter<string>;
 
   @Prop()
   public readonly inputId: string;
@@ -47,13 +47,23 @@ export class XecTextfield {
     return this.inputRef.checkValidity() && this.validateConstraints();
   }
 
+  @Method()
+  public async getValue(): Promise<string> {
+    return this.inputRef.value;
+  }
+
+  @Method()
+  public async setValue(value: string): Promise<void> {
+    this.inputRef.value = value;
+  }
+
   /**
    * Emit the input value
    */
   private onInput(event: InputEvent) {
     this.preventTypingText(event);
     this.checkMinMaxValue(event);
-    this.inputTextfield.emit((event.target as HTMLInputElement).value);
+    this.textfieldChange.emit((event.target as HTMLInputElement).value);
   }
 
   /**

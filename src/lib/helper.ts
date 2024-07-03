@@ -23,7 +23,7 @@ export const registerBlots = () => {
     DeletedBlot,
     AbbreviationBlot,
     BlankSpaceBlot
-  ].forEach(blot => Quill.register(blot, blot instanceof BlockBlot));
+  ].forEach(blot => Quill.register(blot, true));
 }
 
 /**

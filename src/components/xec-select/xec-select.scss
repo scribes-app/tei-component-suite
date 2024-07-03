@@ -15,6 +15,11 @@
   .wrapper {
     position: relative;
     cursor: pointer;
+    &:focus, &:hover {
+      .input {
+        border-color: var(--xec-select-focus-border-color);
+      }
+    }
     .input {
       appearance: none;
       border: none;
@@ -27,9 +32,7 @@
       font: { size: 12px }
       color: var(--xec-select-color);
       border-bottom: 2px solid var(--xec-select-border-color);
-      &:focus {
-        border-color: var(--xec-select-focus-border-color);
-      }
+      transition: border-color .2s ease;
       &.selected {
         pointer-events: none;
       }

@@ -2,7 +2,7 @@ import Inline from 'quill/blots/inline';
 import { BlankSpaceAttributes } from '../types';
 
 export class BlankSpaceBlot extends Inline {
-  static blotName = 'blankspace';
+  static blotName = 'blank-space';
   static tagName = 'space';
 
   static create(attr: BlankSpaceAttributes) {
@@ -18,7 +18,7 @@ export class BlankSpaceBlot extends Inline {
    */
   static formats(domNode: HTMLElement) {
     return {
-      unit: domNode.getAttribute('unit'),
+      unit: domNode.getAttribute('unit') || 'cm',
       value: parseInt(domNode.getAttribute('value') || '0'),
     };
   }

@@ -1,11 +1,12 @@
 import { Component, Host, h } from '@stencil/core';
-import { Fragment, JSX, Method, Prop, State } from '@stencil/core/internal';
+import { JSX, Method, Prop, State } from '@stencil/core/internal';
 import classNames from 'classnames';
 import * as escaper from 'html-escaper';
 import Quill from 'quill';
 import { registerBlots } from '../../lib/helper';
 import { XmlTransformerService } from '../../lib/services/xml-transformer.service';
-import { EditorState, QuillInstance, ToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionUnclearReason } from '../../lib/types';
+import { EditorState, QuillInstance, ToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionUnclearReason, XecBlankSpaceFormValues } from '../../lib/types';
+import { XecBlankSpaceFormCustomEvent } from '../../components';
 
 @Component({
   tag: 'xec-editor',
@@ -128,23 +129,16 @@ export class XecEditor {
 
   private onClickBlankSpace(): void {
     this.popupElement.setContent(
-      <Fragment>
-        <xec-select
-          placeholder="Unit"
-          entries={[
-            { id: 'cm', label: 'cm' },
-            { id: 'char', label: 'char' },
-          ]}
-        />
-        <xec-textfield
-          placeholder="Value"
-          type="number"
-          integer
-        />
-        <xec-button outlined rounded onClickButton={() => this.popupElement.closePopup()}>Insert</xec-button>
-      </Fragment>
+      <xec-blank-space-form
+        onFormSubmit={this.onSubmitBlankSpaceForm.bind(this)}
+      />
     )
     this.popupElement.openPopup();
+  }
+
+  private onSubmitBlankSpaceForm(event: XecBlankSpaceFormCustomEvent<XecBlankSpaceFormValues>): void {
+    this.popupElement.closePopup();
+    this.activeInstance.format('blank-space', event.detail);
   }
 
   private onClickUnclear(event: CustomEvent<UnionUnclearReason>): void {

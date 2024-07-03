@@ -13,6 +13,11 @@
   --xec-button-hover-border-color: #{$color-slate-600};
   --xec-button-hover-background-color: #{$color-slate-100};
 
+  --xec-button-disabled-color: #{$color-slate-300};
+  --xec-button-disabled-icon-color: #{$color-slate-200};
+  --xec-button-disabled-border-color: #{$color-slate-100};
+  --xec-button-disabled-background-color: #{$color-slate-100};
+
   cursor: pointer;
   display: inline-flex;
   justify-content: flex-start;
@@ -86,5 +91,15 @@
 :host(.icon-position-trailing:not(.iconOnly)) {
   .icon {
     margin-left: 8px;
+  }
+}
+
+:host(.disabled) {
+  cursor: not-allowed;
+  color: var(--xec-button-disabled-color);
+  border-color: var(--xec-button-disabled-border-color);
+  background-color: var(--xec-button-disabled-background-color);
+  .icon {
+    color: var(--xec-button-disabled-icon-color);
   }
 }

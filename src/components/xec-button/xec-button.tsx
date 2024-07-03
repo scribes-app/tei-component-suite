@@ -31,6 +31,9 @@ export class XecButton {
   public readonly rounded?: boolean;
 
   @Prop()
+  public readonly disabled?: boolean;
+
+  @Prop()
   public readonly iconOnly?: boolean;
 
   @Prop()
@@ -40,7 +43,7 @@ export class XecButton {
   public readonly rotateOnActive?: boolean;
 
   public onClickButton(): void {
-    this.clickButton.emit();
+    if (!this.disabled) this.clickButton.emit();
   }
 
   public render() {
@@ -54,6 +57,7 @@ export class XecButton {
       stretched,
       iconOnly,
       rotateOnActive,
+      disabled,
       active
     } = this;
 
@@ -65,6 +69,7 @@ export class XecButton {
           rounded,
           iconOnly,
           active,
+          disabled,
           rotateOnActive,
           stretched,
           [`icon-position-${iconPosition}`]: true,

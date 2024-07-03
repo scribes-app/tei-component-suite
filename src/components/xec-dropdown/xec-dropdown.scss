@@ -11,7 +11,8 @@
     @include shadow;
     position: absolute;
     top: calc(100% + 10px);
-    left: 0;
+    left: 50%;
+    transform: translateX(-50%);
     opacity: 0;
     pointer-events: none;
     z-index: 10;

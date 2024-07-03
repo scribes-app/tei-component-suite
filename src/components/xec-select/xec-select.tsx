@@ -51,6 +51,21 @@ export class XecSelect {
     }
   }
 
+  @Method()
+  public async getValue(): Promise<string> {
+    return this.inputRef.value;
+  }
+
+  @Method()
+  public async setValue(value: string): Promise<void> {
+    const { processedEntries } = this;
+    const selectedEntry = processedEntries.find(entry => entry.id === value);
+    if (!selectedEntry) throw new Error('Invalid value');
+    (this.inputRef as HTMLInputElement).value = selectedEntry.label;
+    this.status = 'selected';
+    this.selectChange.emit(selectedEntry);
+  }
+
   componentWillLoad(): void {
     this.processingEntries();
   }

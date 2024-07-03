@@ -22,7 +22,7 @@
     &::placeholder {
       color: var(--xec-textfield-placeholder-color);
     }
-    &:focus {
+    &:hover, &:focus {
       border-color: var(--xec-textfield-focus-border-color);
     }
   }

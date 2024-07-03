@@ -101,3 +101,9 @@ export type XecSelectEntry = {
   id: string|number;
   normalized?: string;
 };
+
+
+export type XecBlankSpaceFormValues = {
+  unit: UnionBlankSpaceUnit;
+  value: number;
+};
