@@ -1,12 +1,11 @@
 import { Component, Host, h } from '@stencil/core';
 import { JSX, Method, Prop, State } from '@stencil/core/internal';
 import classNames from 'classnames';
-import * as escaper from 'html-escaper';
 import Quill from 'quill';
 import { XecBlankSpaceFormCustomEvent } from '../../components';
 import { registerBlots } from '../../lib/helper';
-import { XmlTransformerService } from '../../lib/services/xml-transformer.service';
 import { EditorState, QuillInstance, ToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionUnclearReason, XecBlankSpaceFormValues, XecStructureFormValues } from '../../lib/types';
+import { XMLTransformerService } from '../../services/xml-transformer.service';
 
 @Component({
   tag: 'xec-editor',
@@ -99,8 +98,12 @@ export class XecEditor {
   private onClickViewRaw(): void {
     const editorState = this.editorStates.get(this.activeEditor);
     const method = editorState.viewType === 'raw' ? 'unescape' : 'escape';
-    const sanitizedHTML = XmlTransformerService.sanitizeXMLFromEditor(this.activeInstance.root.innerHTML);
-    this.activeInstance.clipboard.dangerouslyPasteHTML(escaper[method](sanitizedHTML));
+
+    if (method === 'escape') {
+      this.activeInstance.root.innerHTML = XMLTransformerService.escapeHTMLFromEditor(this.activeInstance.root.innerHTML);
+    } else {
+      this.activeInstance.clipboard.dangerouslyPasteHTML(XMLTransformerService.unescapeHTMLFromEditor(this.activeInstance.root.innerHTML));
+    }
     this.setActiveEditorState('viewType', editorState.viewType === 'raw' ? 'default' : 'raw');
   }
 
@@ -125,6 +128,9 @@ export class XecEditor {
 
   private onClickViewXML(): void {
     this.popupElement.openPopup();
+    this.popupElement.setContent(
+      XMLTransformerService.transformEditorToXML(this.activeInstance.root.innerHTML)
+    );
   }
 
   private onClickBlankSpace(): void {

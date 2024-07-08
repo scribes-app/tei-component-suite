@@ -9,7 +9,7 @@ import { UnclearBlot } from './UnclearBlot';
 
 export class AnonymousBlockBlot extends InlineBlot {
   static blotName = 'anonymous-block';
-  static tagName = 'ab';
+  static tagName = 'AB';
   static allowedChildren: BlotConstructor[] = [
     HighlightedBlot,
     UnclearBlot,

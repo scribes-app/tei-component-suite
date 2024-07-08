@@ -3,7 +3,7 @@ import { UnionDeletedRend } from '../types';
 
 export class DeletedBlot extends InlineBlot {
   static blotName = 'deleted';
-  static tagName = 'del';
+  static tagName = 'DEL';
 
   static create(rend: UnionDeletedRend) {
     const node = super.create();

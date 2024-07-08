@@ -3,7 +3,7 @@ import { UnionHighlightedRend } from '../types';
 
 export class HighlightedBlot extends InlineBlot {
   static blotName = 'highlighted';
-  static tagName = 'h';
+  static tagName = 'H';
 
   static create(rend: UnionHighlightedRend) {
     const node = super.create();

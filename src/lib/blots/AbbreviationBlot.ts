@@ -3,7 +3,7 @@ import { UnionAbbreviationType } from '../types';
 
 export class AbbreviationBlot extends Inline {
   static blotName = 'abbreviation';
-  static tagName = 'abbr';
+  static tagName = 'ABBR';
 
   static create(rend: UnionAbbreviationType) {
     const node = super.create();

@@ -6,7 +6,7 @@ import { BlotConstructor } from 'parchment';
 import { StructureBlot } from './StructureBlot';
 
 export class BlockBlot extends Block {
-  static tagName = 'line';
+  static tagName = 'LINE';
   static allowedChildren: BlotConstructor[] = [
     StructureBlot,
     Break,

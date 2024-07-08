@@ -115,6 +115,9 @@ xec-editor {
           direction: ltr;
           text-align: right;
         }
+        div {
+          display: inline;
+        }
         // Custom tags
         line {
           position: relative;

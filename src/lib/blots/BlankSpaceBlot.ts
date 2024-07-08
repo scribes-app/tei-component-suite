@@ -3,7 +3,7 @@ import { BlankSpaceAttributes } from '../types';
 
 export class BlankSpaceBlot extends InlineBlot {
   static blotName = 'blank-space';
-  static tagName = 'space';
+  static tagName = 'SPACE';
 
   static create(attr: BlankSpaceAttributes) {
     const node = super.create();

@@ -3,7 +3,7 @@ import { UnionUnclearReason } from '../types';
 
 export class UnclearBlot extends InlineBlot {
   static blotName = 'unclear';
-  static tagName = 'unclear';
+  static tagName = 'UNCLEAR';
 
   static create(reason: UnionUnclearReason) {
     const node = super.create();

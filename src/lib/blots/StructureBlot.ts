@@ -12,7 +12,7 @@ import { UnclearBlot } from './UnclearBlot';
 
 export class StructureBlot extends InlineBlot {
   static blotName = 'structure';
-  static tagName = 'structure';
+  static tagName = 'DIV';
   static allowedChildren: BlotConstructor[] = [
     AnonymousBlockBlot,
     HighlightedBlot,
