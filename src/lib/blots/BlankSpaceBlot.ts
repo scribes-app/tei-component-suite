@@ -1,7 +1,7 @@
-import Inline from 'quill/blots/inline';
+import { InlineBlot } from 'parchment';
 import { BlankSpaceAttributes } from '../types';
 
-export class BlankSpaceBlot extends Inline {
+export class BlankSpaceBlot extends InlineBlot {
   static blotName = 'blank-space';
   static tagName = 'space';
 

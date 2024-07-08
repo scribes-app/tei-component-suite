@@ -5,6 +5,8 @@ import { UnclearBlot } from './blots/UnclearBlot';
 import { DeletedBlot } from './blots/DeletedBlot';
 import { AbbreviationBlot } from './blots/AbbreviationBlot';
 import { BlankSpaceBlot } from './blots/BlankSpaceBlot';
+import { AnonymousBlockBlot } from './blots/AnonymousBlockBlot';
+import { StructureBlot } from './blots/StructureBlot';
 
 /**
  * Check if two objects are equal (this is the fastest way with JSON.stringify do not use lodash anymore)
@@ -22,7 +24,9 @@ export const registerBlots = () => {
     HighlightedBlot,
     DeletedBlot,
     AbbreviationBlot,
-    BlankSpaceBlot
+    BlankSpaceBlot,
+    AnonymousBlockBlot,
+    StructureBlot
   ].forEach(blot => Quill.register(blot, true));
 }
 

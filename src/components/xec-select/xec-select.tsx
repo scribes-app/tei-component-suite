@@ -33,6 +33,9 @@ export class XecSelect {
   public readonly required?: boolean;
 
   @State()
+  private selectedEntry: XecSelectEntry;
+
+  @State()
   private processedEntries: XecSelectEntry[] = [];
 
   @State()
@@ -52,8 +55,8 @@ export class XecSelect {
   }
 
   @Method()
-  public async getValue(): Promise<string> {
-    return this.inputRef.value;
+  public async getValue(): Promise<string|number> {
+    return this.selectedEntry.id;
   }
 
   @Method()
@@ -85,6 +88,7 @@ export class XecSelect {
   private onChange(event: MouseEvent, selectedEntry: XecSelectEntry): void {
     event.stopPropagation();
     (this.inputRef as HTMLInputElement).value = selectedEntry.label;
+    this.selectedEntry = selectedEntry;
     this.status = 'selected';
     this.open = false;
     this.selectChange.emit(selectedEntry);

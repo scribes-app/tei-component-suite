@@ -1,8 +1,17 @@
 import Block from 'quill/blots/block';
+import Text from 'quill/blots/text';
+import Break from 'quill/blots/break';
 import { delayed } from '../helper';
+import { BlotConstructor } from 'parchment';
+import { StructureBlot } from './StructureBlot';
 
 export class BlockBlot extends Block {
   static tagName = 'line';
+  static allowedChildren: BlotConstructor[] = [
+    StructureBlot,
+    Break,
+    Text
+  ];
 
   static create(value?: unknown): HTMLElement {
     const node = super.create(value);

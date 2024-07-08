@@ -1,7 +1,7 @@
-import Inline from 'quill/blots/inline';
+import { InlineBlot } from 'parchment';
 import { UnionHighlightedRend } from '../types';
 
-export class HighlightedBlot extends Inline {
+export class HighlightedBlot extends InlineBlot {
   static blotName = 'highlighted';
   static tagName = 'h';
 

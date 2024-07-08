@@ -11,6 +11,8 @@ export type UnionIcons = (
   'align-right' |
   'cross' |
   'angle-down' |
+  'paragraph-rtl' |
+  'paragraph-ltr' |
   'white-space'
 )
 
@@ -26,6 +28,14 @@ export type UnionUnclearReason = (
   'uncertain'|
   'faded'|
   'background_noise'
+);
+
+export type UnionStructureType = (
+  'book'|
+  'chapter'|
+  'verse'|
+  'inscriptio'|
+  'subscriptio'
 );
 
 export type UnionHighlightedRend = (
@@ -61,6 +71,11 @@ export type BlankSpaceAttributes = {
   value: number;
 }
 
+export type StructureAttributes = {
+  type: UnionStructureType;
+  n: string;
+}
+
 export type EditorState = {
   viewType: 'default'|'raw';
   textDirection: 'LTR'|'RTL';
@@ -80,6 +95,7 @@ export type DropdownItem = {
 
 export type ToolbarConfig = {
   controls: {
+    structure?: boolean;
     blankSpace?: boolean;
     abbreviation?: boolean;
     deleted?: boolean;
@@ -102,8 +118,12 @@ export type XecSelectEntry = {
   normalized?: string;
 };
 
-
 export type XecBlankSpaceFormValues = {
   unit: UnionBlankSpaceUnit;
   value: number;
+};
+
+export type XecStructureFormValues = {
+  type: UnionStructureType|'anonymous-block';
+  ref: string;
 };

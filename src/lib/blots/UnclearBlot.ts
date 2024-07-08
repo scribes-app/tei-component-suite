@@ -1,7 +1,7 @@
-import Inline from 'quill/blots/inline';
+import { InlineBlot } from 'parchment';
 import { UnionUnclearReason } from '../types';
 
-export class UnclearBlot extends Inline {
+export class UnclearBlot extends InlineBlot {
   static blotName = 'unclear';
   static tagName = 'unclear';
 

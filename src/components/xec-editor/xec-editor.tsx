@@ -3,10 +3,10 @@ import { JSX, Method, Prop, State } from '@stencil/core/internal';
 import classNames from 'classnames';
 import * as escaper from 'html-escaper';
 import Quill from 'quill';
+import { XecBlankSpaceFormCustomEvent } from '../../components';
 import { registerBlots } from '../../lib/helper';
 import { XmlTransformerService } from '../../lib/services/xml-transformer.service';
-import { EditorState, QuillInstance, ToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionUnclearReason, XecBlankSpaceFormValues } from '../../lib/types';
-import { XecBlankSpaceFormCustomEvent } from '../../components';
+import { EditorState, QuillInstance, ToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionUnclearReason, XecBlankSpaceFormValues, XecStructureFormValues } from '../../lib/types';
 
 @Component({
   tag: 'xec-editor',
@@ -161,6 +161,22 @@ export class XecEditor {
     this.activeInstance.format('abbreviation', type);
   }
 
+  private onClickStructure(): void {
+    this.popupElement.setContent(
+      <xec-structure-form
+        onFormSubmit={this.onSubmitStructureForm.bind(this)}
+      />
+    );
+    this.popupElement.openPopup();
+  }
+
+  private onSubmitStructureForm(event: CustomEvent<XecStructureFormValues>): void {
+    this.popupElement.closePopup();
+    const blot = event.detail.type === 'anonymous-block' ? 'anonymous-block' : 'structure';
+    const params = event.detail.type === 'anonymous-block' ? event.detail.ref : { type: event.detail.type, n: event.detail.ref };
+    this.activeInstance.format(blot, params);
+  }
+
   /**
    * Set the active editor state
    * This solve the issue of the state not being updated when using deep properties
@@ -188,6 +204,7 @@ export class XecEditor {
       onClickDeleted,
       onClickAbbreviation,
       onClickBlankSpace,
+      onClickStructure,
       config,
       activeEditor,
       editorStates,
@@ -206,6 +223,7 @@ export class XecEditor {
           onClickDeleted={onClickDeleted.bind(this)}
           onClickAbbreviation={onClickAbbreviation.bind(this)}
           onClickBlankSpace={onClickBlankSpace.bind(this)}
+          onClickStructure={onClickStructure.bind(this)}
           textDirection={editorStates.get(activeEditor).textDirection}
           viewRaw={editorStates.get(activeEditor).viewType === 'raw'}
         />
@@ -245,6 +263,7 @@ export class XecEditor {
 
 const defaultToolbarConfig: ToolbarConfig = {
   controls: {
+    structure: true,
     abbreviation: true,
     deleted: true,
     highlighted: true,

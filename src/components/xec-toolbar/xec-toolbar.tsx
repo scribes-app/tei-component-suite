@@ -2,7 +2,7 @@ import { Component, Host, h } from '@stencil/core';
 import { Event, EventEmitter, Fragment, JSX, Prop, Watch } from '@stencil/core/internal';
 import classNames from 'classnames';
 import { isEqual } from '../../lib/helper';
-import { ToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionHighlightedRend, UnionUnclearReason } from '../../lib/types';
+import { ToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionHighlightedRend, UnionStructureType, UnionUnclearReason } from '../../lib/types';
 
 @Component({
   tag: 'xec-toolbar',
@@ -28,6 +28,9 @@ export class XecToolbar {
 
   @Event()
   private readonly clickAbbreviation: EventEmitter<UnionAbbreviationType>;
+
+  @Event()
+  private readonly clickStructure: EventEmitter<UnionStructureType|'anonymous-block'>;
 
   @Event()
   private readonly clickBlankSpace: EventEmitter<void>;
@@ -70,6 +73,7 @@ export class XecToolbar {
       clickDeleted,
       clickAbbreviation,
       clickBlankSpace,
+      clickStructure,
       textDirection,
       viewRaw,
       disabled,
@@ -86,12 +90,17 @@ export class XecToolbar {
           )}
           {config.controls.textDirection && (
             <Fragment>
-              <xec-button active={textDirection === 'LTR'} onClickButton={clickLTR.emit.bind(this)} iconOnly icon="align-left" />
-              <xec-button active={textDirection === 'RTL'} onClickButton={clickRTL.emit.bind(this)} iconOnly icon="align-right" />
+              <xec-button active={textDirection === 'LTR'} onClickButton={clickLTR.emit.bind(this)} iconOnly icon="paragraph-ltr" />
+              <xec-button active={textDirection === 'RTL'} onClickButton={clickRTL.emit.bind(this)} iconOnly icon="paragraph-rtl" />
             </Fragment>
           )}
           {config.controls.blankSpace && (
             <xec-button onClickButton={clickBlankSpace.emit.bind(this)} iconOnly icon="white-space" />
+            )}
+          {config.controls.structure && (
+            <xec-button onClickButton={clickStructure.emit.bind(this)}>
+              Structure
+            </xec-button>
           )}
           {config.controls.unclear && (
             <xec-dropdown
