@@ -38,13 +38,26 @@ export class XMLTransformerService {
       .parseFromString(`<root>${xml}</root>`, 'text/html')
       .querySelector('root') as HTMLElement;
 
-    // Tranform the nodes to editor
-    const lines: Map<number, HTMLElement> = XMLTransformerService.createLinesFromXML(tree);
+    // Create lines according to lb tags
+    const map: Map<number, HTMLElement> = XMLTransformerService.createLinesFromXML(tree);
+
+    // Extract the lines from the XML
+    for (const [ln, element] of map.entries()) {
+      element.append(...XMLTransformerService.extractLineContentFromXML(ln, tree));
+    }
+
+
+    for (const [ln, element] of map.entries()) {
+      const unwrappedLine = XMLTransformerService.unwrapWordsFromXML(element);
+      map.set(ln, unwrappedLine);
+    }
+
     const root = document.createElement(TagName.ROOT);
-    lines.forEach((line, n) => {
+    Array.from(map.values()).forEach((line, n) => {
       line.setAttribute('n', n.toString());
       root.appendChild(line);
     });
+
     return root.innerHTML;
   }
 
@@ -212,30 +225,24 @@ export class XMLTransformerService {
     lastLine.setAttribute('n', lbs.length.toString());
     map.set(lbs.length, lastLine);
 
-    for (const [line, element] of map.entries()) {
-      element.append(...XMLTransformerService.extractLineFromXML(line, tree));
-    }
-
     return map;
   }
 
-  static extractLineFromXML(line: number, tree: HTMLElement): Node[] {
-    const lb = tree.querySelector(`${TagName.LINE_BREAK}[n="${line}"]`);
+  static extractLineContentFromXML(ln: number, tree: HTMLElement): Node[] {
+    const lb = tree.querySelector(`${TagName.LINE_BREAK}[n="${ln}"]`);
     let elements: Node[] = [];
-    let element = lb;
-    const hasNextSibling = element.nextElementSibling;
+    let element = lb.previousElementSibling;
+    let parent = element.parentElement;
+    const hasNextSibling = !!lb.nextElementSibling;
 
-    while (element.previousElementSibling) {
-      if (element.nodeName !== TagName.LINE_BREAK) {
-        const clonedElement = element.cloneNode(true);
-        elements.unshift(clonedElement);
-      }
+    while (element) {
+      const clonedElement = element.cloneNode(true);
+      elements.unshift(clonedElement);
       const removableElement = element;
       element = element.previousElementSibling;
       removableElement.remove();
     }
 
-    let parent = element.parentElement;
     while (parent && parent.nodeName !== TagName.ROOT) {
       const clonedParent = parent.cloneNode(false) as HTMLElement;
       clonedParent.append(...elements);
@@ -253,6 +260,18 @@ export class XMLTransformerService {
       if (!hasNextSibling) removableElement.remove();
     }
 
+    // @ts-ignore
+    console.log(elements.map(e => e.outerHTML));
+
     return elements;
+  }
+
+  static unwrapWordsFromXML(line: HTMLElement): HTMLElement {
+    const clonedLine = line.cloneNode(true) as HTMLElement;
+    const words = Array.from(clonedLine.querySelectorAll(TagName.WORD));
+    words.forEach(word => {
+      word.replaceWith(document.createTextNode(word.textContent + (word.nextElementSibling?.textContent?.length ? ' ' : '')));
+    });
+    return clonedLine;
   }
 }
