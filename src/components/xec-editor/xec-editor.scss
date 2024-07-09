@@ -108,7 +108,7 @@ xec-editor {
         padding: 30px;
         counter-set: line 0;
         &.direction-rtl {
-          // direction: rtl;
+          direction: rtl;
           text-align: right;
         }
         &.direction-ltr {
