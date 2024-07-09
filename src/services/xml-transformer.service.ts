@@ -16,9 +16,9 @@ export class XMLTransformerService {
     return root.innerHTML;
   }
 
-  static XML2Editor(html: string): string {
+  static editor2XML(html: string): string {
     const root = document.createElement(TagName.ROOT);
-    root.innerHTML = XMLTransformerService.transformEditorToXML(XMLTransformerService.preprocessLines(html));
+    root.innerHTML = XMLTransformerService.transformEditor2XML(XMLTransformerService.preprocessLines(html));
     const content =
       formatXml(root.outerHTML, {
         indentation: '  ',
@@ -32,18 +32,17 @@ export class XMLTransformerService {
     return content.join('\n');
   }
 
-  static editor2XML(html: string): string {
+  static XML2Editor(html: string): string {
     const root = document.createElement(TagName.ROOT);
     root.innerHTML = html;
     const parsed = formatXml.minify(root.outerHTML, {
       collapseContent: true,
     })
-    .replace(/<(\/)?root>|<(\/)?line( n="\d+")?>|<br( )?(\/)?>/g, '');
-
-    return XMLTransformerService.transformXMLToEditor(parsed);
+    .replace(/<(\/)?root>|<br( )?(\/)?>/g, '');
+    return XMLTransformerService.transformXML2Editor(parsed);
   }
 
-  static transformXMLToEditor(xml: string): string {
+  static transformXML2Editor(xml: string): string {
     const tree = new DOMParser()
       .parseFromString(`<root>${xml}</root>`, 'text/html')
       .querySelector('root') as HTMLElement;
@@ -71,7 +70,7 @@ export class XMLTransformerService {
     return root.innerHTML;
   }
 
-  static transformEditorToXML(rawHtml: string): string {
+  static transformEditor2XML(rawHtml: string): string {
     const root = document.createElement(TagName.ROOT);
     const tree = document.createElement(TagName.ROOT);
     tree.innerHTML = rawHtml;
@@ -81,7 +80,7 @@ export class XMLTransformerService {
       .map(l => XMLTransformerService.tranformNodeToXML(l, Number(l.getAttribute('n'))));
 
     // Merge the nodes to XML
-    const mergedNodes = XMLTransformerService.mergeNodesToXML(transformedNodes.flatMap(n => Array.from(n.childNodes)));
+    const mergedNodes = XMLTransformerService.mergeExtractToXML(transformedNodes);
 
     // Cleanup the XML
     const cleanedNodes = XMLTransformerService.cleanNodesToXML(mergedNodes);
@@ -117,8 +116,11 @@ export class XMLTransformerService {
   /**
    * Merge blocks (Anonymous and structural blocks) to the XML
    */
-  static mergeNodesToXML(nodes: Node[]): Node[] {
-    const clonedNodes = Array.from(nodes).map(n => n.cloneNode(true));
+  static mergeExtractToXML(nodes: Node[]): Node[] {
+    // Remove the line wrapper
+    const clonedNodes = nodes
+      .flatMap(n => Array.from(n.childNodes))
+      .map(n => n.cloneNode(true));
 
     // Create a flat mat of every structural nodes
     const structuralNodes = clonedNodes
@@ -139,7 +141,7 @@ export class XMLTransformerService {
     }
 
     clonedNodes.forEach(node => {
-      if (!node.hasChildNodes()) clonedNodes.splice(clonedNodes.indexOf(node), 1);
+      if (!node.hasChildNodes() && node.nodeName !== TagName.LINE_BREAK) clonedNodes.splice(clonedNodes.indexOf(node), 1);
     });
 
     return clonedNodes;

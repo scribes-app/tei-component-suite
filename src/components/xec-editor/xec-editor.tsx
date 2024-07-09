@@ -122,9 +122,9 @@ export class XecEditor {
   private onClickViewRaw(): void {
     const editorState = this.editorStates.get(this.activeEditor);
     if (editorState.viewType === 'raw') {
-      this.activeTextarea.value = XMLTransformerService.XML2Editor(this.activeInstance.root.innerHTML);
+      this.activeInstance.root.innerHTML = XMLTransformerService.XML2Editor(this.activeTextarea.value);
     } else {
-      this.activeInstance.root.innerHTML = XMLTransformerService.editor2XML(this.activeTextarea.value);
+      this.activeTextarea.value = XMLTransformerService.editor2XML(this.activeInstance.root.innerHTML);
     }
     this.setActiveEditorState('viewType', editorState.viewType === 'raw' ? 'default' : 'raw');
   }
@@ -151,7 +151,7 @@ export class XecEditor {
   private onClickViewXML(): void {
     this.popupElement.openPopup();
     this.popupElement.setContent(
-      XMLTransformerService.transformEditorToXML(this.activeInstance.root.innerHTML)
+      XMLTransformerService.transformEditor2XML(this.activeInstance.root.innerHTML)
     );
   }
 
