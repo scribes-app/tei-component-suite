@@ -27,8 +27,10 @@ import { XMLTransformerService } from '../../services/xml-transformer.service';
 export class XecEditor {
 
   private activeInstance: QuillInstance;
+  private activeTextarea: HTMLTextAreaElement;
   private editorInstances: Map<UnionEditorType, QuillInstance> = new Map();
   private editorElements: Map<UnionEditorType, HTMLDivElement> = new Map();
+  private textareaElements: Map<UnionEditorType, HTMLTextAreaElement> = new Map();
   private popupElement: HTMLXecPopupElement;
 
   @Prop()
@@ -66,10 +68,22 @@ export class XecEditor {
    */
   public componentDidLoad(): void {
     this.initQuillInstances();
+    this.initTextareaElements();
   }
 
   /**
-   * Initialize the Quill editor
+   * Initialize the textarea raw editors
+   */
+  private initTextareaElements(): void {
+    for (const [editorType, textareaElement] of Array.from(this.textareaElements.entries())) {
+      textareaElement.addEventListener('focus', this.onFocusTextarea.bind(this, editorType));
+    }
+
+    this.activeTextarea = this.textareaElements.get(this.activeEditor);
+  }
+
+  /**
+   * Initialize the Quill editors
    */
   private initQuillInstances(): void {
     registerBlots();
@@ -84,10 +98,20 @@ export class XecEditor {
   }
 
   /**
+   * Switch active instance according to the current focused textarea
+   */
+  private onFocusTextarea(editorType: UnionEditorType): void {
+    this.activeInstance = this.editorInstances.get(editorType);
+    this.activeTextarea = this.textareaElements.get(editorType);
+    this.activeEditor = editorType;
+  }
+
+  /**
    * Switch active instance according to the current focused editor
    */
   private onFocusEditor(editorType: UnionEditorType): void {
     this.activeInstance = this.editorInstances.get(editorType);
+    this.activeTextarea = this.textareaElements.get(editorType);
     this.activeEditor = editorType;
   }
 
@@ -97,12 +121,10 @@ export class XecEditor {
    */
   private onClickViewRaw(): void {
     const editorState = this.editorStates.get(this.activeEditor);
-    const method = editorState.viewType === 'raw' ? 'unescape' : 'escape';
-
-    if (method === 'escape') {
-      this.activeInstance.root.innerHTML = XMLTransformerService.escapeHTMLFromEditor(this.activeInstance.root.innerHTML);
+    if (editorState.viewType === 'raw') {
+      this.activeTextarea.value = XMLTransformerService.XML2Editor(this.activeInstance.root.innerHTML);
     } else {
-      this.activeInstance.clipboard.dangerouslyPasteHTML(XMLTransformerService.unescapeHTMLFromEditor(this.activeInstance.root.innerHTML));
+      this.activeInstance.root.innerHTML = XMLTransformerService.editor2XML(this.activeTextarea.value);
     }
     this.setActiveEditorState('viewType', editorState.viewType === 'raw' ? 'default' : 'raw');
   }
@@ -234,30 +256,69 @@ export class XecEditor {
           viewRaw={editorStates.get(activeEditor).viewType === 'raw'}
         />
         <div class="editors">
-          <div
-            class={classNames({
-              editor: true,
-              transcribe: true,
-              active: activeEditor === 'transcribe'
-            })}
-            ref={el => this.editorElements.set('transcribe', el)}
-          />
-          <div
-            class={classNames({
-              editor: true,
-              translate: true,
-              active: activeEditor === 'translate'
-            })}
-            ref={el => this.editorElements.set('translate', el)}
-          />
-          <div
-            class={classNames({
-              editor: true,
-              comment: true,
-              active: activeEditor === 'comment'
-            })}
-            ref={el => this.editorElements.set('comment', el)}
-          />
+          <div class={classNames({
+            editorWrapper: true,
+            transcribe: true,
+            active: activeEditor === 'transcribe'
+          })}>
+            <div
+              class={classNames({
+                editor: true,
+                hidden: editorStates.get('transcribe').viewType === 'raw',
+              })}
+              ref={el => this.editorElements.set('transcribe', el)}
+              />
+            <textarea
+              class={classNames({
+                editor: true,
+                hidden: editorStates.get('transcribe').viewType === 'default',
+                textarea: true,
+              })}
+              ref={el => this.textareaElements.set('transcribe', el)}
+            />
+          </div>
+
+          <div class={classNames({
+            editorWrapper: true,
+            translate: true,
+            active: activeEditor === 'translate'
+          })}>
+            <div
+              class={classNames({
+                editor: true,
+                hidden: editorStates.get('translate').viewType === 'raw',
+              })}
+              ref={el => this.editorElements.set('translate', el)}
+            />
+            <textarea
+              class={classNames({
+                editor: true,
+                hidden: editorStates.get('translate').viewType === 'default',
+                textarea: true,
+              })}
+              ref={el => this.textareaElements.set('translate', el)}
+            />
+          </div>
+          <div class={classNames({
+            editorWrapper: true,
+            comment: true,
+            active: activeEditor === 'comment'
+          })}>
+            <div
+              class={classNames({
+                editor: true,
+                hidden: editorStates.get('comment').viewType === 'raw',
+              })}
+              ref={el => this.editorElements.set('comment', el)}
+            />
+            <textarea class={classNames({
+                editor: true,
+                hidden: editorStates.get('comment').viewType === 'default',
+                textarea: true,
+              })}
+              ref={el => this.textareaElements.set('comment', el)}
+            />
+          </div>
         </div>
         <xec-popup ref={el => this.popupElement = el} />
       </Host>

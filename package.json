@@ -53,7 +53,6 @@
     "@stencil/sass": "^3.0.12",
     "@types/html-escaper": "^3.0.2",
     "classnames": "^2.5.1",
-    "html-escaper": "^3.0.3",
     "parchment": "^3.0.0",
     "quill": "^2.0.2",
     "xml-formatter": "^3.6.3"

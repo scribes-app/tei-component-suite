@@ -1,6 +1,5 @@
 import formatXml from 'xml-formatter';
 import { TagName, XMLAvailableTagsList } from '../lib/helper';
-import * as escaper from 'html-escaper';
 
 /**
  * @description This class is responsible for performing any transformation on the from or to XML data
@@ -17,26 +16,25 @@ export class XMLTransformerService {
     return root.innerHTML;
   }
 
-  static escapeHTMLFromEditor(html: string): string {
+  static XML2Editor(html: string): string {
     const root = document.createElement(TagName.ROOT);
     root.innerHTML = XMLTransformerService.transformEditorToXML(XMLTransformerService.preprocessLines(html));
-    const content = escaper
-      .escape(
-        formatXml(root.outerHTML, {
-          indentation: '  ',
-          collapseContent: true,
-          lineSeparator: '\n',
-        })
-        .replace(/<root>|<\/root>/g, '')
-      )
+    const content =
+      formatXml(root.outerHTML, {
+        indentation: '  ',
+        collapseContent: true,
+        lineSeparator: '\n',
+      })
+      .replace(/<root>|<\/root>/g, '')
+      .replace(/^  /gm, '')
       .split('\n');
     content.splice(0, 1);
     return content.join('\n');
   }
 
-  static unescapeHTMLFromEditor(html: string): string {
+  static editor2XML(html: string): string {
     const root = document.createElement(TagName.ROOT);
-    root.innerHTML = escaper.unescape(html);
+    root.innerHTML = html;
     const parsed = formatXml.minify(root.outerHTML, {
       collapseContent: true,
     })

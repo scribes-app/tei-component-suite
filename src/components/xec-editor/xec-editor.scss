@@ -36,14 +36,14 @@ xec-editor {
       bottom-left-radius: var(--xec-editor-border-radius);
       bottom-right-radius: var(--xec-editor-border-radius);
     };
-    .editor {
+    .editorWrapper {
+      position: relative;
       flex: 0 0 math.div(100%, 3);
       border: {
         width: 1px;
         style: solid;
         color: var(--xec-editor-border-color);
       }
-      color: var(--xec-editor-text-color);
       transition: border-color 0.2s ease;
       &::before {
         position: absolute;
@@ -57,6 +57,7 @@ xec-editor {
         letter-spacing: 1px;
         transition: color 0.2s ease;
       }
+
       &.active {
         border-color: var(--xec-editor-focus-border-color);
         &::before {
@@ -69,11 +70,12 @@ xec-editor {
         border-right-color: transparent;
         &.active {
           border-right-color: var(--xec-editor-focus-border-color);
-          + .editor {
+          + .editorWrapper {
             border-left-color: transparent;
           }
         }
         &::before {
+          z-index: 1;
           content: 'Transcribe';
         }
       }
@@ -83,7 +85,7 @@ xec-editor {
         &.active {
           border-right-color: var(--xec-editor-focus-border-color);;
           border-left-color: var(--xec-editor-focus-border-color);
-          + .editor {
+          + .editorWrapper {
             border-left-color: transparent;
           }
         }
@@ -101,42 +103,65 @@ xec-editor {
           content: 'Comments';
         }
       }
+      .editor {
+        font: {
+          size: 13px;
+          weight: 400;
+          family: $font-default;
+        }
+        color: var(--xec-editor-text-color);
 
-      // Quill Editor override
-      .ql-editor {
-        position: relative;
-        padding: 30px;
-        counter-set: line 0;
-        &.direction-rtl {
-          direction: rtl;
-          text-align: right;
-        }
-        &.direction-ltr {
-          direction: ltr;
-          text-align: right;
-        }
-        div {
-          display: inline;
-        }
-        // Custom tags
-        line {
-          position: relative;
+        &.textarea {
           display: block;
-          counter-increment: line;
-          &::before {
-            content: counter(line);
-            position: absolute;
-            left: -20px;
-            top: 3px;
-            display: block;
+          outline: none;
+          border: none;
+          resize: none;
+          position: relative;
+          padding: 30px;
+          height: 100%;
+          width: 100%;
+        }
+
+        &.hidden {
+          display: none;
+        }
+
+        // Quill Editor override
+        .ql-editor {
+          position: relative;
+          padding: 30px;
+          counter-set: line 0;
+          &.direction-rtl {
+            direction: rtl;
             text-align: right;
-            color: var(--xec-editor-line-number-color);
-            font-size: 10px;
-            font-weight: 700;
+          }
+          &.direction-ltr {
+            direction: ltr;
+            text-align: right;
+          }
+          div {
+            display: inline;
+          }
+          // Custom tags
+          line {
+            position: relative;
+            display: block;
+            counter-increment: line;
+            &::before {
+              content: counter(line);
+              position: absolute;
+              left: -20px;
+              top: 3px;
+              display: block;
+              text-align: right;
+              color: var(--xec-editor-line-number-color);
+              font-size: 10px;
+              font-weight: 700;
+            }
           }
         }
-      }
 
+      }
     }
   }
 
