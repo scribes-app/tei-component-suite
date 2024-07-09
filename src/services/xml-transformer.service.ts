@@ -196,6 +196,7 @@ export class XMLTransformerService {
         const element = document.createElement(TagName.WORD_WRAP);
         node.textContent
           .split(' ')
+          .filter(text => text.length > 0)
           .map(text => {
             const w = document.createElement(TagName.WORD);
             w.textContent = text;
@@ -267,7 +268,8 @@ export class XMLTransformerService {
     const clonedLine = line.cloneNode(true) as HTMLElement;
     const words = Array.from(clonedLine.querySelectorAll(TagName.WORD));
     words.forEach(word => {
-      word.replaceWith(document.createTextNode(word.textContent + (word.nextElementSibling?.textContent?.length ? ' ' : '')));
+      const isLastWord = Array.from(clonedLine.querySelectorAll(TagName.WORD)).pop().isSameNode(word);
+      word.replaceWith(document.createTextNode(word.textContent + (isLastWord ? '' : ' ')));
     });
     return clonedLine;
   }
