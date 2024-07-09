@@ -68,6 +68,7 @@ export const removeClickOutside = (listener: (this: Window, ev: MouseEvent) => a
 }
 
 export enum TagName {
+  ROOT = 'ROOT',
   BLOCK = 'LINE',
   STRUCTURE = 'DIV',
   ANONYMOUS_BLOCK = 'AB',

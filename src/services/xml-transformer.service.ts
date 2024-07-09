@@ -25,18 +25,29 @@ export class XMLTransformerService {
 
   static unescapeHTMLFromEditor(html: string): string {
     const xml = `<root>${html}</root>`;
-    return formatXml.minify(escaper.unescape(xml), {
+    const parsed = formatXml.minify(escaper.unescape(xml), {
       collapseContent: true,
     })
-    .replace(/<root>|<\/root>|<br>|<br\/>/g, '');
+    .replace(/<(\/)?root>|<(\/)?line( n="\d+")?>|<br( )?(\/)?>/g, '');
+
+    return XMLTransformerService.transformXMLToEditor(parsed);
   }
 
   static transformXMLToEditor(xml: string): string {
-    const tree = document.createElement('div');
-    tree.innerHTML = xml;
+    const tree = new DOMParser()
+      .parseFromString(`<root>${xml}</root>`, 'text/html')
+      .querySelector('root') as HTMLElement;
 
-    return tree.innerHTML;
+    // Tranform the nodes to editor
+    const lines: Map<number, HTMLElement> = XMLTransformerService.createLinesFromXML(tree);
+    const root = document.createElement(TagName.ROOT);
+    lines.forEach((line, n) => {
+      line.setAttribute('n', n.toString());
+      root.appendChild(line);
+    });
+    return root.innerHTML;
   }
+
   static transformEditorToXML(rawHtml: string): string {
     const xml = document.createElement('div');
     const tree = document.createElement('div');
@@ -47,7 +58,7 @@ export class XMLTransformerService {
       .map(l => XMLTransformerService.tranformNodeToXML(l, Number(l.getAttribute('n'))));
 
     // Merge the nodes to XML
-    const mergedNodes = XMLTransformerService.mergeNodesToXML(transformedNodes.flatMap(node => Array.from(node.childNodes)));
+    const mergedNodes = XMLTransformerService.mergeNodesToXML(transformedNodes.flatMap(n => Array.from(n.childNodes)));
 
     // Cleanup the XML
     const cleanedNodes = XMLTransformerService.cleanNodesToXML(mergedNodes);
@@ -84,29 +95,31 @@ export class XMLTransformerService {
    * Merge blocks (Anonymous and structural blocks) to the XML
    */
   static mergeNodesToXML(nodes: Node[]): Node[] {
-    return Array.from(nodes)
+    const clonedNodes = Array.from(nodes).map(n => n.cloneNode(true));
+
+    // Create a flat mat of every structural nodes
+    const structuralNodes = clonedNodes
       .reduce((acc, node) => {
-        const mergedNode = node.cloneNode(false) as HTMLElement;
-        const children = XMLTransformerService.mergeNodesToXML(Array.from(node.childNodes));
-        children.forEach(child => mergedNode.appendChild(child));
-        switch (mergedNode.nodeName) {
-          case TagName.ANONYMOUS_BLOCK:
-          case TagName.STRUCTURE: {
-            const existingNode = acc.find((n: HTMLElement) => n.nodeName === TagName.STRUCTURE && (mergedNode as HTMLElement).getAttribute('n') === n.getAttribute('n'));
-            if (existingNode) {
-              const children = Array.from(mergedNode.childNodes);
-              children.forEach(child => existingNode.appendChild(child));
-            } else {
-              acc.push(mergedNode);
-            }
-            break;
-          }
-          default: {
-            acc.push(mergedNode);
-          }
-        };
+        acc.push(node as HTMLElement);
+        acc.push(...Array.from((node as HTMLElement).querySelectorAll('*')) as HTMLElement[]);
         return acc;
-      }, [] as Node[]);
+      }, [] as HTMLElement[])
+      .filter(node => node.nodeName === TagName.STRUCTURE || node.nodeName === TagName.ANONYMOUS_BLOCK)
+
+    for (const node of structuralNodes) {
+      const similarNodes = structuralNodes.filter(n => n.nodeName === node.nodeName && n.getAttribute('n') === node.getAttribute('n') && !n.isSameNode(node));
+      similarNodes.forEach(n => {
+        Array.from(n.childNodes).forEach(child => node.appendChild(child));
+        n.remove();
+        structuralNodes.splice(structuralNodes.indexOf(n), 1);
+      });
+    }
+
+    clonedNodes.forEach(node => {
+      if (!node.hasChildNodes()) clonedNodes.splice(clonedNodes.indexOf(node), 1);
+    });
+
+    return clonedNodes;
   }
 
   /**
@@ -147,9 +160,13 @@ export class XMLTransformerService {
         const element = node.cloneNode(false) as HTMLElement;
         const nodes = Array.from(node.childNodes).map(n => XMLTransformerService.tranformNodeToXML(n, line));
         nodes.forEach(node => element.appendChild(node));
-        const breakElement = document.createElement(TagName.LINE_BREAK);
-        breakElement.setAttribute('n', line.toString());
-        element.appendChild(breakElement);
+
+        if (!(node as HTMLElement).nextElementSibling) {
+          const breakElement = document.createElement(TagName.LINE_BREAK);
+          breakElement.setAttribute('n', line.toString());
+          element.appendChild(breakElement);
+        }
+
         return element;
       }
       case TagName.UNCLEAR:
@@ -180,4 +197,62 @@ export class XMLTransformerService {
     }
   }
 
+  static createLinesFromXML(tree: HTMLElement): Map<number, HTMLElement> {
+    const map = new Map<number, HTMLElement>();
+
+    // Extract line breaks to create the lines
+    const lbs = Array.from(tree.querySelectorAll(TagName.LINE_BREAK));
+    lbs.forEach(lb => {
+      const n = Number(lb.getAttribute('n'));
+      map.set(n, document.createElement(TagName.BLOCK));
+    });
+
+    // Adds last line
+    const lastLine = document.createElement(TagName.BLOCK);
+    lastLine.setAttribute('n', lbs.length.toString());
+    map.set(lbs.length, lastLine);
+
+    for (const [line, element] of map.entries()) {
+      element.append(...XMLTransformerService.extractLineFromXML(line, tree));
+    }
+
+    return map;
+  }
+
+  static extractLineFromXML(line: number, tree: HTMLElement): Node[] {
+    const lb = tree.querySelector(`${TagName.LINE_BREAK}[n="${line}"]`);
+    let elements: Node[] = [];
+    let element = lb;
+    const hasNextSibling = element.nextElementSibling;
+
+    while (element.previousElementSibling) {
+      if (element.nodeName !== TagName.LINE_BREAK) {
+        const clonedElement = element.cloneNode(true);
+        elements.unshift(clonedElement);
+      }
+      const removableElement = element;
+      element = element.previousElementSibling;
+      removableElement.remove();
+    }
+
+    let parent = element.parentElement;
+    while (parent && parent.nodeName !== TagName.ROOT) {
+      const clonedParent = parent.cloneNode(false) as HTMLElement;
+      clonedParent.append(...elements);
+      elements = [clonedParent];
+      let previousParent = parent.previousSibling;
+      while (previousParent) {
+        const clonedPreviousParent = previousParent.cloneNode(true);
+        elements.unshift(clonedPreviousParent);
+        const removableElement = previousParent;
+        previousParent = previousParent.previousSibling;
+        removableElement.remove();
+      }
+      const removableElement = parent;
+      parent = parent.parentElement;
+      if (!hasNextSibling) removableElement.remove();
+    }
+
+    return elements;
+  }
 }
