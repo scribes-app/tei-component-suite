@@ -260,9 +260,6 @@ export class XMLTransformerService {
       if (!hasNextSibling) removableElement.remove();
     }
 
-    // @ts-ignore
-    console.log(elements.map(e => e.outerHTML));
-
     return elements;
   }
 
