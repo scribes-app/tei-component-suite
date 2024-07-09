@@ -7,11 +7,22 @@ import * as escaper from 'html-escaper';
  */
 export class XMLTransformerService {
 
+  static preprocessLines(html: string): string {
+    const root = document.createElement(TagName.ROOT);
+    root.innerHTML = html;
+    Array.from(root.children)
+      .forEach((line, n) => {
+        line.setAttribute('n', (++n).toString());
+      });
+    return root.innerHTML;
+  }
+
   static escapeHTMLFromEditor(html: string): string {
-    const xml = `<root>${XMLTransformerService.transformEditorToXML(html)}</root>`;
+    const root = document.createElement(TagName.ROOT);
+    root.innerHTML = XMLTransformerService.transformEditorToXML(XMLTransformerService.preprocessLines(html));
     const content = escaper
       .escape(
-        formatXml(xml, {
+        formatXml(root.outerHTML, {
           indentation: '  ',
           collapseContent: true,
           lineSeparator: '\n',
@@ -24,8 +35,9 @@ export class XMLTransformerService {
   }
 
   static unescapeHTMLFromEditor(html: string): string {
-    const xml = `<root>${html}</root>`;
-    const parsed = formatXml.minify(escaper.unescape(xml), {
+    const root = document.createElement(TagName.ROOT);
+    root.innerHTML = escaper.unescape(html);
+    const parsed = formatXml.minify(root.outerHTML, {
       collapseContent: true,
     })
     .replace(/<(\/)?root>|<(\/)?line( n="\d+")?>|<br( )?(\/)?>/g, '');
@@ -62,8 +74,8 @@ export class XMLTransformerService {
   }
 
   static transformEditorToXML(rawHtml: string): string {
-    const xml = document.createElement('div');
-    const tree = document.createElement('div');
+    const root = document.createElement(TagName.ROOT);
+    const tree = document.createElement(TagName.ROOT);
     tree.innerHTML = rawHtml;
 
     // Tranform the nodes to XML
@@ -77,8 +89,8 @@ export class XMLTransformerService {
     const cleanedNodes = XMLTransformerService.cleanNodesToXML(mergedNodes);
 
     // Append the nodes to the XML
-    cleanedNodes.forEach(node => xml.appendChild(node));
-    return xml.innerHTML;
+    cleanedNodes.forEach(node => root.appendChild(node));
+    return root.innerHTML;
   }
 
   /**
@@ -146,6 +158,15 @@ export class XMLTransformerService {
       case TagName.BLOCK: {
         const element = node.cloneNode(false) as HTMLElement;
         const nodes = Array.from(node.childNodes).map(n => XMLTransformerService.tranformNodeToXML(n, line));
+
+        // Add line break to the block if it hasn't any child
+        const hasChild = Boolean(nodes.length) && nodes.some(n => n.nodeName !== TagName.UNKNOWN);
+        if (!hasChild) {
+          const breakElement = document.createElement(TagName.LINE_BREAK);
+          breakElement.setAttribute('n', line.toString());
+          nodes.push(breakElement);
+        };
+
         nodes.forEach(node => element.appendChild(node));
         return element;
       }
@@ -207,7 +228,7 @@ export class XMLTransformerService {
         return element;
       }
       // Keep the function working even if the node is not recognized but signal that there is an issue
-      default: return document.createElement('UNKNOWN');
+      default: return document.createElement(TagName.UNKNOWN);
     }
   }
 
@@ -221,11 +242,6 @@ export class XMLTransformerService {
       map.set(n, document.createElement(TagName.BLOCK));
     });
 
-    // Adds last line
-    const lastLine = document.createElement(TagName.BLOCK);
-    lastLine.setAttribute('n', lbs.length.toString());
-    map.set(lbs.length, lastLine);
-
     return map;
   }
 
@@ -233,7 +249,11 @@ export class XMLTransformerService {
     const lb = tree.querySelector(`${TagName.LINE_BREAK}[n="${ln}"]`);
     let elements: Node[] = [];
     let element = lb.previousElementSibling;
-    let parent = element.parentElement;
+    let parent = element?.parentElement;
+
+    // There is no parent in some case as a simple line break but we need to keep it as a line
+    if (!parent) return [];
+
     const hasNextSibling = !!lb.nextElementSibling;
 
     while (element) {
