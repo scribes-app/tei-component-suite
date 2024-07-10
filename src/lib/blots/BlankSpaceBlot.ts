@@ -28,7 +28,6 @@ export class BlankSpaceBlot extends InlineBlot {
   }
 
   optimize(): void {
-    console.log('run');
     // Prevent typing inside the blank space
     if (!this.optimizing) {
       // Will recall the optimize method, we prevent the infinite loop by setting the optimizing flag
