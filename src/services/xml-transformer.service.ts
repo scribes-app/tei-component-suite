@@ -200,7 +200,7 @@ export class XMLTransformerService {
             ])
             .pop();
 
-          lastStructuralNode!.appendChild(breakElement);
+          lastStructuralNode?.appendChild(breakElement);
         }
 
         nodes.forEach(node => element.appendChild(node));

@@ -3,7 +3,7 @@ import { JSX, Method, Prop, State } from '@stencil/core/internal';
 import classNames from 'classnames';
 import Quill from 'quill';
 import { XecBlankSpaceFormCustomEvent } from '../../components';
-import { delayed, registerBlots } from '../../lib/helper';
+import { TagName, delayed, registerBlots } from '../../lib/helper';
 import { EditorState, QuillInstance, ToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionUnclearReason, XecBlankSpaceFormValues, XecStructureFormValues } from '../../lib/types';
 import { XMLTransformerService } from '../../services/xml-transformer.service';
 import { Delta } from 'quill/core';
@@ -33,6 +33,7 @@ export class XecEditor {
   private editorElements: Map<UnionEditorType, HTMLDivElement> = new Map();
   private textareaElements: Map<UnionEditorType, HTMLTextAreaElement> = new Map();
   private popupElement: HTMLXecPopupElement;
+  private concurrentTextChange: boolean = false;
 
   @Prop()
   public readonly config: ToolbarConfig = defaultToolbarConfig;
@@ -117,15 +118,40 @@ export class XecEditor {
     this.activeEditor = editorType;
   }
 
+  /**
+   * Handle the text change event
+   */
   private onTextChange(editorType: UnionEditorType, delta: Delta): void {
-    // Insert a new block (a line in the editor point of view)
-    if (delta.ops.at(1)?.attributes?.block) {
+    if (this.concurrentTextChange) return;
+    // Insert a new block (a line in the editor point of view) or delete it
+    if (delta.ops.at(1)?.attributes?.block || delta.ops.at(1)?.delete || delta.ops.at(0)?.delete) {
       const instance = this.editorInstances.get(editorType);
       const range = instance.getSelection();
       instance.root.innerHTML = XMLTransformerService.addClasses(instance.root.innerHTML);
+
+      this.concurrentTextChange = true;
+      this.syncLines();
       delayed(() => {
         instance.setSelection({ index: (range?.index ?? 0) + 1, length: 0 });
+        this.concurrentTextChange = false;
       }, 15);
+    }
+  }
+
+  /**
+   * Sync the lines between the editors
+   */
+  private syncLines(): void {
+    const ln = this.editorInstances.get('transcribe').root.querySelectorAll(TagName.BLOCK).length;
+    for (const instance of [this.editorInstances.get('translate'), this.editorInstances.get('comment')]) {
+      instance.root.querySelectorAll(TagName.BLOCK).forEach((block, index) => {
+        if (index >= ln) block.remove();
+      });
+      for (let i = instance.root.querySelectorAll(TagName.BLOCK).length; i < ln; i++) {
+        const block = document.createElement(TagName.BLOCK);
+        block.innerHTML = '<br />';
+        instance.root.appendChild(block);
+      }
     }
   }
 
