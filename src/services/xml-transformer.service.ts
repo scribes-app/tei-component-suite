@@ -190,6 +190,7 @@ export class XMLTransformerService {
       case TagName.ANONYMOUS_BLOCK:
       case TagName.UNCLEAR:
       case TagName.DELETED:
+      case TagName.ABBREVIATION:
       case TagName.HIGHLIGHTED:
       case TagName.BLANK_SPACE: {
         const element = node.cloneNode(false) as HTMLElement;

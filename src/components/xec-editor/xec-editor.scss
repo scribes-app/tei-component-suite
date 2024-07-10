@@ -15,6 +15,10 @@ xec-editor {
   --xec-editor-focus-border-color: #{$color-slate-700};
   --xec-editor-focus-title-color: #{$color-slate-700};
 
+  --xec-editor-text-element-border-color: #{$color-slate-200};
+  --xec-editor-text-element-background-color: #{$color-slate-100};
+  --xec-editor-tooltip-color: #{$color-slate-500};
+
   position: relative;
 
   .toolbar {
@@ -164,6 +168,56 @@ xec-editor {
               font-size: 10px;
               font-weight: 700;
             }
+          }
+          // Text elements
+          unclear,
+          del,
+          h,
+          space,
+          abbr {
+            position: relative;
+            border: 1px solid var(--xec-editor-text-element-border-color);
+            background-color: var(--xec-editor-text-element-background-color);
+            &::before {
+              @include shadow;
+              z-index: 20;
+              position: absolute;
+              pointer-events: none;
+              left: 50%;
+              transform: translateX(-50%);
+              bottom: 10px;
+              background-color: white;
+              padding: 2px 5px;
+              border-radius: 5px;
+              transition: bottom 0.2s ease;
+              white-space: nowrap;
+              color: var(--xec-editor-tooltip-color);
+            }
+            &:hover {
+              &::before {
+                bottom: 20px;
+              }
+            }
+          }
+          space {
+            text-align: center;
+            display: inline-block;
+            width: 20px;
+          }
+          unclear:hover::before {
+            content: 'unclear: (' attr(reason) ')';
+          }
+          del:hover::before {
+            content: 'deleted: (' attr(rend) ')';
+          }
+          h:hover::before {
+            content: 'highlighted: (' attr(rend) ')';
+          }
+          abbr:hover::before {
+            content: 'abbreviation: (' attr(rend) ')';
+          }
+          space:hover::before {
+            content: 'Blank space: (' attr(value) attr(unit) ')';
           }
         }
 
