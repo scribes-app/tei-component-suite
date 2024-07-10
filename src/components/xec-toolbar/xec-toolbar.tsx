@@ -90,24 +90,49 @@ export class XecToolbar {
         })}>
         <div class="controls">
           {config.controls.viewRaw && (
-            <xec-button active={viewRaw} onClickButton={clickViewRaw.emit.bind(this)} iconOnly icon="code-simple" />
+            <xec-button
+              active={viewRaw}
+              onClickButton={clickViewRaw.emit.bind(this)}
+              iconOnly
+              icon="code-simple"
+            />
           )}
           {config.controls.textDirection && (
             <Fragment>
-              <xec-button active={textDirection === 'LTR'} onClickButton={clickLTR.emit.bind(this)} iconOnly icon="paragraph-ltr" />
-              <xec-button active={textDirection === 'RTL'} onClickButton={clickRTL.emit.bind(this)} iconOnly icon="paragraph-rtl" />
+              <xec-button
+                active={textDirection === 'LTR'}
+                onClickButton={clickLTR.emit.bind(this)}
+                iconOnly
+                icon="paragraph-ltr"
+                disabled={viewRaw}
+              />
+              <xec-button
+                active={textDirection === 'RTL'}
+                onClickButton={clickRTL.emit.bind(this)}
+                iconOnly
+                icon="paragraph-rtl"
+                disabled={viewRaw}
+              />
             </Fragment>
           )}
           {config.controls.blankSpace && (
-            <xec-button onClickButton={clickBlankSpace.emit.bind(this)} iconOnly icon="white-space" />
+            <xec-button
+              onClickButton={clickBlankSpace.emit.bind(this)}
+              iconOnly
+              icon="white-space"
+              disabled={viewRaw}
+            />
             )}
           {config.controls.structure && (
-            <xec-button onClickButton={clickStructure.emit.bind(this)}>
+            <xec-button
+              onClickButton={clickStructure.emit.bind(this)}
+              disabled={viewRaw}>
               Structure
             </xec-button>
           )}
           {config.controls.unclear && (
             <xec-dropdown
+              disabled={viewRaw}
               config={{
                 label: 'Unclear',
                 items: [
@@ -137,6 +162,7 @@ export class XecToolbar {
           )}
           {config.controls.highlighted && (
             <xec-dropdown
+              disabled={viewRaw}
               config={{
                 label: 'Highlighted',
                 items: [
@@ -181,6 +207,7 @@ export class XecToolbar {
           )}
           {config.controls.deleted && (
             <xec-dropdown
+              disabled={viewRaw}
               config={{
                 label: 'Deleted',
                 items: [
@@ -215,6 +242,7 @@ export class XecToolbar {
           )}
           {config.controls.abbreviation && (
             <xec-dropdown
+              disabled={viewRaw}
               config={{
                 label: 'Abbreviation',
                 items: [

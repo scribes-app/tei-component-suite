@@ -21,6 +21,9 @@ export class XecDropdown {
     items: []
   };
 
+  @Prop()
+  public readonly disabled: boolean = false;
+
   @State()
   private isOpen = false;
 
@@ -59,6 +62,7 @@ export class XecDropdown {
     const {
       onClickDropdown,
       config: { items, label },
+      disabled,
       isOpen
     } = this;
     return (
@@ -68,6 +72,7 @@ export class XecDropdown {
           active={isOpen}
           icon="angle-down"
           iconPosition="trailing"
+          disabled={disabled}
           rotateOnActive>
           {label}
         </xec-button>

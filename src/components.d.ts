@@ -26,6 +26,7 @@ export namespace Components {
     interface XecDropdown {
         "close": () => Promise<void>;
         "config": DropdownConfig;
+        "disabled": boolean;
         "open": () => Promise<void>;
     }
     interface XecEditor {
@@ -290,6 +291,7 @@ declare namespace LocalJSX {
     }
     interface XecDropdown {
         "config"?: DropdownConfig;
+        "disabled"?: boolean;
     }
     interface XecEditor {
         "config"?: ToolbarConfig;
