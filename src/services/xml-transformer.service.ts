@@ -140,11 +140,14 @@ export class XMLTransformerService {
       });
     }
 
+    const mergedNodes: Node[] = [];
+
     clonedNodes.forEach(node => {
-      if (!node.hasChildNodes() && node.nodeName !== TagName.LINE_BREAK) clonedNodes.splice(clonedNodes.indexOf(node), 1);
+      if (node.hasChildNodes() || node.nodeName === TagName.LINE_BREAK) mergedNodes.push(node);
     });
 
-    return clonedNodes;
+
+    return mergedNodes;
   }
 
   /**
@@ -164,9 +167,20 @@ export class XMLTransformerService {
         breakElement.setAttribute('n', line.toString());
 
         // Add line break to the last structure child of the block or if it has no child
-        if (!hasChild) nodes.push(breakElement);
+        if (!hasChild) {
+          nodes.push(breakElement);
+        }
         // Otherwise add the line break to the last structure child of the block
-        else [...nodes].reverse().find(n => n.nodeName === TagName.STRUCTURE)?.appendChild(breakElement);
+        else {
+          const lastStructuralNode = [...nodes]
+            .flatMap(n => [
+              ...(n.nodeName === TagName.STRUCTURE ? [n as HTMLElement] : []),
+              ...(Array.from((n as HTMLElement).querySelectorAll([TagName.STRUCTURE, TagName.ANONYMOUS_BLOCK].join(', '))))
+            ])
+            .pop();
+
+          lastStructuralNode!.appendChild(breakElement);
+        }
 
         nodes.forEach(node => element.appendChild(node));
         return element;
@@ -226,8 +240,6 @@ export class XMLTransformerService {
     // There is no parent in some case as a simple line break but we need to keep it as a line
     if (!parent) return [];
 
-    const hasNextSibling = !!lb.nextElementSibling;
-
     while (element) {
       const clonedElement = element.cloneNode(true);
       elements.unshift(clonedElement);
@@ -237,6 +249,7 @@ export class XMLTransformerService {
     }
 
     while (parent && parent.nodeName !== TagName.ROOT) {
+      const isEmpty = !parent.textContent.trim().length;
       const clonedParent = parent.cloneNode(false) as HTMLElement;
       clonedParent.append(...elements);
       elements = [clonedParent];
@@ -250,7 +263,7 @@ export class XMLTransformerService {
       }
       const removableElement = parent;
       parent = parent.parentElement;
-      if (!hasNextSibling) removableElement.remove();
+      if (isEmpty) removableElement.remove();
     }
 
     return elements;
