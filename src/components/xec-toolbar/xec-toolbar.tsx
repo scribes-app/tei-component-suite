@@ -15,9 +15,6 @@ export class XecToolbar {
   private readonly clickViewRaw: EventEmitter<void>;
 
   @Event()
-  private readonly clickViewXML: EventEmitter<void>;
-
-  @Event()
   private readonly clickUnclear: EventEmitter<UnionUnclearReason>;
 
   @Event()
@@ -67,7 +64,6 @@ export class XecToolbar {
       clickViewRaw,
       clickRTL,
       clickLTR,
-      clickViewXML,
       clickUnclear,
       clickHighlighted,
       clickDeleted,
@@ -227,11 +223,6 @@ export class XecToolbar {
                 ]
               }}
             />
-          )}
-          {config.controls.viewXML && (
-            <xec-button onClickButton={clickViewXML.emit.bind(this)}>
-              View XML
-            </xec-button>
           )}
         </div>
       </Host>

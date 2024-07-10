@@ -164,13 +164,6 @@ export class XecEditor {
     this.setActiveEditorState('textDirection', 'LTR');
   }
 
-  private onClickViewXML(): void {
-    this.popupElement.openPopup();
-    this.popupElement.setContent(
-      XMLTransformerService.transformEditor2XML(this.activeInstance.root.innerHTML)
-    );
-  }
-
   private onClickBlankSpace(): void {
     this.popupElement.setContent(
       <xec-blank-space-form
@@ -249,7 +242,6 @@ export class XecEditor {
       onClickLTR,
       onClickRTL,
       onClickViewRaw,
-      onClickViewXML,
       onClickUnclear,
       onClickHighlighted,
       onClickDeleted,
@@ -268,7 +260,6 @@ export class XecEditor {
           onClickViewRaw={onClickViewRaw.bind(this)}
           onClickRTL={onClickRTL.bind(this)}
           onClickLTR={onClickLTR.bind(this)}
-          onClickViewXML={onClickViewXML.bind(this)}
           onClickUnclear={onClickUnclear.bind(this)}
           onClickHighlighted={onClickHighlighted.bind(this)}
           onClickDeleted={onClickDeleted.bind(this)}
@@ -359,7 +350,6 @@ const defaultToolbarConfig: ToolbarConfig = {
     highlighted: true,
     unclear: true,
     viewRaw: true,
-    viewXML: true,
     textDirection: true,
     blankSpace: true,
   },

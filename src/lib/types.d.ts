@@ -101,7 +101,6 @@ export type ToolbarConfig = {
     deleted?: boolean;
     highlighted?: boolean;
     unclear?: boolean;
-    viewXML?: boolean;
     viewRaw?: boolean;
     textDirection?: boolean;
   }

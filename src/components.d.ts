@@ -232,7 +232,6 @@ declare global {
     };
     interface HTMLXecToolbarElementEventMap {
         "clickViewRaw": void;
-        "clickViewXML": void;
         "clickUnclear": UnionUnclearReason;
         "clickHighlighted": UnionHighlightedRend;
         "clickDeleted": UnionDeletedRend;
@@ -338,7 +337,6 @@ declare namespace LocalJSX {
         "onClickStructure"?: (event: XecToolbarCustomEvent<UnionStructureType|'anonymous-block'>) => void;
         "onClickUnclear"?: (event: XecToolbarCustomEvent<UnionUnclearReason>) => void;
         "onClickViewRaw"?: (event: XecToolbarCustomEvent<void>) => void;
-        "onClickViewXML"?: (event: XecToolbarCustomEvent<void>) => void;
         "textDirection"?: 'LTR'|'RTL';
         "viewRaw"?: boolean;
     }
