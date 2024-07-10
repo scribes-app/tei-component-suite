@@ -13,7 +13,8 @@ export type UnionIcons = (
   'angle-down' |
   'paragraph-rtl' |
   'paragraph-ltr' |
-  'white-space'
+  'white-space' |
+  'columns'
 )
 
 export type UnionEditorType = (
@@ -22,6 +23,10 @@ export type UnionEditorType = (
   'comment'
 )
 
+export type UnionLayoutType = (
+  'tabs' |
+  'columns'
+)
 
 export type UnionUnclearReason = (
   'legible_incomplete'|
@@ -95,6 +100,7 @@ export type DropdownItem = {
 
 export type ToolbarConfig = {
   controls: {
+    layout?: boolean;
     structure?: boolean;
     blankSpace?: boolean;
     abbreviation?: boolean;

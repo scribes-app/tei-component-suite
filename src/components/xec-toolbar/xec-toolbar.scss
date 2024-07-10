@@ -25,9 +25,18 @@
     flex-direction: row;
     justify-content: flex-start;
     align-items: stretch;
-    xec-button {
+    width: 100%;
+    > xec-button {
       &:first-child {
         border-top-left-radius: var(--xec-toolbar-border-radius);
+      }
+    }
+    .alignRight {
+      margin-left: auto;
+      xec-button {
+        &:last-child {
+          border-top-right-radius: var(--xec-toolbar-border-radius);
+        }
       }
     }
   }

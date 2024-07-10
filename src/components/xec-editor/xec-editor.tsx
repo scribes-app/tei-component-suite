@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import Quill from 'quill';
 import { XecBlankSpaceFormCustomEvent } from '../../components';
 import { TagName, delayed, registerBlots } from '../../lib/helper';
-import { EditorState, QuillInstance, ToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionUnclearReason, XecBlankSpaceFormValues, XecStructureFormValues } from '../../lib/types';
+import { EditorState, QuillInstance, ToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionLayoutType, UnionUnclearReason, XecBlankSpaceFormValues, XecStructureFormValues } from '../../lib/types';
 import { XMLTransformerService } from '../../services/xml-transformer.service';
 import { Delta } from 'quill/core';
 
@@ -47,6 +47,9 @@ export class XecEditor {
 
   @State()
   private activeEditor: UnionEditorType = 'transcribe';
+
+  @State()
+  private layoutType: UnionLayoutType = 'columns';
 
   @Method()
   public async getQuillInstances(): Promise<Map<UnionEditorType, QuillInstance>> {
@@ -113,6 +116,15 @@ export class XecEditor {
    * Switch active instance according to the current focused editor
    */
   private onFocusEditor(editorType: UnionEditorType): void {
+    this.activeInstance = this.editorInstances.get(editorType);
+    this.activeTextarea = this.textareaElements.get(editorType);
+    this.activeEditor = editorType;
+  }
+
+  /**
+   * Switch active instance according to the clicked tab
+   */
+  private onClickTab(editorType: UnionEditorType): void {
     this.activeInstance = this.editorInstances.get(editorType);
     this.activeTextarea = this.textareaElements.get(editorType);
     this.activeEditor = editorType;
@@ -224,6 +236,10 @@ export class XecEditor {
     this.activeInstance.format('abbreviation', type);
   }
 
+  private onClickLayout(): void {
+    this.layoutType = this.layoutType === 'columns' ? 'tabs' : 'columns';
+  }
+
   private onClickStructure(): void {
     this.popupElement.setContent(
       <xec-structure-form
@@ -265,6 +281,7 @@ export class XecEditor {
    */
   public render(): JSX.Element {
     const {
+      onClickTab,
       onClickLTR,
       onClickRTL,
       onClickViewRaw,
@@ -274,9 +291,11 @@ export class XecEditor {
       onClickAbbreviation,
       onClickBlankSpace,
       onClickStructure,
+      onClickLayout,
       config,
       activeEditor,
       editorStates,
+      layoutType
     } = this;
     return (
       <Host>
@@ -292,10 +311,15 @@ export class XecEditor {
           onClickAbbreviation={onClickAbbreviation.bind(this)}
           onClickBlankSpace={onClickBlankSpace.bind(this)}
           onClickStructure={onClickStructure.bind(this)}
+          onClickLayout={onClickLayout.bind(this)}
+          layoutType={layoutType}
           textDirection={editorStates.get(activeEditor).textDirection}
           viewRaw={editorStates.get(activeEditor).viewType === 'raw'}
         />
-        <div class="editors">
+        <div class={classNames({
+          editors: true,
+          [layoutType]: true,
+        })}>
           <div class={classNames({
             editorWrapper: true,
             transcribe: true,
@@ -359,6 +383,17 @@ export class XecEditor {
               ref={el => this.textareaElements.set('comment', el)}
             />
           </div>
+          {layoutType === 'tabs' && (
+            <div class="tabs">
+              {['transcribe', 'translate', 'comment']
+                .filter(editorType => editorType !== activeEditor)
+                .map(editorType => (
+                  <button class="tab" key={editorType} onClick={onClickTab.bind(this, editorType)}>
+                    {editorType}
+                  </button>
+              ))}
+            </div>
+          )}
         </div>
         <xec-popup ref={el => this.popupElement = el} />
       </Host>
@@ -370,6 +405,7 @@ export class XecEditor {
 
 const defaultToolbarConfig: ToolbarConfig = {
   controls: {
+    layout: true,
     structure: true,
     abbreviation: true,
     deleted: true,

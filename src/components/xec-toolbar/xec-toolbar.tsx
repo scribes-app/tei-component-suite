@@ -2,7 +2,7 @@ import { Component, Host, h } from '@stencil/core';
 import { Event, EventEmitter, Fragment, JSX, Prop, Watch } from '@stencil/core/internal';
 import classNames from 'classnames';
 import { isEqual } from '../../lib/helper';
-import { ToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionHighlightedRend, UnionStructureType, UnionUnclearReason } from '../../lib/types';
+import { ToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionHighlightedRend, UnionLayoutType, UnionStructureType, UnionUnclearReason } from '../../lib/types';
 
 @Component({
   tag: 'xec-toolbar',
@@ -38,11 +38,17 @@ export class XecToolbar {
   @Event()
   private readonly clickLTR: EventEmitter<void>;
 
+  @Event()
+  private readonly clickLayout: EventEmitter<void>;
+
   @Prop()
   public readonly config: ToolbarConfig;
 
   @Prop()
   public readonly textDirection: 'LTR'|'RTL' = 'LTR';
+
+  @Prop()
+  public readonly layoutType: UnionLayoutType = 'columns';
 
   @Prop()
   public readonly viewRaw: boolean = false;
@@ -62,6 +68,7 @@ export class XecToolbar {
   public render(): JSX.Element {
     const {
       clickViewRaw,
+      clickLayout,
       clickRTL,
       clickLTR,
       clickUnclear,
@@ -71,6 +78,7 @@ export class XecToolbar {
       clickBlankSpace,
       clickStructure,
       textDirection,
+      layoutType,
       viewRaw,
       disabled,
       config
@@ -224,6 +232,17 @@ export class XecToolbar {
               }}
             />
           )}
+          <div class="alignRight">
+            {config.controls.layout && (
+              <xec-button
+                class="align-right"
+                onClickButton={clickLayout.emit.bind(this)}
+                iconOnly
+                active={layoutType === 'columns'}
+                icon="columns"
+              />
+            )}
+          </div>
         </div>
       </Host>
     );

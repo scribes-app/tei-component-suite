@@ -5,8 +5,8 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { DropdownConfig, QuillInstance, ToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionIcons, UnionStructureType, UnionUnclearReason, XecBlankSpaceFormValues, XecSelectEntry, XecStructureFormValues } from "./lib/types";
-export { DropdownConfig, QuillInstance, ToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionIcons, UnionStructureType, UnionUnclearReason, XecBlankSpaceFormValues, XecSelectEntry, XecStructureFormValues } from "./lib/types";
+import { DropdownConfig, QuillInstance, ToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionIcons, UnionLayoutType, UnionStructureType, UnionUnclearReason, XecBlankSpaceFormValues, XecSelectEntry, XecStructureFormValues } from "./lib/types";
+export { DropdownConfig, QuillInstance, ToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionIcons, UnionLayoutType, UnionStructureType, UnionUnclearReason, XecBlankSpaceFormValues, XecSelectEntry, XecStructureFormValues } from "./lib/types";
 export namespace Components {
     interface XecBlankSpaceForm {
         "isValid": () => Promise<boolean>;
@@ -75,6 +75,7 @@ export namespace Components {
     interface XecToolbar {
         "config": ToolbarConfig;
         "disabled": boolean;
+        "layoutType": UnionLayoutType;
         "textDirection": 'LTR'|'RTL';
         "viewRaw": boolean;
     }
@@ -240,6 +241,7 @@ declare global {
         "clickBlankSpace": void;
         "clickRTL": void;
         "clickLTR": void;
+        "clickLayout": void;
     }
     interface HTMLXecToolbarElement extends Components.XecToolbar, HTMLStencilElement {
         addEventListener<K extends keyof HTMLXecToolbarElementEventMap>(type: K, listener: (this: HTMLXecToolbarElement, ev: XecToolbarCustomEvent<HTMLXecToolbarElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -328,11 +330,13 @@ declare namespace LocalJSX {
     interface XecToolbar {
         "config"?: ToolbarConfig;
         "disabled"?: boolean;
+        "layoutType"?: UnionLayoutType;
         "onClickAbbreviation"?: (event: XecToolbarCustomEvent<UnionAbbreviationType>) => void;
         "onClickBlankSpace"?: (event: XecToolbarCustomEvent<void>) => void;
         "onClickDeleted"?: (event: XecToolbarCustomEvent<UnionDeletedRend>) => void;
         "onClickHighlighted"?: (event: XecToolbarCustomEvent<UnionHighlightedRend>) => void;
         "onClickLTR"?: (event: XecToolbarCustomEvent<void>) => void;
+        "onClickLayout"?: (event: XecToolbarCustomEvent<void>) => void;
         "onClickRTL"?: (event: XecToolbarCustomEvent<void>) => void;
         "onClickStructure"?: (event: XecToolbarCustomEvent<UnionStructureType|'anonymous-block'>) => void;
         "onClickUnclear"?: (event: XecToolbarCustomEvent<UnionUnclearReason>) => void;

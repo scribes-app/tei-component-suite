@@ -18,6 +18,8 @@ xec-editor {
   --xec-editor-text-element-border-color: #{$color-slate-200};
   --xec-editor-text-element-background-color: #{rgba($color-slate-100, .5)};
   --xec-editor-tooltip-color: #{$color-slate-500};
+  --xec-editor-tabs-button-color: #{$color-slate-500};
+  --xec-editor-tabs-button-hover-background-color: #{$color-slate-100};
 
   position: relative;
 
@@ -40,6 +42,45 @@ xec-editor {
       bottom-left-radius: var(--xec-editor-border-radius);
       bottom-right-radius: var(--xec-editor-border-radius);
     };
+    &.tabs {
+      .editorWrapper {
+        flex: 0 0 calc(100% - 20px);
+        border-bottom-left-radius: var(--xec-editor-border-radius);
+      }
+      .tabs {
+        flex: 0 0 20px;
+        display: flex;
+        flex-direction: column;
+        button.tab {
+          cursor: pointer;
+          display: block;
+          flex: 1;
+          writing-mode: vertical-lr;
+          background-color: white;
+          color: var(--xec-editor-tabs-button-color);
+          font-weight: 700;
+          font-size: 8px;
+          border: none;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          border-right: 1px solid var(--xec-editor-border-color);
+          border-top: 1px solid var(--xec-editor-border-color);
+          transition: border-color 0.2s ease,
+                      background-color 0.2s ease;
+          &:last-child {
+            border-bottom: 1px solid var(--xec-editor-border-color);
+            border-bottom-right-radius: var(--xec-editor-border-radius);
+          }
+          &:hover {
+            border-color: var(--xec-editor-focus-border-color);
+            background-color: var(--xec-editor-tabs-button-hover-background-color);
+          }
+        }
+      }
+      .editorWrapper:not(.active) {
+        display: none;
+      }
+    }
     .editorWrapper {
       position: relative;
       flex: 0 0 math.div(100%, 3);
