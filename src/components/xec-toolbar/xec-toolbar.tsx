@@ -41,6 +41,9 @@ export class XecToolbar {
   @Event()
   private readonly clickLayout: EventEmitter<void>;
 
+  @Event()
+  private readonly clickRemove: EventEmitter<void>;
+
   @Prop()
   public readonly config: ToolbarConfig;
 
@@ -77,6 +80,7 @@ export class XecToolbar {
       clickAbbreviation,
       clickBlankSpace,
       clickStructure,
+      clickRemove,
       textDirection,
       layoutType,
       viewRaw,
@@ -95,6 +99,14 @@ export class XecToolbar {
               onClickButton={clickViewRaw.emit.bind(this)}
               iconOnly
               icon="code-simple"
+            />
+          )}
+          {config.controls.remove && (
+            <xec-button
+              active={viewRaw}
+              onClickButton={clickRemove.emit.bind(this)}
+              iconOnly
+              icon="broom"
             />
           )}
           {config.controls.textDirection && (

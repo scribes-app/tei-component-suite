@@ -243,6 +243,7 @@ declare global {
         "clickRTL": void;
         "clickLTR": void;
         "clickLayout": void;
+        "clickRemove": void;
     }
     interface HTMLXecToolbarElement extends Components.XecToolbar, HTMLStencilElement {
         addEventListener<K extends keyof HTMLXecToolbarElementEventMap>(type: K, listener: (this: HTMLXecToolbarElement, ev: XecToolbarCustomEvent<HTMLXecToolbarElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -340,6 +341,7 @@ declare namespace LocalJSX {
         "onClickLTR"?: (event: XecToolbarCustomEvent<void>) => void;
         "onClickLayout"?: (event: XecToolbarCustomEvent<void>) => void;
         "onClickRTL"?: (event: XecToolbarCustomEvent<void>) => void;
+        "onClickRemove"?: (event: XecToolbarCustomEvent<void>) => void;
         "onClickStructure"?: (event: XecToolbarCustomEvent<UnionStructureType|'anonymous-block'>) => void;
         "onClickUnclear"?: (event: XecToolbarCustomEvent<UnionUnclearReason>) => void;
         "onClickViewRaw"?: (event: XecToolbarCustomEvent<void>) => void;

@@ -154,7 +154,7 @@ export class XecEditor {
    * Sync the lines between the editors
    */
   private syncLines(): void {
-    const ln = this.editorInstances.get('transcribe').root.querySelectorAll(TagName.BLOCK).length;
+    const ln = this.activeInstance.getLines().length;
     for (const instance of [this.editorInstances.get('translate'), this.editorInstances.get('comment')]) {
       instance.root.querySelectorAll(TagName.BLOCK).forEach((block, index) => {
         if (index >= ln) block.remove();
@@ -240,6 +240,15 @@ export class XecEditor {
     this.layoutType = this.layoutType === 'columns' ? 'tabs' : 'columns';
   }
 
+  private onClickRemove(): void {
+    // Should has the focus to get proper selection
+    this.activeInstance.focus();
+    const range = this.activeInstance.getSelection();
+    const text = this.activeInstance.getText(range.index, range.length);
+    this.activeInstance.deleteText(range);
+    this.activeInstance.insertText(range.index, text);
+  }
+
   private onClickStructure(): void {
     this.popupElement.setContent(
       <xec-structure-form
@@ -290,6 +299,7 @@ export class XecEditor {
       onClickDeleted,
       onClickAbbreviation,
       onClickBlankSpace,
+      onClickRemove,
       onClickStructure,
       onClickLayout,
       config,
@@ -312,6 +322,7 @@ export class XecEditor {
           onClickBlankSpace={onClickBlankSpace.bind(this)}
           onClickStructure={onClickStructure.bind(this)}
           onClickLayout={onClickLayout.bind(this)}
+          onClickRemove={onClickRemove.bind(this)}
           layoutType={layoutType}
           textDirection={editorStates.get(activeEditor).textDirection}
           viewRaw={editorStates.get(activeEditor).viewType === 'raw'}
@@ -406,6 +417,7 @@ export class XecEditor {
 const defaultToolbarConfig: ToolbarConfig = {
   controls: {
     layout: true,
+    remove: true,
     structure: true,
     abbreviation: true,
     deleted: true,

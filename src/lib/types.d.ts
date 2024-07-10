@@ -14,6 +14,7 @@ export type UnionIcons = (
   'paragraph-rtl' |
   'paragraph-ltr' |
   'white-space' |
+  'broom' |
   'columns'
 )
 
@@ -101,6 +102,7 @@ export type DropdownItem = {
 export type ToolbarConfig = {
   controls: {
     layout?: boolean;
+    remove?: boolean;
     structure?: boolean;
     blankSpace?: boolean;
     abbreviation?: boolean;
