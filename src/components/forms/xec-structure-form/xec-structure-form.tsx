@@ -66,7 +66,6 @@ export class XecStructureForm {
           onSelectChange={onChange.bind(this)}
           entries={[
             { id: 'chapter', label: 'Chapter' },
-            { id: 'book', label: 'Book' },
             { id: 'anonymous-block', label: 'Anonymous block' },
           ]}
         />

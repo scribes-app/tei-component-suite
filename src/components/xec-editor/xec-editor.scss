@@ -16,7 +16,7 @@ xec-editor {
   --xec-editor-focus-title-color: #{$color-slate-700};
 
   --xec-editor-text-element-border-color: #{$color-slate-200};
-  --xec-editor-text-element-background-color: #{$color-slate-100};
+  --xec-editor-text-element-background-color: #{rgba($color-slate-100, .5)};
   --xec-editor-tooltip-color: #{$color-slate-500};
 
   position: relative;
@@ -218,6 +218,22 @@ xec-editor {
           }
           space:hover::before {
             content: 'Blank space: (' attr(value) attr(unit) ')';
+          }
+          div.first {
+            &[type="chapter"]::before {
+              content: '[c]: ' attr(n) ' ';
+            }
+            &::before {
+              font-weight: 700;
+              font-size: 10px;
+            }
+          }
+          ab.first {
+            &::before {
+              content: '[ab]: ' attr(n) ' ';
+              font-weight: 700;
+              font-size: 10px;
+            }
           }
         }
 

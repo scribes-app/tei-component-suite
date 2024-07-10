@@ -3,9 +3,10 @@ import { JSX, Method, Prop, State } from '@stencil/core/internal';
 import classNames from 'classnames';
 import Quill from 'quill';
 import { XecBlankSpaceFormCustomEvent } from '../../components';
-import { registerBlots } from '../../lib/helper';
+import { delayed, registerBlots } from '../../lib/helper';
 import { EditorState, QuillInstance, ToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionUnclearReason, XecBlankSpaceFormValues, XecStructureFormValues } from '../../lib/types';
 import { XMLTransformerService } from '../../services/xml-transformer.service';
+import { Delta } from 'quill/core';
 
 @Component({
   tag: 'xec-editor',
@@ -91,6 +92,7 @@ export class XecEditor {
     for (const [editorType, editorElement] of Array.from(this.editorElements.entries())) {
       const instance = new Quill(editorElement);
       instance.root.addEventListener('focus', this.onFocusEditor.bind(this, editorType));
+      instance.on('text-change', this.onTextChange.bind(this, editorType));
       this.editorInstances.set(editorType, instance);
     }
 
@@ -115,6 +117,18 @@ export class XecEditor {
     this.activeEditor = editorType;
   }
 
+  private onTextChange(editorType: UnionEditorType, delta: Delta): void {
+    // Insert a new block (a line in the editor point of view)
+    if (delta.ops.at(1)?.attributes?.block) {
+      const instance = this.editorInstances.get(editorType);
+      const range = instance.getSelection();
+      instance.root.innerHTML = XMLTransformerService.addClasses(instance.root.innerHTML);
+      delayed(() => {
+        instance.setSelection({ index: (range?.index ?? 0) + 1, length: 0 });
+      }, 15);
+    }
+  }
+
   /**
    * Handle the click on the view raw button
    * Toggle the view between raw and default
@@ -122,9 +136,11 @@ export class XecEditor {
   private onClickViewRaw(): void {
     const editorState = this.editorStates.get(this.activeEditor);
     if (editorState.viewType === 'raw') {
-      this.activeInstance.root.innerHTML = XMLTransformerService.XML2Editor(this.activeTextarea.value);
+      const editorContent = XMLTransformerService.XML2Editor(this.activeTextarea.value);
+      this.activeInstance.root.innerHTML = XMLTransformerService.addClasses(editorContent);
     } else {
-      this.activeTextarea.value = XMLTransformerService.editor2XML(this.activeInstance.root.innerHTML);
+      const xmlContent = XMLTransformerService.editor2XML(this.activeInstance.root.innerHTML);
+      this.activeTextarea.value = XMLTransformerService.removeClasses(xmlContent);
     }
     this.setActiveEditorState('viewType', editorState.viewType === 'raw' ? 'default' : 'raw');
   }
@@ -202,7 +218,14 @@ export class XecEditor {
     this.popupElement.closePopup();
     const blot = event.detail.type === 'anonymous-block' ? 'anonymous-block' : 'structure';
     const params = event.detail.type === 'anonymous-block' ? event.detail.ref : { type: event.detail.type, n: event.detail.ref };
+
     this.activeInstance.format(blot, params);
+
+    const range = this.activeInstance.getSelection();
+    this.activeInstance.root.innerHTML = XMLTransformerService.addClasses(this.activeInstance.root.innerHTML);
+    delayed(() => {
+      this.activeInstance.setSelection(range);
+    }, 15);
   }
 
   /**

@@ -16,6 +16,27 @@ export class XMLTransformerService {
     return root.innerHTML;
   }
 
+  static addClasses(html: string): string {
+    const root = document.createElement(TagName.ROOT);
+    root.innerHTML = html;
+    (Array.from(root.querySelectorAll([TagName.STRUCTURE, TagName.ANONYMOUS_BLOCK].join(','))) as HTMLElement[])
+      .reduce<HTMLElement[]>((acc, element) => {
+        const exists = acc.some(el => el.nodeName === element.nodeName && el.getAttribute('n') === element.getAttribute('n'));
+        if (!exists) acc.push(element);
+        return acc;
+      }, [])
+      .forEach(el => el.classList.add('first'));
+    return root.innerHTML;
+  }
+
+  static removeClasses(html: string): string {
+    const root = document.createElement(TagName.ROOT);
+    root.innerHTML = html;
+    (Array.from(root.querySelectorAll([TagName.STRUCTURE, TagName.ANONYMOUS_BLOCK].join(','))) as HTMLElement[])
+      .forEach(el => el.removeAttribute('class'));
+    return root.innerHTML;
+  }
+
   static editor2XML(html: string): string {
     const root = document.createElement(TagName.ROOT);
     root.innerHTML = XMLTransformerService.transformEditor2XML(XMLTransformerService.preprocessLines(html));
