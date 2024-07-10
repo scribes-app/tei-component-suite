@@ -134,6 +134,12 @@ xec-editor {
           &.direction-rtl {
             direction: rtl;
             text-align: right;
+            line {
+              &::before {
+                right: -20px;
+                left: unset;
+              }
+            }
           }
           &.direction-ltr {
             direction: ltr;
