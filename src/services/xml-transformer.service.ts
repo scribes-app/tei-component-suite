@@ -159,50 +159,21 @@ export class XMLTransformerService {
         const element = node.cloneNode(false) as HTMLElement;
         const nodes = Array.from(node.childNodes).map(n => XMLTransformerService.tranformNodeToXML(n, line));
 
-        // Add line break to the block if it hasn't any child
         const hasChild = Boolean(nodes.length) && nodes.some(n => n.nodeName !== TagName.UNKNOWN);
-        if (!hasChild) {
-          const breakElement = document.createElement(TagName.LINE_BREAK);
-          breakElement.setAttribute('n', line.toString());
-          nodes.push(breakElement);
-        };
+        const breakElement = document.createElement(TagName.LINE_BREAK);
+        breakElement.setAttribute('n', line.toString());
+
+        // Add line break to the last structure child of the block or if it has no child
+        if (!hasChild) nodes.push(breakElement);
+        // Otherwise add the line break to the last structure child of the block
+        else [...nodes].reverse().find(n => n.nodeName === TagName.STRUCTURE)?.appendChild(breakElement);
 
         nodes.forEach(node => element.appendChild(node));
         return element;
       }
-      case TagName.STRUCTURE: {
-        /**
-         * Check whether the node has an anonymous block as a child, if so, then we need to add the line break to it
-         * otherwise, we need to add the line break to the node itself
-         */
-        if (node.lastChild.nodeName === TagName.ANONYMOUS_BLOCK) {
-          const element = node.cloneNode(false) as HTMLElement;
-          const nodes = Array.from(node.childNodes).map(n => XMLTransformerService.tranformNodeToXML(n, line));
-          nodes.forEach(node => element.appendChild(node));
-          return element;
-        } else {
-          const element = node.cloneNode(false) as HTMLElement;
-          const nodes = Array.from(node.childNodes).map(n => XMLTransformerService.tranformNodeToXML(n, line));
-          nodes.forEach(node => element.appendChild(node));
-          const breakElement = document.createElement(TagName.LINE_BREAK);
-          breakElement.setAttribute('n', line.toString());
-          element.appendChild(breakElement);
-          return element;
-        }
-      }
-      case TagName.ANONYMOUS_BLOCK: {
-        const element = node.cloneNode(false) as HTMLElement;
-        const nodes = Array.from(node.childNodes).map(n => XMLTransformerService.tranformNodeToXML(n, line));
-        nodes.forEach(node => element.appendChild(node));
 
-        if (!(node as HTMLElement).nextElementSibling) {
-          const breakElement = document.createElement(TagName.LINE_BREAK);
-          breakElement.setAttribute('n', line.toString());
-          element.appendChild(breakElement);
-        }
-
-        return element;
-      }
+      case TagName.STRUCTURE:
+      case TagName.ANONYMOUS_BLOCK:
       case TagName.UNCLEAR:
       case TagName.DELETED:
       case TagName.HIGHLIGHTED:
@@ -212,6 +183,7 @@ export class XMLTransformerService {
         nodes.forEach(node => element.appendChild(node));
         return element;
       }
+
       case TagName.TEXT: {
         const parent = node.parentElement;
         const element = document.createElement(TagName.WORD_WRAP);
