@@ -107,6 +107,7 @@ export class XecToolbar {
               onClickButton={clickRemove.emit.bind(this)}
               iconOnly
               icon="broom"
+              disabled={viewRaw}
             />
           )}
           {config.controls.textDirection && (
