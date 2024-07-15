@@ -136,15 +136,19 @@ export class XecEditor {
   private onTextChange(editorType: UnionEditorType, delta: Delta): void {
     if (this.concurrentTextChange) return;
     // Insert a new block (a line in the editor point of view) or delete it
-    if (delta.ops.at(1)?.attributes?.block || delta.ops.at(1)?.delete || delta.ops.at(0)?.delete) {
+    const isNewBlock = delta.ops.at(0)?.attributes?.block || delta.ops.at(1)?.attributes?.block;
+    const isDelete = delta.ops.at(0)?.delete || delta.ops.at(1)?.delete;
+    if (isNewBlock || isDelete) {
+      this.concurrentTextChange = true;
+
       const instance = this.editorInstances.get(editorType);
       const range = instance.getSelection();
       instance.root.innerHTML = XMLTransformerService.addClasses(instance.root.innerHTML);
+      const nextPosition = (range?.index ?? 0) + (isNewBlock ? 1 : 0);
 
-      this.concurrentTextChange = true;
       this.syncLines();
       delayed(() => {
-        instance.setSelection({ index: (range?.index ?? 0) + 1, length: 0 });
+        instance.setSelection({ index: nextPosition, length: 0 });
         this.concurrentTextChange = false;
       }, 15);
     }
@@ -263,6 +267,7 @@ export class XecEditor {
     const blot = event.detail.type === 'anonymous-block' ? 'anonymous-block' : 'structure';
     const params = event.detail.type === 'anonymous-block' ? event.detail.ref : { type: event.detail.type, n: event.detail.ref };
 
+    this.activeInstance.focus();
     this.activeInstance.format(blot, params);
 
     const range = this.activeInstance.getSelection();
