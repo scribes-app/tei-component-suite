@@ -276,6 +276,22 @@ xec-editor {
               font-size: 10px;
             }
           }
+          div.last {
+            &[type="chapter"]::after {
+              content: ' [/c]';
+            }
+            &::after {
+              font-weight: 700;
+              font-size: 10px;
+            }
+          }
+          ab.last {
+            &::after {
+              content: ' [/ab]';
+              font-weight: 700;
+              font-size: 10px;
+            }
+          }
         }
 
       }

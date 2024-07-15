@@ -19,6 +19,7 @@ export class XMLTransformerService {
   static addClasses(html: string): string {
     const root = document.createElement(TagName.ROOT);
     root.innerHTML = html;
+    // Adds first class to the first structure or anonymous block with the same name
     (Array.from(root.querySelectorAll([TagName.STRUCTURE, TagName.ANONYMOUS_BLOCK].join(','))) as HTMLElement[])
       .reduce<HTMLElement[]>((acc, element) => {
         const exists = acc.some(el => el.nodeName === element.nodeName && el.getAttribute('n') === element.getAttribute('n'));
@@ -26,6 +27,20 @@ export class XMLTransformerService {
         return acc;
       }, [])
       .forEach(el => el.classList.add('first'));
+
+    // Adds last class to the last structure or anonymous block with the same name
+    (Array.from(root.querySelectorAll([TagName.STRUCTURE, TagName.ANONYMOUS_BLOCK].join(','))) as HTMLElement[])
+      .reduce<HTMLElement[]>((acc, element) => {
+        const index = acc.findIndex(el => el.nodeName === element.nodeName && el.getAttribute('n') === element.getAttribute('n'));
+        if (index !== -1) {
+          acc.splice(index, 1, element);
+        } else {
+          acc.push(element);
+        }
+        return acc;
+      }, [])
+      .forEach(el => el.classList.add('last'));
+
     return root.innerHTML;
   }
 
@@ -167,7 +182,6 @@ export class XMLTransformerService {
       if (node.hasChildNodes() || node.nodeName === TagName.LINE_BREAK) mergedNodes.push(node);
     });
 
-
     return mergedNodes;
   }
 
@@ -182,8 +196,7 @@ export class XMLTransformerService {
       case TagName.BLOCK: {
         const element = node.cloneNode(false) as HTMLElement;
         const nodes = Array.from(node.childNodes).map(n => XMLTransformerService.tranformNodeToXML(n, line));
-
-        const hasChild = Boolean(nodes.length) && nodes.some(n => n.nodeName !== TagName.UNKNOWN);
+        const hasChild = Boolean(nodes.length) && nodes.some(n => n.nodeName !== TagName.UNKNOWN && n.nodeName !== TagName.WORD_WRAP);
         const breakElement = document.createElement(TagName.LINE_BREAK);
         breakElement.setAttribute('n', line.toString());
 
@@ -196,10 +209,12 @@ export class XMLTransformerService {
           const lastStructuralNode = [...nodes]
             .flatMap(n => [
               ...(n.nodeName === TagName.STRUCTURE ? [n as HTMLElement] : []),
-              ...(Array.from((n as HTMLElement).querySelectorAll([TagName.STRUCTURE, TagName.ANONYMOUS_BLOCK].join(', '))))
+              ...(Array.from((n as HTMLElement).querySelectorAll([
+                  TagName.STRUCTURE,
+                  TagName.ANONYMOUS_BLOCK
+              ].join(', '))))
             ])
             .pop();
-
           lastStructuralNode?.appendChild(breakElement);
         }
 
