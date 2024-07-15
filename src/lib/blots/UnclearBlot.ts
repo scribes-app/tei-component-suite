@@ -1,9 +1,10 @@
 import { InlineBlot } from 'parchment';
 import { UnionUnclearReason } from '../types';
+import { TagName } from '../helper';
 
 export class UnclearBlot extends InlineBlot {
   static blotName = 'unclear';
-  static tagName = 'UNCLEAR';
+  static tagName = TagName.UNCLEAR;
 
   static create(reason: UnionUnclearReason) {
     const node = super.create();
@@ -11,10 +12,6 @@ export class UnclearBlot extends InlineBlot {
     return node;
   }
 
-  /**
-   * This method is used to define the formats that the blot will accept not that there is an issue with the InlineBlot
-   * @see https://github.com/slab/quill/issues/1866
-   */
   static formats(domNode: HTMLElement) {
     return domNode.getAttribute('reason') || true;
   }

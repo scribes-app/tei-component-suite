@@ -7,6 +7,7 @@ import { AbbreviationBlot } from './blots/AbbreviationBlot';
 import { BlankSpaceBlot } from './blots/BlankSpaceBlot';
 import { AnonymousBlockBlot } from './blots/AnonymousBlockBlot';
 import { StructureBlot } from './blots/StructureBlot';
+import { PunctuationBlot } from './blots/PunctuationBlot';
 
 /**
  * Check if two objects are equal (this is the fastest way with JSON.stringify do not use lodash anymore)
@@ -25,6 +26,7 @@ export const registerBlots = () => {
     DeletedBlot,
     AbbreviationBlot,
     BlankSpaceBlot,
+    PunctuationBlot,
     AnonymousBlockBlot,
     StructureBlot
   ].forEach(blot => Quill.register(blot, true));
@@ -72,7 +74,7 @@ export const removeClickOutside = (listener: (this: Window, ev: MouseEvent) => a
  */
 export const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 
-export enum TagName {
+export const enum TagName {
   ROOT = 'ROOT',
   BLOCK = 'LINE',
   STRUCTURE = 'DIV',
@@ -84,6 +86,7 @@ export enum TagName {
   BLANK_SPACE = 'SPACE',
   WORD = 'W',
   WORD_WRAP = 'WORDWRAP',
+  PUNCTUATION = 'PC',
   TEXT = '#text',
   UNKNOWN = 'UNKNOWN',
   LINE_BREAK = 'LB'
@@ -99,5 +102,20 @@ export const XMLAvailableTagsList: (TagName|string)[] =  [
   TagName.BLANK_SPACE,
   TagName.TEXT,
   TagName.WORD,
+  TagName.PUNCTUATION,
   TagName.LINE_BREAK,
-]
+];
+
+export const Punctuations = [
+  // Hebrew punctuation
+  '\u05BE',
+  '\u05C0',
+  '\u05C3',
+  '\u05C6',
+  '\u05F3',
+  '\u05F4',
+  // Hebrew ligatures
+  '\u05F0',
+  '\u05F1',
+  '\u05F2',
+];

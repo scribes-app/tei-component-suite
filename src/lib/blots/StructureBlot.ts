@@ -9,10 +9,12 @@ import { BlankSpaceBlot } from './BlankSpaceBlot';
 import { DeletedBlot } from './DeletedBlot';
 import { HighlightedBlot } from './HighlightedBlot';
 import { UnclearBlot } from './UnclearBlot';
+import { PunctuationBlot } from './PunctuationBlot';
+import { TagName } from '../helper';
 
 export class StructureBlot extends InlineBlot {
   static blotName = 'structure';
-  static tagName = 'DIV';
+  static tagName = TagName.STRUCTURE;
   static allowedChildren: BlotConstructor[] = [
     AnonymousBlockBlot,
     HighlightedBlot,
@@ -20,6 +22,7 @@ export class StructureBlot extends InlineBlot {
     AbbreviationBlot,
     BlankSpaceBlot,
     DeletedBlot,
+    PunctuationBlot,
     Break,
     Text
   ];
@@ -31,10 +34,6 @@ export class StructureBlot extends InlineBlot {
     return node;
   }
 
-  /**
-   * This method is used to define the formats that the blot will accept not that there is an issue with the InlineBlot
-   * @see https://github.com/slab/quill/issues/1866
-   */
   static formats(domNode: HTMLElement) {
     return {
       type: domNode.getAttribute('type') || 'chapter',

@@ -224,6 +224,7 @@ xec-editor {
           del,
           h,
           space,
+          pc,
           abbr {
             position: relative;
             border: 1px solid var(--xec-editor-text-element-border-color);
@@ -268,6 +269,9 @@ xec-editor {
           }
           space:hover::before {
             content: 'Blank space: (' attr(value) attr(unit) ')';
+          }
+          pc:hover::before {
+            content: 'Punctuation';
           }
           div.first {
             &[type="chapter"]::before {

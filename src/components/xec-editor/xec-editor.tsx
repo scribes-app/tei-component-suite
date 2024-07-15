@@ -3,11 +3,10 @@ import { JSX, Method, Prop, State } from '@stencil/core/internal';
 import classNames from 'classnames';
 import Quill from 'quill';
 import { XecBlankSpaceFormCustomEvent } from '../../components';
-import { TagName, capitalize, delayed, registerBlots } from '../../lib/helper';
+import { Punctuations, TagName, capitalize, delayed, registerBlots } from '../../lib/helper';
 import { EditorState, QuillInstance, ToolbarConfig, UnionAbbreviationType, UnionCommentType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionLayoutType, UnionUnclearReason, XecBlankSpaceFormValues, XecStructureFormValues } from '../../lib/types';
 import { XMLTransformerService } from '../../services/xml-transformer.service';
 import { Delta } from 'quill/core';
-
 @Component({
   tag: 'xec-editor',
   styleUrls: [
@@ -226,7 +225,10 @@ export class XecEditor {
 
   private onSubmitBlankSpaceForm(event: XecBlankSpaceFormCustomEvent<XecBlankSpaceFormValues>): void {
     this.popupElement.closePopup();
-    this.activeInstance.format('blank-space', event.detail);
+    this.activeInstance.focus();
+    const range = this.activeInstance.getSelection();
+    this.activeInstance.insertEmbed(range.index, 'blank-space', event.detail);
+    this.activeInstance.setSelection({ index: range.index + 1, length: 0 });
   }
 
   private onClickUnclear(event: CustomEvent<UnionUnclearReason>): void {
@@ -247,6 +249,14 @@ export class XecEditor {
   private onClickAbbreviation(event: CustomEvent<UnionAbbreviationType>): void {
     const { detail: type } = event;
     this.activeInstance.format('abbreviation', type);
+  }
+
+  private onClickPunctuation(event: CustomEvent<typeof Punctuations[number]>): void {
+    const { detail: type } = event;
+    this.activeInstance.focus();
+    const range = this.activeInstance.getSelection();
+    this.activeInstance.insertEmbed(range.index, 'punctuation', type);
+    this.activeInstance.setSelection({ index: range.index + 1, length: 0 });
   }
 
   private onClickLayout(): void {
@@ -320,6 +330,7 @@ export class XecEditor {
       onClickDeleted,
       onClickAbbreviation,
       onClickBlankSpace,
+      onClickPunctuation,
       onClickRemove,
       onClickStructure,
       onClickLayout,
@@ -343,6 +354,7 @@ export class XecEditor {
           onClickDeleted={onClickDeleted.bind(this)}
           onClickAbbreviation={onClickAbbreviation.bind(this)}
           onClickBlankSpace={onClickBlankSpace.bind(this)}
+          onClickPunctuation={onClickPunctuation.bind(this)}
           onClickStructure={onClickStructure.bind(this)}
           onClickLayout={onClickLayout.bind(this)}
           onClickRemove={onClickRemove.bind(this)}
@@ -473,6 +485,7 @@ const defaultToolbarConfig: ToolbarConfig = {
     layout: true,
     remove: true,
     structure: true,
+    punctuation: true,
     abbreviation: true,
     deleted: true,
     highlighted: true,

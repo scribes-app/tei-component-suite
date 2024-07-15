@@ -1,7 +1,7 @@
 import { Component, Host, h } from '@stencil/core';
 import { Event, EventEmitter, Fragment, JSX, Prop, Watch } from '@stencil/core/internal';
 import classNames from 'classnames';
-import { isEqual } from '../../lib/helper';
+import { Punctuations, isEqual } from '../../lib/helper';
 import { ToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionHighlightedRend, UnionLayoutType, UnionStructureType, UnionUnclearReason } from '../../lib/types';
 
 @Component({
@@ -25,6 +25,9 @@ export class XecToolbar {
 
   @Event()
   private readonly clickAbbreviation: EventEmitter<UnionAbbreviationType>;
+
+  @Event()
+  private readonly clickPunctuation: EventEmitter<string>;
 
   @Event()
   private readonly clickStructure: EventEmitter<UnionStructureType|'anonymous-block'>;
@@ -79,6 +82,7 @@ export class XecToolbar {
       clickDeleted,
       clickAbbreviation,
       clickBlankSpace,
+      clickPunctuation,
       clickStructure,
       clickRemove,
       textDirection,
@@ -270,6 +274,19 @@ export class XecToolbar {
                     onClick: clickAbbreviation.emit.bind(this, 'other')
                   }
                 ]
+              }}
+            />
+          )}
+          {config.controls.punctuation && (
+            <xec-dropdown
+              disabled={viewRaw}
+              config={{
+                label: 'Punctuation',
+                items: Punctuations.map(punctuation => ({
+                  id: punctuation,
+                  label: punctuation,
+                  onClick: clickPunctuation.emit.bind(this, punctuation)
+                }))
               }}
             />
           )}

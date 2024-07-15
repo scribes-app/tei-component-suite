@@ -111,6 +111,7 @@ export type ToolbarConfig = {
     remove?: boolean;
     structure?: boolean;
     blankSpace?: boolean;
+    punctuation?: boolean;
     abbreviation?: boolean;
     deleted?: boolean;
     highlighted?: boolean;

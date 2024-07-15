@@ -1,14 +1,18 @@
 import Block from 'quill/blots/block';
 import Text from 'quill/blots/text';
 import Break from 'quill/blots/break';
-import { delayed } from '../helper';
+import { TagName, delayed } from '../helper';
 import { BlotConstructor } from 'parchment';
 import { StructureBlot } from './StructureBlot';
+import { PunctuationBlot } from './PunctuationBlot';
+import { BlankSpaceBlot } from './BlankSpaceBlot';
 
 export class BlockBlot extends Block {
-  static tagName = 'LINE';
+  static tagName = TagName.BLOCK;
   static allowedChildren: BlotConstructor[] = [
     StructureBlot,
+    BlankSpaceBlot,
+    PunctuationBlot,
     Break,
     Text
   ];

@@ -19,6 +19,11 @@ export class XMLTransformerService {
   static addClasses(html: string): string {
     const root = document.createElement(TagName.ROOT);
     root.innerHTML = html;
+
+    // Cleanup
+    (Array.from(root.querySelectorAll([TagName.STRUCTURE, TagName.ANONYMOUS_BLOCK].join(','))) as HTMLElement[])
+      .forEach(el => el.removeAttribute('class'));
+
     // Adds first class to the first structure or anonymous block with the same name
     (Array.from(root.querySelectorAll([TagName.STRUCTURE, TagName.ANONYMOUS_BLOCK].join(','))) as HTMLElement[])
       .reduce<HTMLElement[]>((acc, element) => {
@@ -91,10 +96,16 @@ export class XMLTransformerService {
       element.append(...XMLTransformerService.extractLineContentFromXML(ln, tree));
     }
 
-
+    // Unwrap the words from the XML
     for (const [ln, element] of map.entries()) {
       const unwrappedLine = XMLTransformerService.unwrapWordsFromXML(element);
       map.set(ln, unwrappedLine);
+    }
+
+    // Process custom tag behavior
+    for (const [ln, element] of map.entries()) {
+      const processedLine = XMLTransformerService.processCustomTagFromXML(element);
+      map.set(ln, processedLine);
     }
 
     const root = document.createElement(TagName.ROOT);
@@ -196,7 +207,7 @@ export class XMLTransformerService {
       case TagName.BLOCK: {
         const element = node.cloneNode(false) as HTMLElement;
         const nodes = Array.from(node.childNodes).map(n => XMLTransformerService.tranformNodeToXML(n, line));
-        const hasChild = Boolean(nodes.length) && nodes.some(n => n.nodeName !== TagName.UNKNOWN && n.nodeName !== TagName.WORD_WRAP);
+        const hasChild = Boolean(nodes.length) && nodes.some(n => ![TagName.WORD_WRAP, TagName.UNKNOWN, TagName.PUNCTUATION, TagName.BLANK_SPACE].includes(n.nodeName as any));
         const breakElement = document.createElement(TagName.LINE_BREAK);
         breakElement.setAttribute('n', line.toString());
 
@@ -219,6 +230,12 @@ export class XMLTransformerService {
         }
 
         nodes.forEach(node => element.appendChild(node));
+        return element;
+      }
+
+      case TagName.PUNCTUATION: {
+        const element = document.createElement(TagName.PUNCTUATION);
+        element.textContent = node.textContent;
         return element;
       }
 
@@ -306,13 +323,41 @@ export class XMLTransformerService {
     return elements;
   }
 
+  static processCustomTagFromXML(line: HTMLElement): HTMLElement {
+    const clonedLine = line.cloneNode(true) as HTMLElement;
+    clonedLine.querySelectorAll(TagName.BLANK_SPACE).forEach(blankSpace => {
+      const inner = document.createElement('span');
+      inner.textContent = '_';
+      inner.setAttribute('contenteditable', 'false');
+      blankSpace.appendChild(inner);
+    });
+    return clonedLine;
+  }
+
   static unwrapWordsFromXML(line: HTMLElement): HTMLElement {
     const clonedLine = line.cloneNode(true) as HTMLElement;
+
+    // Insert space after blank space
+    const blankSpaces = Array.from(clonedLine.querySelectorAll(TagName.BLANK_SPACE));
+    blankSpaces.forEach(blankSpace => {
+      const hasWordAfter = blankSpace.nextElementSibling?.nodeName === TagName.WORD;
+      if (hasWordAfter) blankSpace.after(document.createTextNode(' '));
+    });
+
+    // Insert space after punctuation
+    const punctuations = Array.from(clonedLine.querySelectorAll(TagName.PUNCTUATION));
+    punctuations.forEach(punctuation => {
+      const hasWordAfter = punctuation.nextElementSibling?.nodeName === TagName.WORD;
+      if (hasWordAfter) punctuation.after(document.createTextNode(' '));
+    });
+
+    // Unwrap the words
     const words = Array.from(clonedLine.querySelectorAll(TagName.WORD));
     words.forEach(word => {
-      const isLastWord = Array.from(clonedLine.querySelectorAll(TagName.WORD)).pop().isSameNode(word);
+      const isLastWord = Array.from(clonedLine.querySelectorAll(TagName.WORD)).pop().isSameNode(word) || word.nextElementSibling?.nodeName === TagName.PUNCTUATION;
       word.replaceWith(document.createTextNode(word.textContent + (isLastWord ? '' : ' ')));
     });
+
     return clonedLine;
   }
 }

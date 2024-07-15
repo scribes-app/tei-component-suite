@@ -238,6 +238,7 @@ declare global {
         "clickHighlighted": UnionHighlightedRend;
         "clickDeleted": UnionDeletedRend;
         "clickAbbreviation": UnionAbbreviationType;
+        "clickPunctuation": string;
         "clickStructure": UnionStructureType|'anonymous-block';
         "clickBlankSpace": void;
         "clickRTL": void;
@@ -340,6 +341,7 @@ declare namespace LocalJSX {
         "onClickHighlighted"?: (event: XecToolbarCustomEvent<UnionHighlightedRend>) => void;
         "onClickLTR"?: (event: XecToolbarCustomEvent<void>) => void;
         "onClickLayout"?: (event: XecToolbarCustomEvent<void>) => void;
+        "onClickPunctuation"?: (event: XecToolbarCustomEvent<string>) => void;
         "onClickRTL"?: (event: XecToolbarCustomEvent<void>) => void;
         "onClickRemove"?: (event: XecToolbarCustomEvent<void>) => void;
         "onClickStructure"?: (event: XecToolbarCustomEvent<UnionStructureType|'anonymous-block'>) => void;
