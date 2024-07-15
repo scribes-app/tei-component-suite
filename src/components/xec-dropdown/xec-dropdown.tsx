@@ -58,9 +58,15 @@ export class XecDropdown {
     this.isOpen = false;
   }
 
+  private onClickItem(handler: () => any): void {
+    handler();
+    this.isOpen = false;
+  }
+
   render() {
     const {
       onClickDropdown,
+      onClickItem,
       config: { items, label },
       disabled,
       isOpen
@@ -81,10 +87,10 @@ export class XecDropdown {
           open: isOpen
         })}>
           {items.map(({ label, items, onClick }) => (
-            <xec-button stretched class="item" onClickButton={onClick}>
+            <xec-button stretched class="item" onClickButton={onClickItem.bind(this, onClick)}>
               {label}
               {items && items.map(({ label, onClick }) => {
-                <xec-button stretched class="item" onClickButton={onClick}>
+                <xec-button stretched class="item" onClickButton={onClickItem.bind(this, onClick)}>
                   {label}
                 </xec-button>
               })}

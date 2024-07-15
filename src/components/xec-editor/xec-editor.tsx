@@ -3,8 +3,8 @@ import { JSX, Method, Prop, State } from '@stencil/core/internal';
 import classNames from 'classnames';
 import Quill from 'quill';
 import { XecBlankSpaceFormCustomEvent } from '../../components';
-import { TagName, delayed, registerBlots } from '../../lib/helper';
-import { EditorState, QuillInstance, ToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionLayoutType, UnionUnclearReason, XecBlankSpaceFormValues, XecStructureFormValues } from '../../lib/types';
+import { TagName, capitalize, delayed, registerBlots } from '../../lib/helper';
+import { EditorState, QuillInstance, ToolbarConfig, UnionAbbreviationType, UnionCommentType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionLayoutType, UnionUnclearReason, XecBlankSpaceFormValues, XecStructureFormValues } from '../../lib/types';
 import { XMLTransformerService } from '../../services/xml-transformer.service';
 import { Delta } from 'quill/core';
 
@@ -42,11 +42,15 @@ export class XecEditor {
   private editorStates: Map<UnionEditorType, EditorState> = new Map([
     ['transcribe', { viewType: 'default', textDirection: 'LTR' }],
     ['translate', { viewType: 'default', textDirection: 'LTR' }],
-    ['comment', { viewType: 'default', textDirection: 'LTR' }],
+    ['comment_line', { viewType: 'default', textDirection: 'LTR' }],
+    ['comment_verse', { viewType: 'default', textDirection: 'LTR' }],
   ]);
 
   @State()
   private activeEditor: UnionEditorType = 'transcribe';
+
+  @State()
+  private activeCommentTab: UnionCommentType = 'line';
 
   @State()
   private layoutType: UnionLayoutType = 'columns';
@@ -159,7 +163,12 @@ export class XecEditor {
    */
   private syncLines(): void {
     const ln = this.activeInstance.getLines().length;
-    for (const instance of [this.editorInstances.get('translate'), this.editorInstances.get('comment')]) {
+    const instances = [
+      this.editorInstances.get('translate'),
+      this.editorInstances.get('comment_line'),
+      this.editorInstances.get('comment_verse')
+    ];
+    for (const instance of instances) {
       instance.root.querySelectorAll(TagName.BLOCK).forEach((block, index) => {
         if (index >= ln) block.remove();
       });
@@ -244,6 +253,13 @@ export class XecEditor {
     this.layoutType = this.layoutType === 'columns' ? 'tabs' : 'columns';
   }
 
+  private onClickCommentDropdown(type: UnionCommentType): void {
+    this.activeCommentTab = type;
+    this.activeInstance = this.editorInstances.get(`comment_${type}` as UnionEditorType);
+    this.activeTextarea = this.textareaElements.get(`comment_${type}` as UnionEditorType);
+    this.activeEditor = `comment_${type}` as UnionEditorType;
+  }
+
   private onClickRemove(): void {
     // Should has the focus to get proper selection
     this.activeInstance.focus();
@@ -307,9 +323,11 @@ export class XecEditor {
       onClickRemove,
       onClickStructure,
       onClickLayout,
+      onClickCommentDropdown,
       config,
       activeEditor,
       editorStates,
+      activeCommentTab,
       layoutType
     } = this;
     return (
@@ -382,30 +400,61 @@ export class XecEditor {
           <div class={classNames({
             editorWrapper: true,
             comment: true,
-            active: activeEditor === 'comment'
+            active: activeEditor.includes('comment')
           })}>
+            <xec-dropdown
+              config={{
+                label: capitalize(activeCommentTab.replace('comment_', '')),
+                items: [
+                  {
+                    id: 'line',
+                    label: 'Line',
+                    onClick: onClickCommentDropdown.bind(this, 'line')
+                  },
+                  {
+                    id: 'verse',
+                    label: 'Verse',
+                    onClick: onClickCommentDropdown.bind(this, 'verse')
+                  }
+                ]
+              }}
+            />
             <div
               class={classNames({
                 editor: true,
-                hidden: editorStates.get('comment').viewType === 'raw',
+                hidden: editorStates.get('comment_line').viewType === 'raw' || activeCommentTab !== 'line',
               })}
-              ref={el => this.editorElements.set('comment', el)}
+              ref={el => this.editorElements.set('comment_line', el)}
             />
             <textarea class={classNames({
                 editor: true,
-                hidden: editorStates.get('comment').viewType === 'default',
+                hidden: editorStates.get('comment_line').viewType === 'default' || activeCommentTab !== 'line',
                 textarea: true,
               })}
-              ref={el => this.textareaElements.set('comment', el)}
+              ref={el => this.textareaElements.set('comment_line', el)}
+            />
+            <div
+              class={classNames({
+                editor: true,
+                hidden: editorStates.get('comment_verse').viewType === 'raw' || activeCommentTab !== 'verse',
+              })}
+              ref={el => this.editorElements.set('comment_verse', el)}
+            />
+            <textarea class={classNames({
+                editor: true,
+                hidden: editorStates.get('comment_verse').viewType === 'default' || activeCommentTab !== 'verse',
+                textarea: true,
+              })}
+              ref={el => this.textareaElements.set('comment_verse', el)}
             />
           </div>
           {layoutType === 'tabs' && (
             <div class="tabs">
-              {['transcribe', 'translate', 'comment']
+              {['transcribe', 'translate', `comment_${activeCommentTab}`]
                 .filter(editorType => editorType !== activeEditor)
                 .map(editorType => (
                   <button class="tab" key={editorType} onClick={onClickTab.bind(this, editorType)}>
-                    {editorType}
+                    {editorType.replace(/(_line|_verse)/, '')}
                   </button>
               ))}
             </div>

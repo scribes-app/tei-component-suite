@@ -90,6 +90,12 @@ xec-editor {
         color: var(--xec-editor-border-color);
       }
       transition: border-color 0.2s ease;
+      xec-dropdown {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 10;
+      }
       &::before {
         position: absolute;
         pointer-events: none;
@@ -162,7 +168,7 @@ xec-editor {
           border: none;
           resize: none;
           position: relative;
-          padding: 30px;
+          padding: 40px 30px 30px;
           height: 100%;
           width: 100%;
         }
@@ -174,7 +180,7 @@ xec-editor {
         // Quill Editor override
         .ql-editor {
           position: relative;
-          padding: 30px;
+          padding: 40px 30px 30px;
           counter-set: line 0;
           &.direction-rtl {
             direction: rtl;

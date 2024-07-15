@@ -67,6 +67,11 @@ export const removeClickOutside = (listener: (this: Window, ev: MouseEvent) => a
   globalThis.removeEventListener('click', listener);
 }
 
+/**
+ * Capitalize the first letter of a string
+ */
+export const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
+
 export enum TagName {
   ROOT = 'ROOT',
   BLOCK = 'LINE',

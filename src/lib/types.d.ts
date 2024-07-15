@@ -21,7 +21,13 @@ export type UnionIcons = (
 export type UnionEditorType = (
   'transcribe' |
   'translate' |
-  'comment'
+  'comment_verse' |
+  'comment_line'
+)
+
+export type UnionCommentType = (
+  'verse' |
+  'line'
 )
 
 export type UnionLayoutType = (
