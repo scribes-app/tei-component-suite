@@ -46,6 +46,9 @@ xec-editor {
       .editorWrapper {
         flex: 0 0 calc(100% - 20px);
         border-bottom-left-radius: var(--xec-editor-border-radius);
+        &.comment {
+          border-bottom-right-radius: 0;
+        }
       }
       .tabs {
         flex: 0 0 20px;
