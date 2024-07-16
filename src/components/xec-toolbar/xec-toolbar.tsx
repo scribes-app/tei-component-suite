@@ -47,6 +47,9 @@ export class XecToolbar {
   @Event()
   private readonly clickRemove: EventEmitter<void>;
 
+  @Event()
+  private readonly clickSettings: EventEmitter<void>;
+
   @Prop()
   public readonly config: ToolbarConfig;
 
@@ -85,6 +88,7 @@ export class XecToolbar {
       clickPunctuation,
       clickStructure,
       clickRemove,
+      clickSettings,
       textDirection,
       layoutType,
       viewRaw,
@@ -291,9 +295,15 @@ export class XecToolbar {
             />
           )}
           <div class="alignRight">
+            {config.controls.settings && (
+              <xec-button
+                onClickButton={clickSettings.emit.bind(this)}
+                iconOnly
+                icon="settings"
+              />
+            )}
             {config.controls.layout && (
               <xec-button
-                class="align-right"
                 onClickButton={clickLayout.emit.bind(this)}
                 iconOnly
                 active={layoutType === 'columns'}

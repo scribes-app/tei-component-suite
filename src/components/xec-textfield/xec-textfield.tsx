@@ -16,6 +16,9 @@ export class XecTextfield {
   public readonly inputId: string;
 
   @Prop()
+  public readonly defaultValue: string;
+
+  @Prop()
   public readonly inputName: string;
 
   @Prop()
@@ -132,6 +135,7 @@ export class XecTextfield {
       onInput,
       inputId: id,
       inputName: name,
+      defaultValue,
       placeholder,
       min,
       max,
@@ -150,6 +154,7 @@ export class XecTextfield {
           placeholder={placeholder}
           min={min}
           max={max}
+          defaultValue={defaultValue}
           required={required}
           pattern={pattern}
           onInput={onInput.bind(this)}

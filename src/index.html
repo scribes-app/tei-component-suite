@@ -8,12 +8,28 @@
     <script type="module" src="/build/xml-editor-cmp.esm.js"></script>
     <script nomodule src="/build/xml-editor-cmp.js"></script>
     <script>
+      // This is used to set the path to the symbols.svg file which contains the icons used in the editor.
       globalThis.XecConfig = {
         symbolsPath: '/symbols.svg',
       }
     </script>
   </head>
   <body style="margin-top: 200px;">
-    <xec-editor></xec-editor>
+    <xec-editor
+      id="editor"
+    ></xec-editor>
+    <script>
+      const editor = document.getElementById('editor');
+      // UNCOMMENT TO SEE THE TEI OUTPUT IN THE CONSOLE EVERY 3 SECONDS
+      // ------------------------------
+      // setInterval(() => {
+      //   editor.getFormattedTEI().then(tei => {
+      //     console.log('transcribe',     tei.transcribe && new DOMParser().parseFromString(tei.transcribe, 'text/xml'));
+      //     console.log('translate',      tei.translate && new DOMParser().parseFromString(tei.translate, 'text/xml'));
+      //     console.log('comment_line',   tei.comment_line && new DOMParser().parseFromString(tei.comment_line, 'text/xml'));
+      //     console.log('comment_verse',  tei.comment_verse && new DOMParser().parseFromString(tei.comment_verse, 'text/xml'));
+      //   });
+      // }, 3000);
+    </script>
   </body>
 </html>

@@ -5,8 +5,8 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { DropdownConfig, QuillInstance, ToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionIcons, UnionLayoutType, UnionStructureType, UnionUnclearReason, XecBlankSpaceFormValues, XecSelectEntry, XecStructureFormValues } from "./lib/types";
-export { DropdownConfig, QuillInstance, ToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionIcons, UnionLayoutType, UnionStructureType, UnionUnclearReason, XecBlankSpaceFormValues, XecSelectEntry, XecStructureFormValues } from "./lib/types";
+import { DropdownConfig, EditorFormattedTEI, EditorSettings, QuillInstance, ToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionIcons, UnionLayoutType, UnionStructureType, UnionUnclearReason, XecBlankSpaceFormValues, XecSelectEntry, XecSettingsFormValues, XecStructureFormValues } from "./lib/types";
+export { DropdownConfig, EditorFormattedTEI, EditorSettings, QuillInstance, ToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionIcons, UnionLayoutType, UnionStructureType, UnionUnclearReason, XecBlankSpaceFormValues, XecSelectEntry, XecSettingsFormValues, XecStructureFormValues } from "./lib/types";
 export namespace Components {
     interface XecBlankSpaceForm {
         "isValid": () => Promise<boolean>;
@@ -30,9 +30,12 @@ export namespace Components {
         "open": () => Promise<void>;
     }
     interface XecEditor {
-        "config": ToolbarConfig;
+        "getFormattedTEI": () => Promise<EditorFormattedTEI>;
         "getQuillInstances": () => Promise<Map<UnionEditorType, QuillInstance>>;
+        "getSettings": () => Promise<EditorSettings>;
         "lock": () => Promise<void>;
+        "settings": EditorSettings;
+        "toolbarConfig": ToolbarConfig;
         "unlock": () => Promise<void>;
     }
     interface XecIcon {
@@ -55,11 +58,16 @@ export namespace Components {
         "required"?: boolean;
         "setValue": (value: string) => Promise<void>;
     }
+    interface XecSettingsForm {
+        "defaultValues": XecSettingsFormValues;
+        "isValid": () => Promise<boolean>;
+    }
     interface XecStructureForm {
         "isValid": () => Promise<boolean>;
     }
     interface XecTextfield {
         "allowedValues"?: (string|number)[];
+        "defaultValue": string;
         "getValue": () => Promise<string>;
         "inputId": string;
         "inputName": string;
@@ -96,6 +104,10 @@ export interface XecIconCustomEvent<T> extends CustomEvent<T> {
 export interface XecSelectCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLXecSelectElement;
+}
+export interface XecSettingsFormCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLXecSettingsFormElement;
 }
 export interface XecStructureFormCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -197,6 +209,24 @@ declare global {
         prototype: HTMLXecSelectElement;
         new (): HTMLXecSelectElement;
     };
+    interface HTMLXecSettingsFormElementEventMap {
+        "formChange": XecSettingsFormValues;
+        "formSubmit": XecSettingsFormValues;
+    }
+    interface HTMLXecSettingsFormElement extends Components.XecSettingsForm, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLXecSettingsFormElementEventMap>(type: K, listener: (this: HTMLXecSettingsFormElement, ev: XecSettingsFormCustomEvent<HTMLXecSettingsFormElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLXecSettingsFormElementEventMap>(type: K, listener: (this: HTMLXecSettingsFormElement, ev: XecSettingsFormCustomEvent<HTMLXecSettingsFormElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLXecSettingsFormElement: {
+        prototype: HTMLXecSettingsFormElement;
+        new (): HTMLXecSettingsFormElement;
+    };
     interface HTMLXecStructureFormElementEventMap {
         "formChange": XecStructureFormValues;
         "formSubmit": XecStructureFormValues;
@@ -245,6 +275,7 @@ declare global {
         "clickLTR": void;
         "clickLayout": void;
         "clickRemove": void;
+        "clickSettings": void;
     }
     interface HTMLXecToolbarElement extends Components.XecToolbar, HTMLStencilElement {
         addEventListener<K extends keyof HTMLXecToolbarElementEventMap>(type: K, listener: (this: HTMLXecToolbarElement, ev: XecToolbarCustomEvent<HTMLXecToolbarElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -268,6 +299,7 @@ declare global {
         "xec-icon": HTMLXecIconElement;
         "xec-popup": HTMLXecPopupElement;
         "xec-select": HTMLXecSelectElement;
+        "xec-settings-form": HTMLXecSettingsFormElement;
         "xec-structure-form": HTMLXecStructureFormElement;
         "xec-textfield": HTMLXecTextfieldElement;
         "xec-toolbar": HTMLXecToolbarElement;
@@ -296,7 +328,8 @@ declare namespace LocalJSX {
         "disabled"?: boolean;
     }
     interface XecEditor {
-        "config"?: ToolbarConfig;
+        "settings"?: EditorSettings;
+        "toolbarConfig"?: ToolbarConfig;
     }
     interface XecIcon {
         "icon"?: UnionIcons;
@@ -314,12 +347,18 @@ declare namespace LocalJSX {
         "placeholder"?: string;
         "required"?: boolean;
     }
+    interface XecSettingsForm {
+        "defaultValues"?: XecSettingsFormValues;
+        "onFormChange"?: (event: XecSettingsFormCustomEvent<XecSettingsFormValues>) => void;
+        "onFormSubmit"?: (event: XecSettingsFormCustomEvent<XecSettingsFormValues>) => void;
+    }
     interface XecStructureForm {
         "onFormChange"?: (event: XecStructureFormCustomEvent<XecStructureFormValues>) => void;
         "onFormSubmit"?: (event: XecStructureFormCustomEvent<XecStructureFormValues>) => void;
     }
     interface XecTextfield {
         "allowedValues"?: (string|number)[];
+        "defaultValue"?: string;
         "inputId"?: string;
         "inputName"?: string;
         "integer"?: boolean;
@@ -344,6 +383,7 @@ declare namespace LocalJSX {
         "onClickPunctuation"?: (event: XecToolbarCustomEvent<string>) => void;
         "onClickRTL"?: (event: XecToolbarCustomEvent<void>) => void;
         "onClickRemove"?: (event: XecToolbarCustomEvent<void>) => void;
+        "onClickSettings"?: (event: XecToolbarCustomEvent<void>) => void;
         "onClickStructure"?: (event: XecToolbarCustomEvent<UnionStructureType|'anonymous-block'>) => void;
         "onClickUnclear"?: (event: XecToolbarCustomEvent<UnionUnclearReason>) => void;
         "onClickViewRaw"?: (event: XecToolbarCustomEvent<void>) => void;
@@ -358,6 +398,7 @@ declare namespace LocalJSX {
         "xec-icon": XecIcon;
         "xec-popup": XecPopup;
         "xec-select": XecSelect;
+        "xec-settings-form": XecSettingsForm;
         "xec-structure-form": XecStructureForm;
         "xec-textfield": XecTextfield;
         "xec-toolbar": XecToolbar;
@@ -374,6 +415,7 @@ declare module "@stencil/core" {
             "xec-icon": LocalJSX.XecIcon & JSXBase.HTMLAttributes<HTMLXecIconElement>;
             "xec-popup": LocalJSX.XecPopup & JSXBase.HTMLAttributes<HTMLXecPopupElement>;
             "xec-select": LocalJSX.XecSelect & JSXBase.HTMLAttributes<HTMLXecSelectElement>;
+            "xec-settings-form": LocalJSX.XecSettingsForm & JSXBase.HTMLAttributes<HTMLXecSettingsFormElement>;
             "xec-structure-form": LocalJSX.XecStructureForm & JSXBase.HTMLAttributes<HTMLXecStructureFormElement>;
             "xec-textfield": LocalJSX.XecTextfield & JSXBase.HTMLAttributes<HTMLXecTextfieldElement>;
             "xec-toolbar": LocalJSX.XecToolbar & JSXBase.HTMLAttributes<HTMLXecToolbarElement>;

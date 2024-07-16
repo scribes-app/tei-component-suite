@@ -87,6 +87,10 @@ export const enum TagName {
   WORD = 'W',
   WORD_WRAP = 'WORDWRAP',
   PUNCTUATION = 'PC',
+  TEXT_TEI = 'text',
+  BODY = 'body',
+  COLUMN = 'cb',
+  FOLIO = 'pb',
   TEXT = '#text',
   UNKNOWN = 'UNKNOWN',
   LINE_BREAK = 'LB'

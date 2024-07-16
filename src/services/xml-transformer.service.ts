@@ -1,5 +1,6 @@
-import formatXml from 'xml-formatter';
+import formatXml, { XMLFormatterOptions } from 'xml-formatter';
 import { TagName, XMLAvailableTagsList } from '../lib/helper';
+import { EditorSettings } from '../components';
 
 /**
  * @description This class is responsible for performing any transformation on the from or to XML data
@@ -57,13 +58,60 @@ export class XMLTransformerService {
     return root.innerHTML;
   }
 
+  static XML2TEI(html: string, settings: EditorSettings): string {
+    const root = document.createElement(TagName.ROOT);
+    const text = document.createElement('text');
+    const body = document.createElement('body');
+    text.setAttribute('xml:lang', 'g-l');
+
+    let rootWrapper: HTMLElement = body;
+
+    if (settings.manuscript?.folio) {
+      const folio = document.createElement(TagName.FOLIO);
+      folio.setAttribute('n', settings.manuscript.folio);
+      body.appendChild(folio);
+    }
+
+    if (settings.manuscript?.column) {
+      const column = document.createElement(TagName.COLUMN);
+      column.setAttribute('n', settings.manuscript.column);
+      body.appendChild(column);
+    }
+
+    if (settings.manuscript?.book) {
+      const book = document.createElement(TagName.STRUCTURE);
+      book.setAttribute('type', 'book');
+      book.setAttribute('n', settings.manuscript.book);
+      body.appendChild(book);
+      rootWrapper = book;
+    }
+
+    rootWrapper.innerHTML = html;
+
+    text.appendChild(body);
+    root.appendChild(text);
+
+    const formatConfig: XMLFormatterOptions = {
+      indentation: '  ',
+      collapseContent: true,
+      lineSeparator: '\n',
+    };
+
+    return formatXml(`
+      <?xml  version="1.0" encoding="utf-8"?>
+      <!DOCTYPE TEI>
+      <TEI xmlns="http://www.tei-c.org/ns/1.0">
+        ${formatXml(root.innerHTML, formatConfig)}
+      </TEI>
+    `, formatConfig);
+  }
+
   static editor2XML(html: string): string {
     const root = document.createElement(TagName.ROOT);
     root.innerHTML = XMLTransformerService.transformEditor2XML(XMLTransformerService.preprocessLines(html));
     const content =
       formatXml(root.outerHTML, {
         indentation: '  ',
-        collapseContent: true,
         lineSeparator: '\n',
       })
       .replace(/<root>|<\/root>/g, '')

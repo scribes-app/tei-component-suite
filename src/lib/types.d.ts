@@ -15,7 +15,8 @@ export type UnionIcons = (
   'paragraph-ltr' |
   'white-space' |
   'broom' |
-  'columns'
+  'columns' |
+  'settings'
 )
 
 export type UnionEditorType = (
@@ -107,6 +108,7 @@ export type DropdownItem = {
 
 export type ToolbarConfig = {
   controls: {
+    settings?: boolean;
     layout?: boolean;
     remove?: boolean;
     structure?: boolean;
@@ -119,6 +121,21 @@ export type ToolbarConfig = {
     viewRaw?: boolean;
     textDirection?: boolean;
   }
+}
+
+export type EditorSettings = {
+  manuscript?: {
+    column?: string;
+    folio?: string;
+    book?: string;
+  }
+}
+
+export type EditorFormattedTEI = {
+  transcribe?: string;
+  translate?: string;
+  comment_line?: string;
+  comment_verse?: string;
 }
 
 /**
@@ -140,4 +157,10 @@ export type XecBlankSpaceFormValues = {
 export type XecStructureFormValues = {
   type: UnionStructureType|'anonymous-block';
   ref: string;
+};
+
+export type XecSettingsFormValues = {
+  column?: string;
+  folio?: string;
+  book?: string;
 };

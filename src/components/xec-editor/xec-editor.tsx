@@ -1,12 +1,12 @@
 import { Component, Host, h } from '@stencil/core';
-import { JSX, Method, Prop, State } from '@stencil/core/internal';
+import { Element, JSX, Method, Prop, State, Watch } from '@stencil/core/internal';
 import classNames from 'classnames';
 import Quill from 'quill';
+import { Delta } from 'quill/core';
 import { XecBlankSpaceFormCustomEvent } from '../../components';
 import { Punctuations, TagName, capitalize, delayed, registerBlots } from '../../lib/helper';
-import { EditorState, QuillInstance, ToolbarConfig, UnionAbbreviationType, UnionCommentType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionLayoutType, UnionUnclearReason, XecBlankSpaceFormValues, XecStructureFormValues } from '../../lib/types';
+import { EditorFormattedTEI, EditorSettings, EditorState, QuillInstance, ToolbarConfig, UnionAbbreviationType, UnionCommentType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionLayoutType, UnionUnclearReason, XecBlankSpaceFormValues, XecSettingsFormValues, XecStructureFormValues } from '../../lib/types';
 import { XMLTransformerService } from '../../services/xml-transformer.service';
-import { Delta } from 'quill/core';
 @Component({
   tag: 'xec-editor',
   styleUrls: [
@@ -34,8 +34,14 @@ export class XecEditor {
   private popupElement: HTMLXecPopupElement;
   private concurrentTextChange: boolean = false;
 
-  @Prop()
-  public readonly config: ToolbarConfig = defaultToolbarConfig;
+  @Element()
+  private element: HTMLElement;
+
+  @Prop({ mutable: true })
+  public toolbarConfig: ToolbarConfig = defaultToolbarConfig;
+
+  @Prop({ mutable: true })
+  public settings: EditorSettings = defaultEditorSettings;
 
   @State()
   private editorStates: Map<UnionEditorType, EditorState> = new Map([
@@ -61,14 +67,45 @@ export class XecEditor {
 
   @Method()
   public async lock(): Promise<void> {
+    Array.from(this.textareaElements.values())
+      .forEach(textarea => textarea.setAttribute('disabled', ''));
     Array.from(this.editorInstances.values())
       .forEach(instance => instance.disable());
   }
 
   @Method()
   public async unlock(): Promise<void> {
+    Array.from(this.textareaElements.values())
+      .forEach(textarea => textarea.removeAttribute('disabled'));
     Array.from(this.editorInstances.values())
       .forEach(instance => instance.enable());
+  }
+
+  @Method()
+  public async getSettings(): Promise<EditorSettings> {
+    return this.settings;
+  }
+
+  @Method()
+  public async getFormattedTEI(): Promise<EditorFormattedTEI> {
+    const tei: EditorFormattedTEI = {};
+    const transform = (content: string): string => XMLTransformerService.XML2TEI(XMLTransformerService.editor2XML(content), this.settings);
+    for (const [editorType, instance] of this.editorInstances.entries()) {
+      if (instance.getLength() > 1) tei[editorType] = transform(instance.root.innerHTML);
+    }
+    return tei;
+  }
+
+  @Watch('settings')
+  public watchSettings(next?: string|object): void {
+    if (!next || typeof next === 'object') return;
+    this.settings = JSON.parse(next);
+  }
+
+  @Watch('toolbarConfig')
+  public watchToolbarConfig(next?: string|object): void {
+    if (!next || typeof next === 'object') return;
+    this.toolbarConfig = JSON.parse(next);
   }
 
   /**
@@ -77,6 +114,15 @@ export class XecEditor {
   public componentDidLoad(): void {
     this.initQuillInstances();
     this.initTextareaElements();
+  }
+
+  /**
+   * Lifecycle hook called before the component is rendered
+   */
+  public componentWillLoad(): void {
+    this.element.getAttribute('settings') ? this.watchSettings(this.element.getAttribute('settings')) : defaultEditorSettings;
+    this.element.getAttribute('toolbarConfig') ? this.watchToolbarConfig(this.element.getAttribute('toolbarConfig')) : defaultToolbarConfig;
+
   }
 
   /**
@@ -303,6 +349,27 @@ export class XecEditor {
     }, 15);
   }
 
+  private onClickSettings(): void {
+    this.popupElement.setContent(
+      <xec-settings-form
+        defaultValues={this.settings.manuscript}
+        onFormSubmit={this.onSubmitSettingsForm.bind(this)}
+      />
+    );
+    this.popupElement.openPopup();
+  }
+
+  private onSubmitSettingsForm(event: CustomEvent<XecSettingsFormValues>): void {
+    this.popupElement.closePopup();
+    this.settings = {
+      ...this.settings,
+      manuscript: {
+        ...this.settings.manuscript,
+        ...event.detail,
+      },
+    };
+  }
+
   /**
    * Set the active editor state
    * This solve the issue of the state not being updated when using deep properties
@@ -334,8 +401,9 @@ export class XecEditor {
       onClickRemove,
       onClickStructure,
       onClickLayout,
+      onClickSettings,
       onClickCommentDropdown,
-      config,
+      toolbarConfig,
       activeEditor,
       editorStates,
       activeCommentTab,
@@ -345,7 +413,7 @@ export class XecEditor {
       <Host>
         <xec-toolbar
           class="toolbar"
-          config={config}
+          config={toolbarConfig}
           onClickViewRaw={onClickViewRaw.bind(this)}
           onClickRTL={onClickRTL.bind(this)}
           onClickLTR={onClickLTR.bind(this)}
@@ -358,6 +426,7 @@ export class XecEditor {
           onClickStructure={onClickStructure.bind(this)}
           onClickLayout={onClickLayout.bind(this)}
           onClickRemove={onClickRemove.bind(this)}
+          onClickSettings={onClickSettings.bind(this)}
           layoutType={layoutType}
           textDirection={editorStates.get(activeEditor).textDirection}
           viewRaw={editorStates.get(activeEditor).viewType === 'raw'}
@@ -482,6 +551,7 @@ export class XecEditor {
 
 const defaultToolbarConfig: ToolbarConfig = {
   controls: {
+    settings: true,
     layout: true,
     remove: true,
     structure: true,
@@ -495,3 +565,11 @@ const defaultToolbarConfig: ToolbarConfig = {
     blankSpace: true,
   },
 };
+
+const defaultEditorSettings: EditorSettings = {
+  manuscript: {
+    column: undefined,
+    folio: undefined,
+    book: undefined,
+  }
+}
