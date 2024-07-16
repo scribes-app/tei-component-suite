@@ -8,12 +8,12 @@ This project is a web component library that provide a main component `XecEditor
 
 ### NPM Package
 
-- URL @SphRbtHyk should provide the package URL and replace @[package-owner]/[package-name] with the correct NPM package.
+[https://www.npmjs.com/package/@metztheolab/xml-editor-library]()
 
 ### Installation
 
 ```bash
-npm install @[package-owner]/[package-name]
+npm install @metztheolab/xml-editor-library
 ```
 
 **Without framework**
@@ -55,9 +55,9 @@ set -e
 # Removes the existing react-xec-editor folder
 rm -rf src/lib/react-xec-editor
 # Copies the necessary files to the src/lib/react-xec-editor folder
-cp -r node_modules/@[package-owner]/[package-name]/dist/react src/lib/react-xec-editor
+cp -r node_modules/@metztheolab/xml-editor-library/dist/react src/lib/react-xec-editor
 # Copies the symbols.svg file to the public/assets folder
-cp node_modules/@[package-owner]/[package-name]/dist/collection/symbols.svg public/assets/symbols.svg
+cp node_modules/@metztheolab/xml-editor-library/dist/collection/symbols.svg public/assets/symbols.svg
 ```
 
 In the package.json file, add postinstall script:
@@ -116,9 +116,9 @@ set -e
 # Removes the existing ng-xec-editor folder
 rm -rf src/lib/ng-xec-editor
 # Copies the necessary files to the src/lib/ng-xec-editor folder
-cp -r node_modules/@[package-owner]/[package-name]/dist/ng src/lib/ng-xec-editor
+cp -r node_modules/@metztheolab/xml-editor-library/dist/ng src/lib/ng-xec-editor
 # Copies the symbols.svg file to the public/assets folder
-cp node_modules/@[package-owner]/[package-name]/dist/collection/symbols.svg public/assets/symbols.svg
+cp node_modules/@metztheolab/xml-editor-library/dist/collection/symbols.svg public/assets/symbols.svg
 ```
 
 In the package.json file, add postinstall script:
@@ -146,7 +146,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DIRECTIVES as XecWebComponents } from '../lib/ng-xec-editor';
-import { defineCustomElements } from '@[package-owner]/[package-name]/loader';
+import { defineCustomElements } from '@metztheolab/xml-editor-library/loader';
 
 @NgModule({
   declarations: [
@@ -223,8 +223,9 @@ This project rely on the following tools:
 
 - Docker [https://www.docker.com/]()
 - Docker Compose [https://docs.docker.com/compose/]()
-- Make [https://www.gnu.org/software/make/]()
+- Stencil [https://stenciljs.com/]()
 - Quill [https://quilljs.com/]()
+- Make [https://www.gnu.org/software/make/]()
 
 ### Quick start
 
