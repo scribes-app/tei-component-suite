@@ -30,6 +30,164 @@
       //     console.log('comment_verse',  tei.comment_verse && new DOMParser().parseFromString(tei.comment_verse, 'text/xml'));
       //   });
       // }, 3000);
+      // ------------------------------
+
+      // UNCOMMENT TO SET THE INTITAL TEI CONTENT
+      // ------------------------------
+      // setTimeout(() => {
+      //   editor.setInitialTEI({
+      //     transcribe: `
+      //       <?xml version="1.0" encoding="utf-8"?>
+      //       <!DOCTYPE TEI>
+      //       <TEI xmlns="http://www.tei-c.org/ns/1.0">
+      //         <text xml:lang="g-l">
+      //           <body>
+      //             <div type="chapter" n="ABC">
+      //               <w>Lorem</w>
+      //               <w>ipsum</w>
+      //               <w>dolor</w>
+      //               <unclear reason="faded">
+      //                 <w>sit</w>
+      //                 <w>amet,</w>
+      //                 <w>consectetuer</w>
+      //                 <w>adipiscing</w>
+      //                 <w>elit.</w>
+      //               </unclear>
+      //               <w>Aenean</w>
+      //               <w>commodo</w>
+      //               <w>ligula</w>
+      //               <w>eget</w>
+      //               <w>dolor.</w>
+      //               <w>Aenean</w>
+      //               <w>massa.</w>
+      //               <lb n="1"/>
+      //               <w>Cum</w>
+      //               <w>sociis</w>
+      //               <w>natoque</w>
+      //               <w>penatibus</w>
+      //               <w>et</w>
+      //               <w>magnis</w>
+      //               <w>dis</w>
+      //               <w>parturient</w>
+      //               <w>montes,</w>
+      //               <w>nascetur</w>
+      //               <w>ridiculus</w>
+      //               <w>mus.</w>
+      //               <w>Donec</w>
+      //               <w>quam</w>
+      //               <w>felis,</w>
+      //               <w>ultricies</w>
+      //               <w>nec,</w>
+      //               <w>pellentesque</w>
+      //               <w>eu,</w>
+      //               <w>pretium</w>
+      //               <w>quis,</w>
+      //               <w>sem.</w>
+      //               <lb n="2"/>
+      //               <w>Nulla</w>
+      //               <w>consequat</w>
+      //               <w>massa</w>
+      //               <w>quis</w>
+      //               <w>enim.</w>
+      //               <del rend="strikethrough">
+      //                 <w>Donec</w>
+      //                 <w>pede</w>
+      //                 <w>justo,</w>
+      //                 <w>fringilla</w>
+      //                 <w>vel,</w>
+      //                 <w>aliquet</w>
+      //                 <w>nec</w>
+      //               </del>
+      //               <w>,</w>
+      //               <w>vulputate</w>
+      //               <w>eget,</w>
+      //               <w>arcu.</w>
+      //               <w>In</w>
+      //               <w>enim</w>
+      //               <w>justo,</w>
+      //               <w>rhoncus</w>
+      //               <w>ut,</w>
+      //               <w>imperdiet</w>
+      //               <w>a,</w>
+      //               <w>venenatis</w>
+      //               <w>vitae,</w>
+      //               <w>justo.</w>
+      //               <w>Nullam</w>
+      //               <w>dictum</w>
+      //               <w>felis</w>
+      //               <w>eu</w>
+      //               <w>pede</w>
+      //               <w>mollis</w>
+      //               <w>pretium.</w>
+      //               <w>Integer</w>
+      //               <w>tincidunt.</w>
+      //               <lb n="3"/>
+      //             </div>
+      //             <div type="chapter" n="XYZ">
+      //               <w>Cras</w>
+      //               <w>dapibus.</w>
+      //               <w>Vivamus</w>
+      //               <w>elementum</w>
+      //               <w>semper</w>
+      //               <w>nisi.</w>
+      //               <w>Aenean</w>
+      //               <w>vulputate</w>
+      //               <w>eleifend</w>
+      //               <w>tellus.</w>
+      //               <w>Aenean</w>
+      //               <w>leo</w>
+      //               <w>ligula,</w>
+      //               <w>porttitor</w>
+      //               <w>eu,</w>
+      //               <w>consequat</w>
+      //               <w>vitae,</w>
+      //               <w>eleifend</w>
+      //               <w>ac,</w>
+      //               <w>enim.</w>
+      //               <w>Aliquam</w>
+      //               <w>lorem</w>
+      //               <w>ante,</w>
+      //               <w>dapibus</w>
+      //               <w>in,</w>
+      //               <w>viverra</w>
+      //               <w>quis,</w>
+      //               <w>feugiat</w>
+      //               <w>a,</w>
+      //               <w>tellus.</w>
+      //               <ab n="AB-ABC">
+      //                 <w>Phasellus</w>
+      //                 <w>viverra</w>
+      //                 <w>nulla</w>
+      //                 <w>ut</w>
+      //                 <w>metus</w>
+      //                 <w>varius</w>
+      //                 <w>laoreet.</w>
+      //                 <lb n="4"/>
+      //               </ab>
+      //               <w>Quisque</w>
+      //               <w>rutrum.</w>
+      //               <w>Aenean</w>
+      //               <w>imperdiet.</w>
+      //               <w>Etiam</w>
+      //               <w>ultricies</w>
+      //               <w>nisi</w>
+      //               <w>vel</w>
+      //               <w>augue.</w>
+      //               <w>Curabitur</w>
+      //               <w>ullamcorper</w>
+      //               <w>ultricies</w>
+      //               <w>nisi.</w>
+      //               <w>Nam</w>
+      //               <w>eget</w>
+      //               <w>dui.</w>
+      //               <lb n="5"/>
+      //             </div>
+      //             <lb n="6"/>
+      //           </body>
+      //         </text>
+      //       </TEI>`
+      //   });
+      // }, 200);
     </script>
   </body>
 </html>

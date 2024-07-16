@@ -89,11 +89,38 @@ export class XecEditor {
   @Method()
   public async getFormattedTEI(): Promise<EditorFormattedTEI> {
     const tei: EditorFormattedTEI = {};
-    const transform = (content: string): string => XMLTransformerService.XML2TEI(XMLTransformerService.editor2XML(content), this.settings);
+    const transform = (content: string): string => {
+      return XMLTransformerService.XML2TEI(
+        XMLTransformerService.editor2XML(
+          XMLTransformerService.removeClasses(content)
+        )
+      , this.settings)
+    };
     for (const [editorType, instance] of this.editorInstances.entries()) {
       if (instance.getLength() > 1) tei[editorType] = transform(instance.root.innerHTML);
     }
     return tei;
+  }
+
+  @Method()
+  public async setInitialTEI(tei: EditorFormattedTEI): Promise<void> {
+    const transform = (content: string): string => {
+      return XMLTransformerService.addClasses(
+        XMLTransformerService.XML2Editor(
+          XMLTransformerService.TEI2XML(content)
+        )
+      );
+    };
+    for (const [editorType, instance] of this.editorInstances.entries()) {
+      if (tei[editorType]) instance.root.innerHTML = transform(tei[editorType]);
+    }
+
+    delayed(() => {
+      this.syncLines();
+      for (const instance of this.editorInstances.values()) {
+        delayed(instance.blur.bind(instance), 50);
+      }
+    }, 150);
   }
 
   @Watch('settings')
@@ -207,7 +234,7 @@ export class XecEditor {
    * Sync the lines between the editors
    */
   private syncLines(): void {
-    const ln = this.activeInstance.getLines().length;
+    const ln = this.editorInstances.get('transcribe').getLines().length;
     const instances = [
       this.editorInstances.get('translate'),
       this.editorInstances.get('comment_line'),

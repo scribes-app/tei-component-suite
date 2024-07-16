@@ -34,6 +34,7 @@ export namespace Components {
         "getQuillInstances": () => Promise<Map<UnionEditorType, QuillInstance>>;
         "getSettings": () => Promise<EditorSettings>;
         "lock": () => Promise<void>;
+        "setInitialTEI": (tei: EditorFormattedTEI) => Promise<void>;
         "settings": EditorSettings;
         "toolbarConfig": ToolbarConfig;
         "unlock": () => Promise<void>;

@@ -58,6 +58,34 @@ export class XMLTransformerService {
     return root.innerHTML;
   }
 
+  static TEI2Settings(html: string): EditorSettings {
+    const root = document.createElement(TagName.ROOT);
+    root.innerHTML = html
+      .replace(/<\/?\??(xml|TEI|!DOCTYPE|text|body|cb|pb).*>/gm, '');
+    return {
+      manuscript: {
+        folio: root.querySelector(TagName.FOLIO)?.getAttribute('n'),
+        column: root.querySelector(TagName.COLUMN)?.getAttribute('n'),
+        book: root.querySelector(`${TagName.STRUCTURE}[type="book"]`)?.getAttribute('n'),
+      }
+    };
+  }
+
+  static TEI2XML(html: string): string {
+    const root = document.createElement(TagName.ROOT);
+    root.innerHTML = html
+      // Remove wrappers
+      .replace(/<\/?\??(xml|TEI|!DOCTYPE|text|body|cb|pb).*>/gm, '')
+      // Replace autoclosing tags
+      .replace(/<([A-z]+)( [\w\"\=]*)?\/>/gm, '<$1 $2><\/$1>');
+
+    if (root.firstElementChild.getAttribute('type') === 'book') {
+      return root.firstElementChild.innerHTML;
+    }
+
+    return root.innerHTML;
+  }
+
   static XML2TEI(html: string, settings: EditorSettings): string {
     const root = document.createElement(TagName.ROOT);
     const text = document.createElement('text');
@@ -98,7 +126,7 @@ export class XMLTransformerService {
     };
 
     return formatXml(`
-      <?xml  version="1.0" encoding="utf-8"?>
+      <?xml version="1.0" encoding="utf-8"?>
       <!DOCTYPE TEI>
       <TEI xmlns="http://www.tei-c.org/ns/1.0">
         ${formatXml(root.innerHTML, formatConfig)}
@@ -112,6 +140,7 @@ export class XMLTransformerService {
     const content =
       formatXml(root.outerHTML, {
         indentation: '  ',
+        collapseContent: true,
         lineSeparator: '\n',
       })
       .replace(/<root>|<\/root>/g, '')
