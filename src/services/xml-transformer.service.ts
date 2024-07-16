@@ -51,11 +51,7 @@ export class XMLTransformerService {
   }
 
   static removeClasses(html: string): string {
-    const root = document.createElement(TagName.ROOT);
-    root.innerHTML = html;
-    (Array.from(root.querySelectorAll([TagName.STRUCTURE, TagName.ANONYMOUS_BLOCK].join(','))) as HTMLElement[])
-      .forEach(el => el.removeAttribute('class'));
-    return root.innerHTML;
+    return html.replace(/ class="[\w\s-]*"/g, '');
   }
 
   static TEI2Settings(html: string): EditorSettings {
@@ -137,8 +133,12 @@ export class XMLTransformerService {
   static editor2XML(html: string): string {
     const root = document.createElement(TagName.ROOT);
     root.innerHTML = XMLTransformerService.transformEditor2XML(XMLTransformerService.preprocessLines(html));
+
+    // Will replace <lb></lb> for autoclosing tags and perform multiple fixes if required
+    const xml = new DOMParser().parseFromString(root.outerHTML, 'text/xml').documentElement.outerHTML;
+
     const content =
-      formatXml(root.outerHTML, {
+      formatXml(xml, {
         indentation: '  ',
         collapseContent: true,
         lineSeparator: '\n',
@@ -152,11 +152,15 @@ export class XMLTransformerService {
 
   static XML2Editor(html: string): string {
     const root = document.createElement(TagName.ROOT);
-    root.innerHTML = html;
+    root.innerHTML = html
+      // Replace autoclosing tags to HTML closing tags such as <lb /> to <lb></lb>
+      .replace(/<([A-z]+)( [\w\"\=]*)?\/>/gm, '<$1 $2><\/$1>');
+
     const parsed = formatXml.minify(root.outerHTML, {
-      collapseContent: true,
-    })
-    .replace(/<(\/)?root>|<br( )?(\/)?>/g, '');
+        collapseContent: true,
+      })
+      .replace(/<(\/)?root>|<br( )?(\/)?>/g, '');
+
     return XMLTransformerService.transformXML2Editor(parsed);
   }
 
