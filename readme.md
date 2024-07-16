@@ -234,6 +234,10 @@ This project rely on the following tools:
 - Run `make install` to install the dependencies
 - Run `make dev` to start the development
 
+### Publish the package
+
+- Set the NPM_TOKEN in the `.docker/.env` file (ask the maintainer for the token)
+
 ### Useful commands
 
 | Command | Description |
@@ -249,3 +253,4 @@ This project rely on the following tools:
 | `make logs` | Show the logs |
 | `make npm` | Run npm commands |
 | `make shell` | Open a shell in the container |
+| `make publish` | Publish the package |
