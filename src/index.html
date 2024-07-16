@@ -24,6 +24,8 @@
       // ------------------------------
       // setInterval(() => {
       //   editor.getFormattedTEI().then(tei => {
+      //     // Be aware that the node navigator in console will struggle with autoclosing lb tags,
+      //     // you better use string to see the content
       //     console.log('transcribe',     tei.transcribe && new DOMParser().parseFromString(tei.transcribe, 'text/xml'));
       //     console.log('translate',      tei.translate && new DOMParser().parseFromString(tei.translate, 'text/xml'));
       //     console.log('comment_line',   tei.comment_line && new DOMParser().parseFromString(tei.comment_line, 'text/xml'));
