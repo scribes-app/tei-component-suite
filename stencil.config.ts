@@ -5,7 +5,7 @@ import { sass } from '@stencil/sass';
 import { resolve } from 'path';
 
 export const config: Config = {
-  namespace: 'xml-editor-cmp',
+  namespace: 'xml-editor-library',
   globalStyle: 'src/global.scss',
   plugins: [
     sass({
@@ -17,12 +17,12 @@ export const config: Config = {
   ],
   outputTargets: [
     angularOutputTarget({
-      componentCorePackage: 'xml-editor-cmp',
+      componentCorePackage: 'xml-editor-library',
       directivesProxyFile: 'dist/ng/components.ts',
       directivesArrayFile: 'dist/ng/index.ts',
     }),
     reactOutputTarget({
-      componentCorePackage: 'xml-editor-cmp',
+      componentCorePackage: 'xml-editor-library',
       proxiesFile: 'dist/react/index.ts',
       includeDefineCustomElements: true,
     }),

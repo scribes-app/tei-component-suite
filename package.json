@@ -1,17 +1,17 @@
 {
-  "name": "xml-editor-cmp",
+  "name": "xml-editor-library",
   "version": "0.0.1",
-  "description": "XML Editor Component",
+  "description": "XML Editor Components Library",
   "main": "dist/index.cjs.js",
   "module": "dist/index.js",
   "types": "dist/types/index.d.ts",
   "collection": "dist/collection/collection-manifest.json",
   "collection:main": "dist/collection/index.js",
-  "unpkg": "dist/xml-editor-cmp/xml-editor-cmp.esm.js",
+  "unpkg": "dist/xml-editor-library/xml-editor-library.esm.js",
   "exports": {
     ".": {
-      "import": "./dist/xml-editor-cmp/xml-editor-cmp.esm.js",
-      "require": "./dist/xml-editor-cmp/xml-editor-cmp.cjs.js"
+      "import": "./dist/xml-editor-library/xml-editor-library.esm.js",
+      "require": "./dist/xml-editor-library/xml-editor-library.cjs.js"
     },
     "./my-component": {
       "import": "./dist/components/my-component.js",
