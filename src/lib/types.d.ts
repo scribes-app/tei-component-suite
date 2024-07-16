@@ -16,7 +16,9 @@ export type UnionIcons = (
   'white-space' |
   'broom' |
   'columns' |
-  'settings'
+  'settings' |
+  'lock' |
+  'unlock'
 )
 
 export type UnionEditorType = (

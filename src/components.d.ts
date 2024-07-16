@@ -34,7 +34,7 @@ export namespace Components {
         "getQuillInstances": () => Promise<Map<UnionEditorType, QuillInstance>>;
         "getSettings": () => Promise<EditorSettings>;
         "lock": () => Promise<void>;
-        "setInitialTEI": (tei: EditorFormattedTEI) => Promise<void>;
+        "setFormattedTEI": (tei: EditorFormattedTEI) => Promise<void>;
         "settings": EditorSettings;
         "toolbarConfig": ToolbarConfig;
         "unlock": () => Promise<void>;
@@ -86,6 +86,7 @@ export namespace Components {
         "config": ToolbarConfig;
         "disabled": boolean;
         "layoutType": UnionLayoutType;
+        "locked": boolean;
         "textDirection": 'LTR'|'RTL';
         "viewRaw": boolean;
     }
@@ -375,6 +376,7 @@ declare namespace LocalJSX {
         "config"?: ToolbarConfig;
         "disabled"?: boolean;
         "layoutType"?: UnionLayoutType;
+        "locked"?: boolean;
         "onClickAbbreviation"?: (event: XecToolbarCustomEvent<UnionAbbreviationType>) => void;
         "onClickBlankSpace"?: (event: XecToolbarCustomEvent<void>) => void;
         "onClickDeleted"?: (event: XecToolbarCustomEvent<UnionDeletedRend>) => void;

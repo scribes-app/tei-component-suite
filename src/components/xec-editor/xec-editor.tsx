@@ -60,6 +60,9 @@ export class XecEditor {
   @State()
   private layoutType: UnionLayoutType = 'columns';
 
+  @State()
+  private locked: boolean = false;
+
   @Method()
   public async getQuillInstances(): Promise<Map<UnionEditorType, QuillInstance>> {
     return this.editorInstances;
@@ -67,6 +70,7 @@ export class XecEditor {
 
   @Method()
   public async lock(): Promise<void> {
+    this.locked = true;
     Array.from(this.textareaElements.values())
       .forEach(textarea => textarea.setAttribute('disabled', ''));
     Array.from(this.editorInstances.values())
@@ -75,6 +79,7 @@ export class XecEditor {
 
   @Method()
   public async unlock(): Promise<void> {
+    this.locked = false;
     Array.from(this.textareaElements.values())
       .forEach(textarea => textarea.removeAttribute('disabled'));
     Array.from(this.editorInstances.values())
@@ -103,7 +108,7 @@ export class XecEditor {
   }
 
   @Method()
-  public async setInitialTEI(tei: EditorFormattedTEI): Promise<void> {
+  public async setFormattedTEI(tei: EditorFormattedTEI): Promise<void> {
     const transform = (content: string): string => {
       return XMLTransformerService.addClasses(
         XMLTransformerService.XML2Editor(
@@ -434,6 +439,7 @@ export class XecEditor {
       activeEditor,
       editorStates,
       activeCommentTab,
+      locked,
       layoutType
     } = this;
     return (
@@ -457,6 +463,7 @@ export class XecEditor {
           layoutType={layoutType}
           textDirection={editorStates.get(activeEditor).textDirection}
           viewRaw={editorStates.get(activeEditor).viewType === 'raw'}
+          locked={locked}
         />
         <div class={classNames({
           editors: true,
@@ -511,6 +518,7 @@ export class XecEditor {
             active: activeEditor.includes('comment')
           })}>
             <xec-dropdown
+              disabled={locked}
               config={{
                 label: capitalize(activeCommentTab.replace('comment_', '')),
                 items: [

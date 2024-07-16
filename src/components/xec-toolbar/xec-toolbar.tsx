@@ -65,6 +65,9 @@ export class XecToolbar {
   @Prop()
   public readonly disabled: boolean = false;
 
+  @Prop()
+  public readonly locked: boolean = false;
+
   @Watch('config')
   public watchConfig(next: ToolbarConfig, prev: ToolbarConfig): void {
     if (!isEqual(next, prev)) this.initConfig();
@@ -92,6 +95,7 @@ export class XecToolbar {
       textDirection,
       layoutType,
       viewRaw,
+      locked,
       disabled,
       config
     } = this;
@@ -106,6 +110,7 @@ export class XecToolbar {
               active={viewRaw}
               onClickButton={clickViewRaw.emit.bind(this)}
               iconOnly
+              disabled={locked}
               icon="code-simple"
             />
           )}
@@ -115,7 +120,7 @@ export class XecToolbar {
               onClickButton={clickRemove.emit.bind(this)}
               iconOnly
               icon="broom"
-              disabled={viewRaw}
+              disabled={viewRaw || locked}
             />
           )}
           {config.controls.textDirection && (
@@ -125,14 +130,14 @@ export class XecToolbar {
                 onClickButton={clickLTR.emit.bind(this)}
                 iconOnly
                 icon="paragraph-ltr"
-                disabled={viewRaw}
+                disabled={viewRaw || locked}
               />
               <xec-button
                 active={textDirection === 'RTL'}
                 onClickButton={clickRTL.emit.bind(this)}
                 iconOnly
                 icon="paragraph-rtl"
-                disabled={viewRaw}
+                disabled={viewRaw || locked}
               />
             </Fragment>
           )}
@@ -141,19 +146,19 @@ export class XecToolbar {
               onClickButton={clickBlankSpace.emit.bind(this)}
               iconOnly
               icon="white-space"
-              disabled={viewRaw}
+              disabled={viewRaw || locked}
             />
             )}
           {config.controls.structure && (
             <xec-button
               onClickButton={clickStructure.emit.bind(this)}
-              disabled={viewRaw}>
+              disabled={viewRaw || locked}>
               Structure
             </xec-button>
           )}
           {config.controls.unclear && (
             <xec-dropdown
-              disabled={viewRaw}
+              disabled={viewRaw || locked}
               config={{
                 label: 'Unclear',
                 items: [
@@ -183,7 +188,7 @@ export class XecToolbar {
           )}
           {config.controls.highlighted && (
             <xec-dropdown
-              disabled={viewRaw}
+              disabled={viewRaw || locked}
               config={{
                 label: 'Highlighted',
                 items: [
@@ -228,7 +233,7 @@ export class XecToolbar {
           )}
           {config.controls.deleted && (
             <xec-dropdown
-              disabled={viewRaw}
+              disabled={viewRaw || locked}
               config={{
                 label: 'Deleted',
                 items: [
@@ -263,7 +268,7 @@ export class XecToolbar {
           )}
           {config.controls.abbreviation && (
             <xec-dropdown
-              disabled={viewRaw}
+              disabled={viewRaw || locked}
               config={{
                 label: 'Abbreviation',
                 items: [
@@ -283,7 +288,7 @@ export class XecToolbar {
           )}
           {config.controls.punctuation && (
             <xec-dropdown
-              disabled={viewRaw}
+              disabled={viewRaw || locked}
               config={{
                 label: 'Punctuation',
                 items: Punctuations.map(punctuation => ({
@@ -295,11 +300,13 @@ export class XecToolbar {
             />
           )}
           <div class="alignRight">
+            <xec-icon icon={locked ? 'lock' : 'unlock'} />
             {config.controls.settings && (
               <xec-button
                 onClickButton={clickSettings.emit.bind(this)}
                 iconOnly
                 icon="settings"
+                disabled={locked}
               />
             )}
             {config.controls.layout && (
@@ -308,6 +315,7 @@ export class XecToolbar {
                 iconOnly
                 active={layoutType === 'columns'}
                 icon="columns"
+                disabled={locked}
               />
             )}
           </div>
