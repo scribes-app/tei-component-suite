@@ -326,7 +326,9 @@ export class XMLTransformerService {
       case TagName.DELETED:
       case TagName.ABBREVIATION:
       case TagName.HIGHLIGHTED:
-      case TagName.BLANK_SPACE: {
+      case TagName.BLANK_SPACE:
+      case TagName.ANNOTATION:
+      case TagName.RECONSTRUCTION: {
         const element = node.cloneNode(false) as HTMLElement;
         const nodes = Array.from(node.childNodes).map(n => XMLTransformerService.tranformNodeToXML(n, line));
         nodes.forEach(node => element.appendChild(node));

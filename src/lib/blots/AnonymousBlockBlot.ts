@@ -8,6 +8,8 @@ import { HighlightedBlot } from './HighlightedBlot';
 import { UnclearBlot } from './UnclearBlot';
 import { PunctuationBlot } from './PunctuationBlot';
 import { TagName } from '../helper';
+import { AnnotationBlot } from './AnnotationBlot';
+import { ReconstructionBlot } from './ReconstructionBlot';
 
 export class AnonymousBlockBlot extends InlineBlot {
   static blotName = 'anonymous-block';
@@ -19,6 +21,8 @@ export class AnonymousBlockBlot extends InlineBlot {
     BlankSpaceBlot,
     DeletedBlot,
     PunctuationBlot,
+    AnnotationBlot,
+    ReconstructionBlot,
     Break,
     Text
   ];

@@ -5,9 +5,12 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { DropdownConfig, EditorFormattedTEI, EditorSettings, QuillInstance, ToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionIcons, UnionLayoutType, UnionStructureType, UnionUnclearReason, XecBlankSpaceFormValues, XecSelectEntry, XecSettingsFormValues, XecStructureFormValues } from "./lib/types";
-export { DropdownConfig, EditorFormattedTEI, EditorSettings, QuillInstance, ToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionIcons, UnionLayoutType, UnionStructureType, UnionUnclearReason, XecBlankSpaceFormValues, XecSelectEntry, XecSettingsFormValues, XecStructureFormValues } from "./lib/types";
+import { DropdownConfig, EditorFormattedTEI, EditorSettings, QuillInstance, ToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionIcons, UnionLayoutType, UnionReconstructionReason, UnionStructureType, UnionUnclearReason, XecAnnotationFormValues, XecBlankSpaceFormValues, XecSelectEntry, XecSettingsFormValues, XecStructureFormValues } from "./lib/types";
+export { DropdownConfig, EditorFormattedTEI, EditorSettings, QuillInstance, ToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionIcons, UnionLayoutType, UnionReconstructionReason, UnionStructureType, UnionUnclearReason, XecAnnotationFormValues, XecBlankSpaceFormValues, XecSelectEntry, XecSettingsFormValues, XecStructureFormValues } from "./lib/types";
 export namespace Components {
+    interface XecAnnotationForm {
+        "isValid": () => Promise<boolean>;
+    }
     interface XecBlankSpaceForm {
         "isValid": () => Promise<boolean>;
     }
@@ -91,6 +94,10 @@ export namespace Components {
         "viewRaw": boolean;
     }
 }
+export interface XecAnnotationFormCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLXecAnnotationFormElement;
+}
 export interface XecBlankSpaceFormCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLXecBlankSpaceFormElement;
@@ -124,6 +131,24 @@ export interface XecToolbarCustomEvent<T> extends CustomEvent<T> {
     target: HTMLXecToolbarElement;
 }
 declare global {
+    interface HTMLXecAnnotationFormElementEventMap {
+        "formChange": XecAnnotationFormValues;
+        "formSubmit": XecAnnotationFormValues;
+    }
+    interface HTMLXecAnnotationFormElement extends Components.XecAnnotationForm, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLXecAnnotationFormElementEventMap>(type: K, listener: (this: HTMLXecAnnotationFormElement, ev: XecAnnotationFormCustomEvent<HTMLXecAnnotationFormElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLXecAnnotationFormElementEventMap>(type: K, listener: (this: HTMLXecAnnotationFormElement, ev: XecAnnotationFormCustomEvent<HTMLXecAnnotationFormElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLXecAnnotationFormElement: {
+        prototype: HTMLXecAnnotationFormElement;
+        new (): HTMLXecAnnotationFormElement;
+    };
     interface HTMLXecBlankSpaceFormElementEventMap {
         "formChange": XecBlankSpaceFormValues;
         "formSubmit": XecBlankSpaceFormValues;
@@ -267,6 +292,8 @@ declare global {
     interface HTMLXecToolbarElementEventMap {
         "clickViewRaw": void;
         "clickUnclear": UnionUnclearReason;
+        "clickReconstruction": UnionReconstructionReason;
+        "clickAnnotation": void;
         "clickHighlighted": UnionHighlightedRend;
         "clickDeleted": UnionDeletedRend;
         "clickAbbreviation": UnionAbbreviationType;
@@ -294,6 +321,7 @@ declare global {
         new (): HTMLXecToolbarElement;
     };
     interface HTMLElementTagNameMap {
+        "xec-annotation-form": HTMLXecAnnotationFormElement;
         "xec-blank-space-form": HTMLXecBlankSpaceFormElement;
         "xec-button": HTMLXecButtonElement;
         "xec-dropdown": HTMLXecDropdownElement;
@@ -308,6 +336,10 @@ declare global {
     }
 }
 declare namespace LocalJSX {
+    interface XecAnnotationForm {
+        "onFormChange"?: (event: XecAnnotationFormCustomEvent<XecAnnotationFormValues>) => void;
+        "onFormSubmit"?: (event: XecAnnotationFormCustomEvent<XecAnnotationFormValues>) => void;
+    }
     interface XecBlankSpaceForm {
         "onFormChange"?: (event: XecBlankSpaceFormCustomEvent<XecBlankSpaceFormValues>) => void;
         "onFormSubmit"?: (event: XecBlankSpaceFormCustomEvent<XecBlankSpaceFormValues>) => void;
@@ -378,6 +410,7 @@ declare namespace LocalJSX {
         "layoutType"?: UnionLayoutType;
         "locked"?: boolean;
         "onClickAbbreviation"?: (event: XecToolbarCustomEvent<UnionAbbreviationType>) => void;
+        "onClickAnnotation"?: (event: XecToolbarCustomEvent<void>) => void;
         "onClickBlankSpace"?: (event: XecToolbarCustomEvent<void>) => void;
         "onClickDeleted"?: (event: XecToolbarCustomEvent<UnionDeletedRend>) => void;
         "onClickHighlighted"?: (event: XecToolbarCustomEvent<UnionHighlightedRend>) => void;
@@ -385,6 +418,7 @@ declare namespace LocalJSX {
         "onClickLayout"?: (event: XecToolbarCustomEvent<void>) => void;
         "onClickPunctuation"?: (event: XecToolbarCustomEvent<string>) => void;
         "onClickRTL"?: (event: XecToolbarCustomEvent<void>) => void;
+        "onClickReconstruction"?: (event: XecToolbarCustomEvent<UnionReconstructionReason>) => void;
         "onClickRemove"?: (event: XecToolbarCustomEvent<void>) => void;
         "onClickSettings"?: (event: XecToolbarCustomEvent<void>) => void;
         "onClickStructure"?: (event: XecToolbarCustomEvent<UnionStructureType|'anonymous-block'>) => void;
@@ -394,6 +428,7 @@ declare namespace LocalJSX {
         "viewRaw"?: boolean;
     }
     interface IntrinsicElements {
+        "xec-annotation-form": XecAnnotationForm;
         "xec-blank-space-form": XecBlankSpaceForm;
         "xec-button": XecButton;
         "xec-dropdown": XecDropdown;
@@ -411,6 +446,7 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "xec-annotation-form": LocalJSX.XecAnnotationForm & JSXBase.HTMLAttributes<HTMLXecAnnotationFormElement>;
             "xec-blank-space-form": LocalJSX.XecBlankSpaceForm & JSXBase.HTMLAttributes<HTMLXecBlankSpaceFormElement>;
             "xec-button": LocalJSX.XecButton & JSXBase.HTMLAttributes<HTMLXecButtonElement>;
             "xec-dropdown": LocalJSX.XecDropdown & JSXBase.HTMLAttributes<HTMLXecDropdownElement>;

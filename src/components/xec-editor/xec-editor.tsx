@@ -5,7 +5,7 @@ import Quill from 'quill';
 import { Delta } from 'quill/core';
 import { XecBlankSpaceFormCustomEvent } from '../../components';
 import { Punctuations, TagName, capitalize, delayed, registerBlots } from '../../lib/helper';
-import { EditorFormattedTEI, EditorSettings, EditorState, QuillInstance, ToolbarConfig, UnionAbbreviationType, UnionCommentType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionLayoutType, UnionUnclearReason, XecBlankSpaceFormValues, XecSettingsFormValues, XecStructureFormValues } from '../../lib/types';
+import { EditorFormattedTEI, EditorSettings, EditorState, QuillInstance, ToolbarConfig, UnionAbbreviationType, UnionCommentType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionLayoutType, UnionReconstructionReason, UnionUnclearReason, XecAnnotationFormValues, XecBlankSpaceFormValues, XecSettingsFormValues, XecStructureFormValues } from '../../lib/types';
 import { XMLTransformerService } from '../../services/xml-transformer.service';
 @Component({
   tag: 'xec-editor',
@@ -402,6 +402,25 @@ export class XecEditor {
     };
   }
 
+  private onClickAnnotation(): void {
+    this.popupElement.setContent(
+      <xec-annotation-form
+        onFormSubmit={this.onSubmitAnnotationForm.bind(this)}
+      />
+    );
+    this.popupElement.openPopup();
+  }
+
+  private onSubmitAnnotationForm(event: CustomEvent<XecAnnotationFormValues>): void {
+    this.popupElement.closePopup();
+    this.activeInstance.format('annotation', event.detail);
+  }
+
+  private onClickReconstruction(event: CustomEvent<UnionReconstructionReason>): void {
+    const { detail: reason } = event;
+    this.activeInstance.format('reconstruction', reason);
+  }
+
   /**
    * Set the active editor state
    * This solve the issue of the state not being updated when using deep properties
@@ -434,6 +453,8 @@ export class XecEditor {
       onClickStructure,
       onClickLayout,
       onClickSettings,
+      onClickReconstruction,
+      onClickAnnotation,
       onClickCommentDropdown,
       toolbarConfig,
       activeEditor,
@@ -460,6 +481,8 @@ export class XecEditor {
           onClickLayout={onClickLayout.bind(this)}
           onClickRemove={onClickRemove.bind(this)}
           onClickSettings={onClickSettings.bind(this)}
+          onClickReconstruction={onClickReconstruction.bind(this)}
+          onClickAnnotation={onClickAnnotation.bind(this)}
           layoutType={layoutType}
           textDirection={editorStates.get(activeEditor).textDirection}
           viewRaw={editorStates.get(activeEditor).viewType === 'raw'}
@@ -587,6 +610,8 @@ export class XecEditor {
 const defaultToolbarConfig: ToolbarConfig = {
   controls: {
     settings: true,
+    reconstruction: true,
+    annotation: true,
     layout: true,
     remove: true,
     structure: true,

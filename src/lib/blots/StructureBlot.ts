@@ -11,6 +11,8 @@ import { HighlightedBlot } from './HighlightedBlot';
 import { UnclearBlot } from './UnclearBlot';
 import { PunctuationBlot } from './PunctuationBlot';
 import { TagName } from '../helper';
+import { AnnotationBlot } from './AnnotationBlot';
+import { ReconstructionBlot } from './ReconstructionBlot';
 
 export class StructureBlot extends InlineBlot {
   static blotName = 'structure';
@@ -23,6 +25,8 @@ export class StructureBlot extends InlineBlot {
     BlankSpaceBlot,
     DeletedBlot,
     PunctuationBlot,
+    AnnotationBlot,
+    ReconstructionBlot,
     Break,
     Text
   ];

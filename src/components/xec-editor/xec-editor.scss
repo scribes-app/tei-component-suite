@@ -224,6 +224,8 @@ xec-editor {
           del,
           h,
           space,
+          seg,
+          supplied,
           pc,
           abbr {
             position: relative;
@@ -258,6 +260,12 @@ xec-editor {
           unclear:hover::before {
             content: 'unclear: (' attr(reason) ')';
           }
+          seg:hover::before {
+            content: 'annotation: (' attr(type) ', ' attr(rend) ', ' attr(hand) ')';
+          }
+          supplied:hover::before {
+            content: 'reconstruction: (' attr(reason) ')';
+          }
           del:hover::before {
             content: 'deleted: (' attr(rend) ')';
           }
@@ -268,10 +276,10 @@ xec-editor {
             content: 'abbreviation: (' attr(rend) ')';
           }
           space:hover::before {
-            content: 'Blank space: (' attr(value) attr(unit) ')';
+            content: 'blank space: (' attr(value) attr(unit) ')';
           }
           pc:hover::before {
-            content: 'Punctuation';
+            content: 'punctuation';
           }
           div.first {
             &[type="chapter"]::before {

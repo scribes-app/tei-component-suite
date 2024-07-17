@@ -8,6 +8,8 @@ import { BlankSpaceBlot } from './blots/BlankSpaceBlot';
 import { AnonymousBlockBlot } from './blots/AnonymousBlockBlot';
 import { StructureBlot } from './blots/StructureBlot';
 import { PunctuationBlot } from './blots/PunctuationBlot';
+import { AnnotationBlot } from './blots/AnnotationBlot';
+import { ReconstructionBlot } from './blots/ReconstructionBlot';
 
 /**
  * Check if two objects are equal (this is the fastest way with JSON.stringify do not use lodash anymore)
@@ -28,6 +30,8 @@ export const registerBlots = () => {
     BlankSpaceBlot,
     PunctuationBlot,
     AnonymousBlockBlot,
+    AnnotationBlot,
+    ReconstructionBlot,
     StructureBlot
   ].forEach(blot => Quill.register(blot, true));
 }
@@ -87,6 +91,8 @@ export const enum TagName {
   WORD = 'W',
   WORD_WRAP = 'WORDWRAP',
   PUNCTUATION = 'PC',
+  ANNOTATION = 'SEG',
+  RECONSTRUCTION = 'SUPPLIED',
   TEXT_TEI = 'text',
   BODY = 'body',
   COLUMN = 'cb',
@@ -108,6 +114,8 @@ export const XMLAvailableTagsList: (TagName|string)[] =  [
   TagName.WORD,
   TagName.PUNCTUATION,
   TagName.LINE_BREAK,
+  TagName.ANNOTATION,
+  TagName.RECONSTRUCTION,
 ];
 
 export const Punctuations = [

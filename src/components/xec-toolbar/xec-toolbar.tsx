@@ -2,7 +2,7 @@ import { Component, Host, h } from '@stencil/core';
 import { Event, EventEmitter, Fragment, JSX, Prop, Watch } from '@stencil/core/internal';
 import classNames from 'classnames';
 import { Punctuations, isEqual } from '../../lib/helper';
-import { ToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionHighlightedRend, UnionLayoutType, UnionStructureType, UnionUnclearReason } from '../../lib/types';
+import { ToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionHighlightedRend, UnionLayoutType, UnionReconstructionReason, UnionStructureType, UnionUnclearReason } from '../../lib/types';
 
 @Component({
   tag: 'xec-toolbar',
@@ -16,6 +16,12 @@ export class XecToolbar {
 
   @Event()
   private readonly clickUnclear: EventEmitter<UnionUnclearReason>;
+
+  @Event()
+  private readonly clickReconstruction: EventEmitter<UnionReconstructionReason>;
+
+  @Event()
+  private readonly clickAnnotation: EventEmitter<void>;
 
   @Event()
   private readonly clickHighlighted: EventEmitter<UnionHighlightedRend>;
@@ -92,6 +98,8 @@ export class XecToolbar {
       clickStructure,
       clickRemove,
       clickSettings,
+      clickAnnotation,
+      clickReconstruction,
       textDirection,
       layoutType,
       viewRaw,
@@ -155,6 +163,38 @@ export class XecToolbar {
               disabled={viewRaw || locked}>
               Structure
             </xec-button>
+          )}
+          {config.controls.annotation && (
+            <xec-button
+              onClickButton={clickAnnotation.emit.bind(this)}
+              disabled={viewRaw || locked}>
+              Annotation
+            </xec-button>
+          )}
+          {config.controls.reconstruction && (
+            <xec-dropdown
+              disabled={viewRaw || locked}
+              config={{
+                label: 'Reconstruction',
+                items: [
+                  {
+                    id: 'lacuna',
+                    label: 'Lacuna',
+                    onClick: clickReconstruction.emit.bind(this, 'lacuna')
+                  },
+                  {
+                    id: 'illegible',
+                    label: 'Illegible',
+                    onClick: clickReconstruction.emit.bind(this, 'illegible')
+                  },
+                  {
+                    id: 'unspecified',
+                    label: 'Unspecified',
+                    onClick: clickReconstruction.emit.bind(this, 'unspecified')
+                  }
+                ]
+              }}
+            />
           )}
           {config.controls.unclear && (
             <xec-dropdown

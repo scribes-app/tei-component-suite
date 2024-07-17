@@ -81,6 +81,39 @@ export type UnionBlankSpaceUnit = (
   'cm'
 )
 
+export type UnionReconstructionReason = (
+  'lacuna'|
+  'illegible'|
+  'unspecified'
+);
+
+export type UnionAnnotationType = (
+  'top_margin'|
+  'bottom_margin'|
+  'right_margin'|
+  'left_margin'|
+  'interlinear'|
+  'infra-linear'|
+  'supralinear'|
+  'ketiv_qere'
+);
+
+export type UnionAnnotationRend = (
+  'oblique'|
+  'vertical'|
+  'align_left'|
+  'align_center'|
+  'align_right'
+);
+
+export type UnionAnnotationHand = (
+  'main_scribe'|
+  'scribe_a'|
+  'scribe_b'|
+  'scribe_c'|
+  'scribe_d'
+);
+
 export type BlankSpaceAttributes = {
   unit: UnionBlankSpaceUnit;
   value: number;
@@ -89,6 +122,12 @@ export type BlankSpaceAttributes = {
 export type StructureAttributes = {
   type: UnionStructureType;
   n: string;
+}
+
+export type AnnotationAttributes = {
+  type: UnionAnnotationType;
+  rend: UnionAnnotationRend;
+  hand: UnionAnnotationHand;
 }
 
 export type EditorState = {
@@ -111,6 +150,8 @@ export type DropdownItem = {
 export type ToolbarConfig = {
   controls: {
     settings?: boolean;
+    reconstruction?: boolean;
+    annotation?: boolean;
     layout?: boolean;
     remove?: boolean;
     structure?: boolean;
@@ -165,4 +206,10 @@ export type XecSettingsFormValues = {
   column?: string;
   folio?: string;
   book?: string;
+};
+
+export type XecAnnotationFormValues = {
+  type?: UnionAnnotationType;
+  rend?: UnionAnnotationRend;
+  hand?: UnionAnnotationHand;
 };
