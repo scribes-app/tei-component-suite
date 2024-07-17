@@ -42,10 +42,9 @@ stencil:
 	bash .docker/commands/stencil $$command
 
 publish:
-	read -p "Which kind of version would you like to publish (major | minor | patch): " version; \
-	npm version $$version
 	bash .docker/commands/icons
 	bash .docker/commands/stencil build
-	bash .docker/commands/npm config set //registry.npmjs.org/:_authToken $$NPM_TOKEN
-	bash .docker/commands/npm publish --access public
+	read -p "Which kind of version would you like to publish (major | minor | patch): " version; \
+	npm version $$version
+	bash .docker/commands/publish
 
