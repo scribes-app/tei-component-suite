@@ -7,10 +7,10 @@
 
 ## Properties
 
-| Property        | Attribute | Description | Type                                                                                                                                                                                                                                                                            | Default                 |
-| --------------- | --------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- |
-| `settings`      | --        |             | `{ manuscript?: { column?: string; folio?: string; book?: string; }; }`                                                                                                                                                                                                         | `defaultEditorSettings` |
-| `toolbarConfig` | --        |             | `{ controls: { settings?: boolean; layout?: boolean; remove?: boolean; structure?: boolean; blankSpace?: boolean; punctuation?: boolean; abbreviation?: boolean; deleted?: boolean; highlighted?: boolean; unclear?: boolean; viewRaw?: boolean; textDirection?: boolean; }; }` | `defaultToolbarConfig`  |
+| Property        | Attribute | Description | Type                                                                                                                                                                                                                                                                                                                            | Default                 |
+| --------------- | --------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- |
+| `settings`      | --        |             | `{ manuscript?: { column?: string; folio?: string; book?: string; }; }`                                                                                                                                                                                                                                                         | `defaultEditorSettings` |
+| `toolbarConfig` | --        |             | `{ controls: { settings?: boolean; reconstruction?: boolean; annotation?: boolean; layout?: boolean; remove?: boolean; structure?: boolean; blankSpace?: boolean; punctuation?: boolean; abbreviation?: boolean; deleted?: boolean; highlighted?: boolean; unclear?: boolean; viewRaw?: boolean; textDirection?: boolean; }; }` | `defaultToolbarConfig`  |
 
 
 ## Methods
@@ -89,6 +89,7 @@ Type: `Promise<void>`
 - [xec-blank-space-form](../forms/xec-blank-space-form)
 - [xec-structure-form](../forms/xec-structure-form)
 - [xec-settings-form](../forms/xec-settings-form)
+- [xec-annotation-form](../forms/xec-annotation-form)
 - [xec-toolbar](../xec-toolbar)
 - [xec-dropdown](../xec-dropdown)
 - [xec-popup](../xec-popup)
@@ -99,6 +100,7 @@ graph TD;
   xec-editor --> xec-blank-space-form
   xec-editor --> xec-structure-form
   xec-editor --> xec-settings-form
+  xec-editor --> xec-annotation-form
   xec-editor --> xec-toolbar
   xec-editor --> xec-dropdown
   xec-editor --> xec-popup
@@ -112,6 +114,8 @@ graph TD;
   xec-structure-form --> xec-button
   xec-settings-form --> xec-textfield
   xec-settings-form --> xec-button
+  xec-annotation-form --> xec-select
+  xec-annotation-form --> xec-button
   xec-toolbar --> xec-button
   xec-toolbar --> xec-dropdown
   xec-toolbar --> xec-icon

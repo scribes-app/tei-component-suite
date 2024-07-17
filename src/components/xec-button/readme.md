@@ -32,6 +32,7 @@
 
 ### Used by
 
+ - [xec-annotation-form](../forms/xec-annotation-form)
  - [xec-blank-space-form](../forms/xec-blank-space-form)
  - [xec-dropdown](../xec-dropdown)
  - [xec-popup](../xec-popup)
@@ -47,6 +48,7 @@
 ```mermaid
 graph TD;
   xec-button --> xec-icon
+  xec-annotation-form --> xec-button
   xec-blank-space-form --> xec-button
   xec-dropdown --> xec-button
   xec-popup --> xec-button

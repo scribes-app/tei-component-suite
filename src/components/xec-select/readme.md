@@ -66,6 +66,7 @@ Type: `Promise<void>`
 
 ### Used by
 
+ - [xec-annotation-form](../forms/xec-annotation-form)
  - [xec-blank-space-form](../forms/xec-blank-space-form)
  - [xec-structure-form](../forms/xec-structure-form)
 
@@ -77,6 +78,7 @@ Type: `Promise<void>`
 ```mermaid
 graph TD;
   xec-select --> xec-icon
+  xec-annotation-form --> xec-select
   xec-blank-space-form --> xec-select
   xec-structure-form --> xec-select
   style xec-select fill:#f9f,stroke:#333,stroke-width:4px
