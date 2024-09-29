@@ -216,9 +216,11 @@ export class XecEditor {
    */
   private onTextChange(editorType: UnionEditorType, delta: Delta): void {
     if (this.concurrentTextChange) return;
-    // Insert a new block (a line in the editor point of view) or delete it
+
     const isNewBlock = delta.ops.at(0)?.attributes?.block || delta.ops.at(1)?.attributes?.block;
     const isDelete = delta.ops.at(0)?.delete || delta.ops.at(1)?.delete;
+    const isSpace = delta.ops.at(0)?.insert === ' ' || delta.ops.at(1)?.insert === ' ';
+    // Insert a new block (a line in the editor point of view) or delete it
     if (isNewBlock || isDelete) {
       this.concurrentTextChange = true;
 
@@ -232,6 +234,24 @@ export class XecEditor {
         instance.setSelection({ index: nextPosition, length: 0 });
         this.concurrentTextChange = false;
       }, 15);
+    }
+
+    // Wrap words
+    if (isSpace) {
+      this.concurrentTextChange = true;
+      const instance = this.editorInstances.get(editorType);
+      const characters = instance.getText().split('');
+      const wordPositions: { index: number; length: number }[] = characters.reduce((acc, char, index) => {
+        if (char === ' ') acc.push({ index: index + 1, length: 0 });
+        else if (acc.length === 0) acc.push({ index, length: 1 });
+        else acc[acc.length - 1].length++;
+        return acc;
+      }, []);
+      wordPositions.forEach(({ index, length }) => {
+        instance.formatText(index, length, 'word', true);
+        instance.formatText(index - 1, 1, 'word', true);
+      });
+      this.concurrentTextChange = false;
     }
   }
 
@@ -372,7 +392,34 @@ export class XecEditor {
     const params = event.detail.type === 'anonymous-block' ? event.detail.ref : { type: event.detail.type, n: event.detail.ref };
 
     this.activeInstance.focus();
-    this.activeInstance.format(blot, params);
+    if (event.detail.type === 'anonymous-block') {
+      const selection = this.activeInstance.getSelection();
+      const wordIds = this.activeInstance
+        .getContents(selection.index, selection.length)
+        .map((op) => op.attributes.word);
+      const words = Array.from(this.activeInstance.root.querySelectorAll(TagName.WORD))
+        .filter((word) => wordIds.includes(word.getAttribute('x'))) as HTMLElement[];
+
+      // Unique parents checked with isSameNode
+      const parents = words
+        .map((word) => word.parentElement)
+        .filter((parent, index, array) => array.findIndex((p) => p.isSameNode(parent)) === index) as HTMLElement[];
+
+      for (const parent of parents) {
+        const wrapper = document.createElement(TagName.ANONYMOUS_BLOCK);
+        wrapper.setAttribute('n', event.detail.ref);
+        const children = Array.from(parent.children).filter(child => words.some(word => word.isSameNode(child)));
+        children.forEach(child => {
+          const clone = child.cloneNode(true);
+          wrapper.appendChild(clone)
+        });
+
+        children.at(0).replaceWith(wrapper);
+        children.forEach(child => child.remove());
+      }
+    } else {
+      this.activeInstance.format(blot, params);
+    }
 
     const range = this.activeInstance.getSelection();
     this.activeInstance.root.innerHTML = XMLTransformerService.addClasses(this.activeInstance.root.innerHTML);

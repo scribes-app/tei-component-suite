@@ -10,6 +10,7 @@ import { StructureBlot } from './blots/StructureBlot';
 import { PunctuationBlot } from './blots/PunctuationBlot';
 import { AnnotationBlot } from './blots/AnnotationBlot';
 import { ReconstructionBlot } from './blots/ReconstructionBlot';
+import { WordBlot } from './blots/WordBlot';
 
 /**
  * Check if two objects are equal (this is the fastest way with JSON.stringify do not use lodash anymore)
@@ -17,6 +18,8 @@ import { ReconstructionBlot } from './blots/ReconstructionBlot';
 export const isEqual = (base: any, comp: any) => {
   return JSON.stringify(base) === JSON.stringify(comp);
 }
+
+export const generateId = () => Math.random().toString(36).substring(2, 15);
 /**
  * Register all existing blots
  */
@@ -27,6 +30,7 @@ export const registerBlots = () => {
     HighlightedBlot,
     DeletedBlot,
     AbbreviationBlot,
+    WordBlot,
     BlankSpaceBlot,
     PunctuationBlot,
     AnonymousBlockBlot,
@@ -79,6 +83,7 @@ export const removeClickOutside = (listener: (this: Window, ev: MouseEvent) => a
 export const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 
 export const enum TagName {
+  SPACE = 'SP',
   ROOT = 'ROOT',
   BLOCK = 'LINE',
   STRUCTURE = 'DIV',

@@ -1,11 +1,10 @@
+import { BlotConstructor, TextBlot } from 'parchment';
 import Block from 'quill/blots/block';
-import Text from 'quill/blots/text';
 import Break from 'quill/blots/break';
 import { TagName, delayed } from '../helper';
-import { BlotConstructor } from 'parchment';
-import { StructureBlot } from './StructureBlot';
-import { PunctuationBlot } from './PunctuationBlot';
 import { BlankSpaceBlot } from './BlankSpaceBlot';
+import { PunctuationBlot } from './PunctuationBlot';
+import { StructureBlot } from './StructureBlot';
 
 export class BlockBlot extends Block {
   static tagName = TagName.BLOCK;
@@ -14,7 +13,7 @@ export class BlockBlot extends Block {
     BlankSpaceBlot,
     PunctuationBlot,
     Break,
-    Text
+    TextBlot
   ];
 
   static create(value?: unknown): HTMLElement {

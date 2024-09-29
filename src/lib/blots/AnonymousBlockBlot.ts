@@ -1,30 +1,25 @@
-import { BlotConstructor, InlineBlot } from 'parchment';
+import { BlotConstructor, InlineBlot, TextBlot } from 'parchment';
 import Break from 'quill/blots/break';
-import Text from 'quill/blots/text';
-import { AbbreviationBlot } from './AbbreviationBlot';
-import { BlankSpaceBlot } from './BlankSpaceBlot';
-import { DeletedBlot } from './DeletedBlot';
-import { HighlightedBlot } from './HighlightedBlot';
-import { UnclearBlot } from './UnclearBlot';
-import { PunctuationBlot } from './PunctuationBlot';
 import { TagName } from '../helper';
+import { AbbreviationBlot } from './AbbreviationBlot';
 import { AnnotationBlot } from './AnnotationBlot';
+import { BlankSpaceBlot } from './BlankSpaceBlot';
+import { PunctuationBlot } from './PunctuationBlot';
 import { ReconstructionBlot } from './ReconstructionBlot';
+import { WordBlot } from './WordBlot';
 
 export class AnonymousBlockBlot extends InlineBlot {
   static blotName = 'anonymous-block';
   static tagName = TagName.ANONYMOUS_BLOCK;
   static allowedChildren: BlotConstructor[] = [
-    HighlightedBlot,
-    UnclearBlot,
     AbbreviationBlot,
     BlankSpaceBlot,
-    DeletedBlot,
     PunctuationBlot,
     AnnotationBlot,
     ReconstructionBlot,
+    WordBlot,
     Break,
-    Text
+    TextBlot
   ];
 
   static create(n: string) {
@@ -33,7 +28,8 @@ export class AnonymousBlockBlot extends InlineBlot {
     return node;
   }
 
-  static formats(domNode: HTMLElement) {
+  static formats(domNode: HTMLElement, scroll: any) {
+    super.formats(domNode, scroll);
     return domNode.getAttribute('n') || '0';
   }
 }

@@ -1,34 +1,28 @@
-import { BlotConstructor } from 'parchment';
+import { BlotConstructor, InlineBlot, TextBlot } from 'parchment';
 import Break from 'quill/blots/break';
-import { InlineBlot } from 'parchment';
-import Text from 'quill/blots/text';
+import { TagName } from '../helper';
 import { StructureAttributes } from '../types';
 import { AbbreviationBlot } from './AbbreviationBlot';
+import { AnnotationBlot } from './AnnotationBlot';
 import { AnonymousBlockBlot } from './AnonymousBlockBlot';
 import { BlankSpaceBlot } from './BlankSpaceBlot';
-import { DeletedBlot } from './DeletedBlot';
-import { HighlightedBlot } from './HighlightedBlot';
-import { UnclearBlot } from './UnclearBlot';
 import { PunctuationBlot } from './PunctuationBlot';
-import { TagName } from '../helper';
-import { AnnotationBlot } from './AnnotationBlot';
 import { ReconstructionBlot } from './ReconstructionBlot';
+import { WordBlot } from './WordBlot';
 
 export class StructureBlot extends InlineBlot {
   static blotName = 'structure';
   static tagName = TagName.STRUCTURE;
   static allowedChildren: BlotConstructor[] = [
     AnonymousBlockBlot,
-    HighlightedBlot,
-    UnclearBlot,
     AbbreviationBlot,
     BlankSpaceBlot,
-    DeletedBlot,
     PunctuationBlot,
     AnnotationBlot,
     ReconstructionBlot,
+    WordBlot,
     Break,
-    Text
+    TextBlot
   ];
 
   static create(attr: StructureAttributes) {
