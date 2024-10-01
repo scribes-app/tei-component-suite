@@ -2,16 +2,12 @@ import { BlotConstructor, TextBlot } from 'parchment';
 import Block from 'quill/blots/block';
 import Break from 'quill/blots/break';
 import { TagName, delayed } from '../helper';
-import { BlankSpaceBlot } from './BlankSpaceBlot';
-import { PunctuationBlot } from './PunctuationBlot';
 import { StructureBlot } from './StructureBlot';
 
 export class BlockBlot extends Block {
   static tagName = TagName.BLOCK;
   static allowedChildren: BlotConstructor[] = [
     StructureBlot,
-    BlankSpaceBlot,
-    PunctuationBlot,
     Break,
     TextBlot
   ];

@@ -7,6 +7,7 @@ import { XecBlankSpaceFormCustomEvent } from '../../components';
 import { Punctuations, TagName, capitalize, delayed, registerBlots } from '../../lib/helper';
 import { EditorFormattedTEI, EditorSettings, EditorState, QuillInstance, ToolbarConfig, UnionAbbreviationType, UnionCommentType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionLayoutType, UnionReconstructionReason, UnionUnclearReason, XecAnnotationFormValues, XecBlankSpaceFormValues, XecSettingsFormValues, XecStructureFormValues } from '../../lib/types';
 import { XMLTransformerService } from '../../services/xml-transformer.service';
+import { QuillService } from '../../services/quill.service';
 @Component({
   tag: 'xec-editor',
   styleUrls: [
@@ -394,29 +395,12 @@ export class XecEditor {
     this.activeInstance.focus();
     if (event.detail.type === 'anonymous-block') {
       const selection = this.activeInstance.getSelection();
-      const wordIds = this.activeInstance
-        .getContents(selection.index, selection.length)
-        .map((op) => op.attributes.word);
-      const words = Array.from(this.activeInstance.root.querySelectorAll(TagName.WORD))
-        .filter((word) => wordIds.includes(word.getAttribute('x'))) as HTMLElement[];
-
-      // Unique parents checked with isSameNode
-      const parents = words
-        .map((word) => word.parentElement)
-        .filter((parent, index, array) => array.findIndex((p) => p.isSameNode(parent)) === index) as HTMLElement[];
-
-      for (const parent of parents) {
-        const wrapper = document.createElement(TagName.ANONYMOUS_BLOCK);
-        wrapper.setAttribute('n', event.detail.ref);
-        const children = Array.from(parent.children).filter(child => words.some(word => word.isSameNode(child)));
-        children.forEach(child => {
-          const clone = child.cloneNode(true);
-          wrapper.appendChild(clone)
-        });
-
-        children.at(0).replaceWith(wrapper);
-        children.forEach(child => child.remove());
-      }
+      QuillService.wrap(
+        this.activeInstance,
+        selection,
+        TagName.ANONYMOUS_BLOCK,
+        [{ key: 'n', value: event.detail.ref }]
+      );
     } else {
       this.activeInstance.format(blot, params);
     }
@@ -460,7 +444,17 @@ export class XecEditor {
 
   private onSubmitAnnotationForm(event: CustomEvent<XecAnnotationFormValues>): void {
     this.popupElement.closePopup();
-    this.activeInstance.format('annotation', event.detail);
+    this.activeInstance.focus();
+    QuillService.wrap(
+      this.activeInstance,
+      this.activeInstance.getSelection(),
+      TagName.ANNOTATION,
+      [
+        { key: 'type', value: event.detail.type },
+        { key: 'rend', value: event.detail.rend },
+        { key: 'hand', value: event.detail.hand },
+      ]
+    );
   }
 
   private onClickReconstruction(event: CustomEvent<UnionReconstructionReason>): void {

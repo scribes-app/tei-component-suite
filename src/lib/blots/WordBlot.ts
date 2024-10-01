@@ -1,9 +1,11 @@
 import { BlotConstructor, InlineBlot, TextBlot } from 'parchment';
 import Break from 'quill/blots/break';
 import { TagName, generateId } from '../helper';
-import { UnclearBlot } from './UnclearBlot';
-import { HighlightedBlot } from './HighlightedBlot';
+import { AbbreviationBlot } from './AbbreviationBlot';
 import { DeletedBlot } from './DeletedBlot';
+import { HighlightedBlot } from './HighlightedBlot';
+import { ReconstructionBlot } from './ReconstructionBlot';
+import { UnclearBlot } from './UnclearBlot';
 
 export class WordBlot extends InlineBlot {
   static blotName = 'word';
@@ -12,6 +14,8 @@ export class WordBlot extends InlineBlot {
     UnclearBlot,
     HighlightedBlot,
     DeletedBlot,
+    AbbreviationBlot,
+    ReconstructionBlot,
     Break,
     TextBlot
   ];

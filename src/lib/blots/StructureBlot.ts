@@ -2,12 +2,10 @@ import { BlotConstructor, InlineBlot, TextBlot } from 'parchment';
 import Break from 'quill/blots/break';
 import { TagName } from '../helper';
 import { StructureAttributes } from '../types';
-import { AbbreviationBlot } from './AbbreviationBlot';
 import { AnnotationBlot } from './AnnotationBlot';
 import { AnonymousBlockBlot } from './AnonymousBlockBlot';
 import { BlankSpaceBlot } from './BlankSpaceBlot';
 import { PunctuationBlot } from './PunctuationBlot';
-import { ReconstructionBlot } from './ReconstructionBlot';
 import { WordBlot } from './WordBlot';
 
 export class StructureBlot extends InlineBlot {
@@ -15,11 +13,9 @@ export class StructureBlot extends InlineBlot {
   static tagName = TagName.STRUCTURE;
   static allowedChildren: BlotConstructor[] = [
     AnonymousBlockBlot,
-    AbbreviationBlot,
+    AnnotationBlot,
     BlankSpaceBlot,
     PunctuationBlot,
-    AnnotationBlot,
-    ReconstructionBlot,
     WordBlot,
     Break,
     TextBlot
