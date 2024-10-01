@@ -1,5 +1,5 @@
 import formatXml, { XMLFormatterOptions } from 'xml-formatter';
-import { TagName, XMLAvailableTagsList } from '../lib/helper';
+import { TagName, XMLAvailableTagsList, generateId } from '../lib/helper';
 import { EditorSettings } from '../components';
 
 /**
@@ -226,15 +226,11 @@ export class XMLTransformerService {
     Array.from(nodes)
       .forEach(node => {
         if (XMLAvailableTagsList.includes(node.nodeName)) {
+          const empty = node.nodeName === TagName.WORD && !node.textContent.trim().length;
           const cleanedNode = node.cloneNode(false) as HTMLElement;
           const cleanedChildren = XMLTransformerService.cleanNodesToXML(Array.from(node.childNodes))
           cleanedChildren.forEach(child => cleanedNode.appendChild(child));
-          cleanedNodes.push(cleanedNode);
-        } else {
-          if (node.nodeName === TagName.WORD_WRAP) {
-            const words = Array.from(node.childNodes);
-            words.forEach(word => cleanedNodes.push(word));
-          }
+          if (!empty) cleanedNodes.push(cleanedNode);
         }
       });
 
@@ -288,7 +284,7 @@ export class XMLTransformerService {
       case TagName.BLOCK: {
         const element = node.cloneNode(false) as HTMLElement;
         const nodes = Array.from(node.childNodes).map(n => XMLTransformerService.tranformNodeToXML(n, line));
-        const hasChild = Boolean(nodes.length) && nodes.some(n => ![TagName.WORD_WRAP, TagName.UNKNOWN, TagName.PUNCTUATION, TagName.BLANK_SPACE].includes(n.nodeName as any));
+        const hasChild = Boolean(nodes.length) && nodes.some(n => ![TagName.UNKNOWN, TagName.PUNCTUATION, TagName.BLANK_SPACE].includes(n.nodeName as any));
         const breakElement = document.createElement(TagName.LINE_BREAK);
         breakElement.setAttribute('n', line.toString());
 
@@ -335,21 +331,16 @@ export class XMLTransformerService {
         return element;
       }
 
-      case TagName.TEXT: {
-        const parent = node.parentElement;
-        const element = document.createElement(TagName.WORD_WRAP);
-        node.textContent
-          .split(' ')
-          .filter(text => text.length > 0)
-          .map(text => {
-            const w = document.createElement(TagName.WORD);
-            w.textContent = text;
-            return w;
-          })
-          .forEach(child => element.appendChild(child));
-        parent.removeChild(node);
+      case TagName.WORD: {
+        const element = node.cloneNode(false) as HTMLElement;
+        element.removeAttribute('x');
+        const nodes = Array.from(node.childNodes).map(n => XMLTransformerService.tranformNodeToXML(n, line));
+        nodes.forEach(node => element.appendChild(node));
         return element;
       }
+
+      case TagName.TEXT: return node.cloneNode(false);
+
       // Keep the function working even if the node is not recognized but signal that there is an issue
       default: return document.createElement(TagName.UNKNOWN);
     }
@@ -414,31 +405,42 @@ export class XMLTransformerService {
       inner.setAttribute('contenteditable', 'false');
       blankSpace.appendChild(inner);
     });
+
+    clonedLine.querySelectorAll(TagName.WORD).forEach(word => {
+      word.setAttribute('x', generateId());
+    });
+
     return clonedLine;
   }
 
   static unwrapWordsFromXML(line: HTMLElement): HTMLElement {
     const clonedLine = line.cloneNode(true) as HTMLElement;
+    const insertSpace = (element: Element) => {
+      const space = document.createElement(TagName.WORD);
+      space.setAttribute('x', generateId());
+      space.textContent = ' ';
+      element.after(space);
+    };
 
     // Insert space after blank space
     const blankSpaces = Array.from(clonedLine.querySelectorAll(TagName.BLANK_SPACE));
     blankSpaces.forEach(blankSpace => {
       const hasWordAfter = blankSpace.nextElementSibling?.nodeName === TagName.WORD;
-      if (hasWordAfter) blankSpace.after(document.createTextNode(' '));
+      if (!hasWordAfter) insertSpace(blankSpace);
     });
 
     // Insert space after punctuation
     const punctuations = Array.from(clonedLine.querySelectorAll(TagName.PUNCTUATION));
     punctuations.forEach(punctuation => {
       const hasWordAfter = punctuation.nextElementSibling?.nodeName === TagName.WORD;
-      if (hasWordAfter) punctuation.after(document.createTextNode(' '));
+      if (!hasWordAfter) insertSpace(punctuation);
     });
 
-    // Unwrap the words
+    // Insert spaces
     const words = Array.from(clonedLine.querySelectorAll(TagName.WORD));
     words.forEach(word => {
       const isLastWord = Array.from(clonedLine.querySelectorAll(TagName.WORD)).pop().isSameNode(word) || word.nextElementSibling?.nodeName === TagName.PUNCTUATION;
-      word.replaceWith(document.createTextNode(word.textContent + (isLastWord ? '' : ' ')));
+      if (!isLastWord) insertSpace(word);
     });
 
     return clonedLine;

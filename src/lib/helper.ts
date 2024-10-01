@@ -94,7 +94,6 @@ export const enum TagName {
   DELETED = 'DEL',
   BLANK_SPACE = 'SPACE',
   WORD = 'W',
-  WORD_WRAP = 'WORDWRAP',
   PUNCTUATION = 'PC',
   ANNOTATION = 'SEG',
   RECONSTRUCTION = 'SUPPLIED',
