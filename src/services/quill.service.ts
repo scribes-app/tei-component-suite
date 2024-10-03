@@ -4,6 +4,10 @@ import { QuillInstance } from '../components';
 
 export class QuillService {
 
+  /**
+   * @description We use a special wrapper fn as a workaround to wrap elements in Quill
+   * Since Quill does not support wrapping elements in depth, we need to handle it manually
+   */
   static wrap(
     instance: QuillInstance,
     selection: Range,
