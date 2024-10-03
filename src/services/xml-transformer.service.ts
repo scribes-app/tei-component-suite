@@ -288,11 +288,11 @@ export class XMLTransformerService {
         const breakElement = document.createElement(TagName.LINE_BREAK);
         breakElement.setAttribute('n', line.toString());
 
-        // Add line break to the last structure child of the block or if it has no child
+        // If it has no child, add the line break to the block
         if (!hasChild) {
           nodes.push(breakElement);
         }
-        // Otherwise add the line break to the last structure child of the block
+        // Otherwise we have to check whether the last node is a structural node
         else {
           const lastStructuralNode = [...nodes]
             .flatMap(n => [
@@ -304,14 +304,21 @@ export class XMLTransformerService {
             ])
             .pop();
 
-          if (lastStructuralNode) {
-            // Check if the last node of line is the last structural node
-            if (element.lastElementChild?.isSameNode(lastStructuralNode)) {
-              lastStructuralNode?.appendChild(breakElement);
-            // Otherwise add the line break to the parent of last structural node
-            } else {
-              lastStructuralNode.parentElement?.appendChild(breakElement);
-            }
+          if (!lastStructuralNode) return;
+
+          const mainStructuralNode = [...nodes].pop() as HTMLElement;
+
+          // If the main structural node is the same as the last structural node, we append the break to the main node
+          if (mainStructuralNode.isSameNode(lastStructuralNode)) {
+            mainStructuralNode.appendChild(breakElement);
+          }
+          // If the last structural node is the last child of the main node, we append the break to the last node
+          else if (mainStructuralNode.lastElementChild.isSameNode(lastStructuralNode)) {
+            lastStructuralNode.appendChild(breakElement);
+          }
+          // Otherwise we append the break to the main node (for example if there is a <ab></ab> but the last node is a <w></w>)
+          else {
+            mainStructuralNode.appendChild(breakElement);
           }
         }
 
