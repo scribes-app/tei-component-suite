@@ -303,7 +303,16 @@ export class XMLTransformerService {
               ].join(', '))))
             ])
             .pop();
-          lastStructuralNode?.appendChild(breakElement);
+
+          if (lastStructuralNode) {
+            // Check if the last node of line is the last structural node
+            if (element.lastElementChild?.isSameNode(lastStructuralNode)) {
+              nodes.push(breakElement);
+            // Otherwise add the line break to the parent of last structural node
+            } else {
+              lastStructuralNode.parentElement?.appendChild(breakElement);
+            }
+          }
         }
 
         nodes.forEach(node => element.appendChild(node));
