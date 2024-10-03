@@ -179,6 +179,7 @@ export class XecEditor {
       const instance = new Quill(editorElement);
       instance.root.addEventListener('focus', this.onFocusEditor.bind(this, editorType));
       instance.on('text-change', this.onTextChange.bind(this, editorType));
+      instance.clipboard.onPaste = this.onPaste.bind(this, editorType);
       this.editorInstances.set(editorType, instance);
     }
 
@@ -210,6 +211,23 @@ export class XecEditor {
     this.activeInstance = this.editorInstances.get(editorType);
     this.activeTextarea = this.textareaElements.get(editorType);
     this.activeEditor = editorType;
+  }
+
+  /**
+   * Handle the text change event
+   */
+  private onPaste(editorType: UnionEditorType, range: Range, content: { text: string, html: string }): void {
+    this.concurrentTextChange = true;
+    const instance = this.editorInstances.get(editorType);
+    const words = content.text.split(' ');
+
+    let currentIndex = range.index;
+    words.forEach(word => {
+      instance.insertText(currentIndex, word, 'word', generateId(), 'silent');
+      instance.insertText(currentIndex, ' ', 'word', generateId(), 'silent');
+      currentIndex += word.length + 1;
+    });
+    this.concurrentTextChange = false;
   }
 
   /**
