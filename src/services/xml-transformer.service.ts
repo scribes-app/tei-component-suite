@@ -307,7 +307,7 @@ export class XMLTransformerService {
           if (lastStructuralNode) {
             // Check if the last node of line is the last structural node
             if (element.lastElementChild?.isSameNode(lastStructuralNode)) {
-              nodes.push(breakElement);
+              lastStructuralNode?.appendChild(breakElement);
             // Otherwise add the line break to the parent of last structural node
             } else {
               lastStructuralNode.parentElement?.appendChild(breakElement);
