@@ -2,9 +2,9 @@ import { Component, Host, h } from '@stencil/core';
 import { Element, JSX, Method, Prop, State, Watch } from '@stencil/core/internal';
 import classNames from 'classnames';
 import Quill from 'quill';
-import { Delta } from 'quill/core';
+import { Delta, Range } from 'quill/core';
 import { XecBlankSpaceFormCustomEvent } from '../../components';
-import { Punctuations, TagName, capitalize, delayed, registerBlots } from '../../lib/helper';
+import { Punctuations, TagName, capitalize, delayed, generateId, registerBlots } from '../../lib/helper';
 import { EditorFormattedTEI, EditorSettings, EditorState, QuillInstance, ToolbarConfig, UnionAbbreviationType, UnionCommentType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionLayoutType, UnionReconstructionReason, UnionUnclearReason, XecAnnotationFormValues, XecBlankSpaceFormValues, XecSettingsFormValues, XecStructureFormValues } from '../../lib/types';
 import { XMLTransformerService } from '../../services/xml-transformer.service';
 import { QuillService } from '../../services/quill.service';
@@ -221,6 +221,8 @@ export class XecEditor {
     const isNewBlock = delta.ops.at(0)?.attributes?.block || delta.ops.at(1)?.attributes?.block;
     const isDelete = delta.ops.at(0)?.delete || delta.ops.at(1)?.delete;
     const isSpace = delta.ops.at(0)?.insert === ' ' || delta.ops.at(1)?.insert === ' ';
+    const isCharacter = delta.ops.at(0)?.insert && delta.ops.at(0)?.insert !== ' ' || delta.ops.at(1)?.insert !== ' ';
+
     // Insert a new block (a line in the editor point of view) or delete it
     if (isNewBlock || isDelete) {
       this.concurrentTextChange = true;
@@ -237,7 +239,7 @@ export class XecEditor {
       }, 15);
     }
 
-    // Wrap words
+    // Wrap words at each space
     if (isSpace) {
       this.concurrentTextChange = true;
       const instance = this.editorInstances.get(editorType);
@@ -252,6 +254,40 @@ export class XecEditor {
         instance.formatText(index, length, 'word', true);
         instance.formatText(index - 1, 1, 'word', true);
       });
+      this.concurrentTextChange = false;
+    }
+
+    // Merge words while deleting a space
+    if (isDelete) {
+      this.concurrentTextChange = true;
+      const retain = delta.ops.at(0)?.retain as number ?? 0;
+      const prevChar = this.activeInstance.getText(new Range(retain - 1, 1))
+      const nextChar = this.activeInstance.getText(new Range(retain + 1, 1))
+      if (prevChar !== ' ' && nextChar !== ' ') {
+        const prevSpaceIndex = this.activeInstance.getText().lastIndexOf(' ', retain);
+        const nextSpaceIndex = this.activeInstance.getText().indexOf(' ', retain);
+        const length = nextSpaceIndex - prevSpaceIndex;
+        this.activeInstance.formatText(prevSpaceIndex, length, 'word', generateId());
+      }
+      this.concurrentTextChange = false;
+    }
+
+    // Merge words while typing a character at the end or the beginning of a word
+    if (isCharacter) {
+      this.concurrentTextChange = true;
+      const retain = delta.ops.at(0)?.retain as number ?? 0;
+      const prevChar = this.activeInstance.getText(new Range(retain - 1, 1))
+      const nextChar = this.activeInstance.getText(new Range(retain + 1, 1))
+      if (prevChar === ' ' && nextChar !== ' ') {
+        const nextSpaceIndex = this.activeInstance.getText().indexOf(' ', retain);
+        const nextWordLength = nextSpaceIndex - retain;
+        this.activeInstance.formatText(retain, nextWordLength, 'word', generateId());
+      }
+      if (nextChar === ' ' && prevChar !== ' ') {
+        const prevSpaceIndex = this.activeInstance.getText().lastIndexOf(' ', retain);
+        const prevWordLength = retain - prevSpaceIndex;
+        this.activeInstance.formatText(prevSpaceIndex, prevWordLength + 1, 'word', generateId());
+      }
       this.concurrentTextChange = false;
     }
   }

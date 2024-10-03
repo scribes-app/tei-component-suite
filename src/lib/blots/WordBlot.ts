@@ -20,9 +20,10 @@ export class WordBlot extends InlineBlot {
     TextBlot
   ];
 
-  static create() {
+  static create(param?: string|boolean) {
+    const id = typeof param === 'string' && param.length > 0 ? param : generateId();
     const node = super.create();
-    node.setAttribute('x', generateId());
+    node.setAttribute('x', id);
     return node;
   }
 
