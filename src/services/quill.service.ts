@@ -1,5 +1,5 @@
 import { Range } from 'quill';
-import { TagName } from '../lib/helper';
+import { generateId, TagName } from '../lib/helper';
 import { QuillInstance } from '../components';
 
 export class QuillService {
@@ -67,6 +67,33 @@ export class QuillService {
         children.at(0).replaceWith(wrapper);
         children.forEach(child => child.remove());
       }
+  }
+
+  static existingText2Word(instance: QuillInstance, range: Range) {
+    const characters = instance.getText(range).split('');
+    const wordPositions: { index: number; length: number }[] = characters.reduce((acc, char, index) => {
+      if (char === ' ') acc.push({ index: index + 1, length: 0 });
+      else if (acc.length === 0) acc.push({ index, length: 1 });
+      else acc[acc.length - 1].length++;
+      return acc;
+    }, []);
+
+    wordPositions.forEach(({ index, length }) => {
+      instance.formatText(index, length, 'word', true, 'silent');
+      instance.formatText(index - 1, 1, 'word', true, 'silent');
+    });
+  }
+
+  static incomingText2Words(instance: QuillInstance, range: Range, text: string) {
+    const words = text.split(' ');
+
+    let currentIndex = range.index;
+    words.forEach((word, i) => {
+      const spaceAtStart = i === 0 ? 0 : 1;
+      instance.insertText(currentIndex, word, 'word', generateId(), 'silent');
+      if (spaceAtStart) instance.insertText(currentIndex, ' ', 'word', generateId(), 'silent');
+      currentIndex += word.length + spaceAtStart;
+    });
   }
 
 }

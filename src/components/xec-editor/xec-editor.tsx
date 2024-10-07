@@ -218,15 +218,10 @@ export class XecEditor {
    */
   private onPaste(editorType: UnionEditorType, range: Range, content: { text: string, html: string }): void {
     this.concurrentTextChange = true;
-    const instance = this.editorInstances.get(editorType);
-    const words = content.text.split(' ');
 
-    let currentIndex = range.index;
-    words.forEach(word => {
-      instance.insertText(currentIndex, word, 'word', generateId(), 'silent');
-      instance.insertText(currentIndex, ' ', 'word', generateId(), 'silent');
-      currentIndex += word.length + 1;
-    });
+    const instance = this.editorInstances.get(editorType);
+    QuillService.incomingText2Words(instance, range, content.text);
+
     this.concurrentTextChange = false;
   }
 
@@ -261,17 +256,7 @@ export class XecEditor {
     if (isSpace) {
       this.concurrentTextChange = true;
       const instance = this.editorInstances.get(editorType);
-      const characters = instance.getText().split('');
-      const wordPositions: { index: number; length: number }[] = characters.reduce((acc, char, index) => {
-        if (char === ' ') acc.push({ index: index + 1, length: 0 });
-        else if (acc.length === 0) acc.push({ index, length: 1 });
-        else acc[acc.length - 1].length++;
-        return acc;
-      }, []);
-      wordPositions.forEach(({ index, length }) => {
-        instance.formatText(index, length, 'word', true);
-        instance.formatText(index - 1, 1, 'word', true);
-      });
+      QuillService.existingText2Word(instance, instance.getSelection());
       this.concurrentTextChange = false;
     }
 
@@ -447,19 +432,22 @@ export class XecEditor {
     const params = event.detail.type === 'anonymous-block' ? event.detail.ref : { type: event.detail.type, n: event.detail.ref };
 
     this.activeInstance.focus();
+
+    const range = this.activeInstance.getSelection();
     if (event.detail.type === 'anonymous-block') {
-      const selection = this.activeInstance.getSelection();
       QuillService.wrap(
         this.activeInstance,
-        selection,
+        range,
         TagName.ANONYMOUS_BLOCK,
         [{ key: 'n', value: event.detail.ref }]
       );
     } else {
       this.activeInstance.format(blot, params);
+      QuillService.existingText2Word(this.activeInstance, {
+        index: 0,
+        length: this.activeInstance.getLength(),
+      });
     }
-
-    const range = this.activeInstance.getSelection();
     this.activeInstance.root.innerHTML = XMLTransformerService.addClasses(this.activeInstance.root.innerHTML);
     delayed(() => {
       this.activeInstance.setSelection(range);

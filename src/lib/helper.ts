@@ -19,7 +19,11 @@ export const isEqual = (base: any, comp: any) => {
   return JSON.stringify(base) === JSON.stringify(comp);
 }
 
+/**
+ * Generate a random id
+ */
 export const generateId = () => Math.random().toString(36).substring(2, 15);
+
 /**
  * Register all existing blots
  */
