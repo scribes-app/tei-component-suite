@@ -434,10 +434,9 @@ export class XecEditor {
     this.popupElement.closePopup();
     const blot = event.detail.type === 'anonymous-block' ? 'anonymous-block' : 'structure';
     const params = event.detail.type === 'anonymous-block' ? event.detail.ref : { type: event.detail.type, n: event.detail.ref };
-
     this.activeInstance.focus();
+    const range = this.activeInstance.getSelection();
 
-    const range = QuillService.realSelectedRange(this.activeInstance);
     if (event.detail.type === 'anonymous-block') {
       QuillService.wrap(
         this.activeInstance,
@@ -447,14 +446,18 @@ export class XecEditor {
       );
     } else {
       this.activeInstance.format(blot, params);
-      // When its a structure we need to create word elements as this can be the first text wrapped into a chapter
-      QuillService.existingText2Word(this.activeInstance, range);
+      QuillService.existingText2Word(this.activeInstance, {
+        index: 0,
+        length: this.activeInstance.getLength(),
+      });
     }
+
     this.activeInstance.root.innerHTML = XMLTransformerService.addClasses(this.activeInstance.root.innerHTML);
+
     delayed(() => {
       this.activeInstance.setSelection(range);
+      this.concurrentTextChange = false;
     }, 15);
-    this.concurrentTextChange = false;
   }
 
   private onClickSettings(): void {
