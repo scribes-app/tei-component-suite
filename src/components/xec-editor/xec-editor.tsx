@@ -235,13 +235,14 @@ export class XecEditor {
     const isDelete = delta.ops.at(0)?.delete || delta.ops.at(1)?.delete;
     const isSpace = delta.ops.at(0)?.insert === ' ' || delta.ops.at(1)?.insert === ' ';
     const isCharacter = delta.ops.at(0)?.insert && delta.ops.at(0)?.insert !== ' ' || delta.ops.at(1)?.insert !== ' ';
+    const instance = this.editorInstances.get(editorType);
+    const range = instance.getSelection();
 
     // Insert a new block (a line in the editor point of view) or delete it
     if (isNewBlock || isDelete) {
       this.concurrentTextChange = true;
 
       const instance = this.editorInstances.get(editorType);
-      const range = instance.getSelection();
       instance.root.innerHTML = XMLTransformerService.addClasses(instance.root.innerHTML);
       const nextPosition = (range?.index ?? 0) + (isNewBlock ? 1 : 0);
 
@@ -256,7 +257,7 @@ export class XecEditor {
     if (isSpace) {
       this.concurrentTextChange = true;
       const instance = this.editorInstances.get(editorType);
-      QuillService.existingText2Word(instance, instance.getSelection());
+      instance.formatText(range.index - 1, 1, 'word', generateId());
       this.concurrentTextChange = false;
     }
 
@@ -264,13 +265,13 @@ export class XecEditor {
     if (isDelete) {
       this.concurrentTextChange = true;
       const retain = delta.ops.at(0)?.retain as number ?? 0;
-      const prevChar = this.activeInstance.getText(new Range(retain - 1, 1))
-      const nextChar = this.activeInstance.getText(new Range(retain + 1, 1))
+      const prevChar = instance.getText(new Range(retain - 1, 1))
+      const nextChar = instance.getText(new Range(retain + 1, 1))
       if (prevChar !== ' ' && nextChar !== ' ') {
-        const prevSpaceIndex = this.activeInstance.getText().lastIndexOf(' ', retain);
-        const nextSpaceIndex = this.activeInstance.getText().indexOf(' ', retain);
+        const prevSpaceIndex = instance.getText().lastIndexOf(' ', retain);
+        const nextSpaceIndex = instance.getText().indexOf(' ', retain);
         const length = nextSpaceIndex - prevSpaceIndex;
-        this.activeInstance.formatText(prevSpaceIndex, length, 'word', generateId());
+        instance.formatText(prevSpaceIndex, length, 'word', generateId());
       }
       this.concurrentTextChange = false;
     }
@@ -279,17 +280,19 @@ export class XecEditor {
     if (isCharacter) {
       this.concurrentTextChange = true;
       const retain = delta.ops.at(0)?.retain as number ?? 0;
-      const prevChar = this.activeInstance.getText(new Range(retain - 1, 1))
-      const nextChar = this.activeInstance.getText(new Range(retain + 1, 1))
+      const prevChar = instance.getText(new Range(retain - 1, 1))
+      const nextChar = instance.getText(new Range(retain + 1, 1))
       if (prevChar === ' ' && nextChar !== ' ') {
-        const nextSpaceIndex = this.activeInstance.getText().indexOf(' ', retain);
+        let nextSpaceIndex = instance.getText().indexOf(' ', retain);
+        // Handle editing from the end of the text
+        if (nextSpaceIndex === -1) nextSpaceIndex = instance.getLength();
         const nextWordLength = nextSpaceIndex - retain;
-        this.activeInstance.formatText(retain, nextWordLength, 'word', generateId());
+        instance.formatText(retain, nextWordLength, 'word', generateId());
       }
       if (nextChar === ' ' && prevChar !== ' ') {
-        const prevSpaceIndex = this.activeInstance.getText().lastIndexOf(' ', retain);
+        const prevSpaceIndex = instance.getText().lastIndexOf(' ', retain);
         const prevWordLength = retain - prevSpaceIndex;
-        this.activeInstance.formatText(prevSpaceIndex, prevWordLength + 1, 'word', generateId());
+        instance.formatText(prevSpaceIndex, prevWordLength + 1, 'word', generateId());
       }
       this.concurrentTextChange = false;
     }
@@ -427,13 +430,14 @@ export class XecEditor {
   }
 
   private onSubmitStructureForm(event: CustomEvent<XecStructureFormValues>): void {
+    this.concurrentTextChange = true;
     this.popupElement.closePopup();
     const blot = event.detail.type === 'anonymous-block' ? 'anonymous-block' : 'structure';
     const params = event.detail.type === 'anonymous-block' ? event.detail.ref : { type: event.detail.type, n: event.detail.ref };
 
     this.activeInstance.focus();
 
-    const range = this.activeInstance.getSelection();
+    const range = QuillService.realSelectedRange(this.activeInstance);
     if (event.detail.type === 'anonymous-block') {
       QuillService.wrap(
         this.activeInstance,
@@ -443,15 +447,14 @@ export class XecEditor {
       );
     } else {
       this.activeInstance.format(blot, params);
-      QuillService.existingText2Word(this.activeInstance, {
-        index: 0,
-        length: this.activeInstance.getLength(),
-      });
+      // When its a structure we need to create word elements as this can be the first text wrapped into a chapter
+      QuillService.existingText2Word(this.activeInstance, range);
     }
     this.activeInstance.root.innerHTML = XMLTransformerService.addClasses(this.activeInstance.root.innerHTML);
     delayed(() => {
       this.activeInstance.setSelection(range);
     }, 15);
+    this.concurrentTextChange = false;
   }
 
   private onClickSettings(): void {
@@ -487,6 +490,7 @@ export class XecEditor {
   private onSubmitAnnotationForm(event: CustomEvent<XecAnnotationFormValues>): void {
     this.popupElement.closePopup();
     this.activeInstance.focus();
+    this.concurrentTextChange = true;
     QuillService.wrap(
       this.activeInstance,
       this.activeInstance.getSelection(),
@@ -497,6 +501,7 @@ export class XecEditor {
         { key: 'hand', value: event.detail.hand },
       ]
     );
+    this.concurrentTextChange = false;
   }
 
   private onClickReconstruction(event: CustomEvent<UnionReconstructionReason>): void {

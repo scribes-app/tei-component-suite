@@ -96,4 +96,12 @@ export class QuillService {
     });
   }
 
+  static realSelectedRange(instance: QuillInstance): Range {
+    const selection = instance.getSelection();
+    if (selection === null) return { index: 0, length: 0 };
+    const [start, end] = [selection.index, selection.index + selection.length];
+    const [min, max] = [start, end].sort((a, b) => a - b);
+    return { index: min, length: max - min };
+  }
+
 }
