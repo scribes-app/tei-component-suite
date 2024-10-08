@@ -1,11 +1,11 @@
 import { BlotConstructor, InlineBlot, TextBlot } from 'parchment';
-import { TagName } from '../helper';
+import { BlotName, TagName } from '../helper';
 import { AnnotationAttributes } from '../types';
 import Break from 'quill/blots/break';
 import { WordBlot } from './WordBlot';
 
 export class AnnotationBlot extends InlineBlot {
-  static blotName = 'annotation';
+  static blotName = BlotName.ANNOTATION;
   static tagName = TagName.ANNOTATION;
   static allowedChildren: BlotConstructor[] = [
     WordBlot,

@@ -126,6 +126,20 @@ export const XMLAvailableTagsList: (TagName|string)[] =  [
   TagName.RECONSTRUCTION,
 ];
 
+export const enum BlotName {
+  STRUCTURE = 'structure',
+  ANONYMOUS_BLOCK = 'anonymous-block',
+  HIGHLIGHTED = 'highlighted',
+  UNCLEAR = 'unclear',
+  ABBREVIATION = 'abbreviation',
+  DELETED = 'deleted',
+  BLANK_SPACE = 'blank-space',
+  WORD = 'word',
+  PUNCTUATION = 'punctuation',
+  ANNOTATION = 'annotation',
+  RECONSTRUCTION = 'reconstruction',
+}
+
 export const Punctuations = [
   // Hebrew punctuation
   '\u05BE',

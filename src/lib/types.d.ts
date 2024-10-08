@@ -213,3 +213,6 @@ export type XecAnnotationFormValues = {
   rend?: UnionAnnotationRend;
   hand?: UnionAnnotationHand;
 };
+
+export type Attribute = { key: string, value: string }
+;

@@ -1,10 +1,10 @@
 import { BlotConstructor, InlineBlot, TextBlot } from 'parchment';
 import Break from 'quill/blots/break';
-import { TagName } from '../helper';
+import { BlotName, TagName } from '../helper';
 import { UnionDeletedRend } from '../types';
 
 export class DeletedBlot extends InlineBlot {
-  static blotName = 'deleted';
+  static blotName = BlotName.DELETED;
   static tagName = TagName.DELETED;
   static allowedChildren: BlotConstructor[] = [
     Break,

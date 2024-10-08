@@ -1,10 +1,10 @@
 import { BlotConstructor, InlineBlot, TextBlot } from 'parchment';
 import Break from 'quill/blots/break';
-import { TagName } from '../helper';
+import { BlotName, TagName } from '../helper';
 import { UnionHighlightedRend } from '../types';
 
 export class HighlightedBlot extends InlineBlot {
-  static blotName = 'highlighted';
+  static blotName = BlotName.HIGHLIGHTED;
   static tagName = TagName.HIGHLIGHTED;
   static allowedChildren: BlotConstructor[] = [
     Break,

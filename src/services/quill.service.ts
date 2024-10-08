@@ -1,6 +1,7 @@
 import { Range } from 'quill';
-import { generateId, TagName } from '../lib/helper';
 import { QuillInstance } from '../components';
+import { BlotName, generateId, TagName } from '../lib/helper';
+import { Attribute } from '../lib/types';
 
 export class QuillService {
 
@@ -12,7 +13,7 @@ export class QuillService {
     instance: QuillInstance,
     selection: Range,
     tagName: TagName,
-    attributes?: { key: string, value: string }[]) {
+    attributes?: Attribute[]) {
 
       // Depth map
       const depthMap = new Map([
@@ -79,8 +80,8 @@ export class QuillService {
     }, []);
 
     wordPositions.forEach(({ index, length }) => {
-      instance.formatText(index, length, 'word', true, 'silent');
-      instance.formatText(index - 1, 1, 'word', true, 'silent');
+      instance.formatText(index, length, BlotName.WORD, true, 'silent');
+      instance.formatText(index - 1, 1, BlotName.WORD, true, 'silent');
     });
   }
 
@@ -90,10 +91,33 @@ export class QuillService {
     let currentIndex = range.index;
     words.forEach((word, i) => {
       const spaceAtStart = i === 0 ? 0 : 1;
-      instance.insertText(currentIndex, word, 'word', generateId(), 'silent');
-      if (spaceAtStart) instance.insertText(currentIndex, ' ', 'word', generateId(), 'silent');
+      instance.insertText(currentIndex, word, BlotName.WORD, generateId(), 'silent');
+      if (spaceAtStart) instance.insertText(currentIndex, ' ', BlotName.WORD, generateId(), 'silent');
       currentIndex += word.length + spaceAtStart;
     });
+  }
+
+  static insertEmbed(blot: TagName, content: string, attrinutes?: Attribute[]) {
+    // const clone = document.createElement(TagName.ROOT);
+    // clone.innerHTML = instance.root.innerHTML;
+
+    const node = window.getSelection().anchorNode;
+    const offset = window.getSelection().anchorOffset;
+    const element = node.nodeType === Node.TEXT_NODE ? node.parentElement.closest('w') : (node as HTMLElement).closest('w');
+    // const cloneElement = clone.querySelector('w[x="' + element.getAttribute('x') + '"]');
+    const atEnd = offset / node.textContent.length > 0.5 ? true : false;
+
+    const embed = document.createElement(blot);
+    const inner = document.createElement('span');
+    embed.appendChild(inner);
+
+    embed.setAttribute('contenteditable', 'false');
+    inner.setAttribute('contenteditable', 'false');
+    inner.textContent = content;
+
+    attrinutes?.forEach(({ key, value }) => embed.setAttribute(key, value));
+    element[atEnd ? 'after' : 'before'](embed);
+    // instance.root.innerHTML = clone.innerHTML;
   }
 
 }

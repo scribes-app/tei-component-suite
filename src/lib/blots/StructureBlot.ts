@@ -1,6 +1,6 @@
 import { BlotConstructor, InlineBlot, TextBlot } from 'parchment';
 import Break from 'quill/blots/break';
-import { TagName } from '../helper';
+import { BlotName, TagName } from '../helper';
 import { StructureAttributes } from '../types';
 import { AnnotationBlot } from './AnnotationBlot';
 import { AnonymousBlockBlot } from './AnonymousBlockBlot';
@@ -9,7 +9,7 @@ import { PunctuationBlot } from './PunctuationBlot';
 import { WordBlot } from './WordBlot';
 
 export class StructureBlot extends InlineBlot {
-  static blotName = 'structure';
+  static blotName = BlotName.STRUCTURE;
   static tagName = TagName.STRUCTURE;
   static allowedChildren: BlotConstructor[] = [
     AnonymousBlockBlot,

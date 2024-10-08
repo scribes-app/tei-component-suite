@@ -1,9 +1,9 @@
-import { BlotConstructor, EmbedBlot, TextBlot } from 'parchment';
+import { BlotConstructor, InlineBlot, TextBlot } from 'parchment';
 import Break from 'quill/blots/break';
-import { Punctuations, TagName } from '../helper';
+import { BlotName, Punctuations, TagName } from '../helper';
 
-export class PunctuationBlot extends EmbedBlot {
-  static blotName = 'punctuation';
+export class PunctuationBlot extends InlineBlot {
+  static blotName = BlotName.PUNCTUATION;
   static tagName = TagName.PUNCTUATION;
   static allowedChildren: BlotConstructor[] = [
     Break,
@@ -12,10 +12,8 @@ export class PunctuationBlot extends EmbedBlot {
 
   static create(punctuation: typeof Punctuations[number]) {
     const node = super.create();
-    const inner = document.createElement('span');
-    inner.textContent = punctuation;
-    inner.setAttribute('contenteditable', 'false');
-    node.appendChild(inner);
+    node.textContent = punctuation;
+    node.setAttribute('contenteditable', 'false');
     return node;
   }
 

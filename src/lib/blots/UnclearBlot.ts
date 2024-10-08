@@ -1,10 +1,10 @@
 import { BlotConstructor, InlineBlot, TextBlot } from 'parchment';
 import Break from 'quill/blots/break';
-import { TagName } from '../helper';
+import { BlotName, TagName } from '../helper';
 import { UnionUnclearReason } from '../types';
 
 export class UnclearBlot extends InlineBlot {
-  static blotName = 'unclear';
+  static blotName = BlotName.UNCLEAR;
   static tagName = TagName.UNCLEAR;
   static allowedChildren: BlotConstructor[] = [
     Break,

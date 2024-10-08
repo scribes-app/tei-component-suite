@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import Quill from 'quill';
 import { Delta, Range } from 'quill/core';
 import { XecBlankSpaceFormCustomEvent } from '../../components';
-import { Punctuations, TagName, capitalize, delayed, generateId, registerBlots } from '../../lib/helper';
+import { BlotName, Punctuations, TagName, capitalize, delayed, generateId, registerBlots } from '../../lib/helper';
 import { EditorFormattedTEI, EditorSettings, EditorState, QuillInstance, ToolbarConfig, UnionAbbreviationType, UnionCommentType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionLayoutType, UnionReconstructionReason, UnionUnclearReason, XecAnnotationFormValues, XecBlankSpaceFormValues, XecSettingsFormValues, XecStructureFormValues } from '../../lib/types';
 import { XMLTransformerService } from '../../services/xml-transformer.service';
 import { QuillService } from '../../services/quill.service';
@@ -220,6 +220,7 @@ export class XecEditor {
     this.concurrentTextChange = true;
 
     const instance = this.editorInstances.get(editorType);
+    instance.deleteText(range);
     QuillService.incomingText2Words(instance, range, content.text);
 
     this.concurrentTextChange = false;
@@ -257,7 +258,7 @@ export class XecEditor {
     if (isSpace) {
       this.concurrentTextChange = true;
       const instance = this.editorInstances.get(editorType);
-      instance.formatText(range.index - 1, 1, 'word', generateId());
+      instance.formatText(range.index - 1, 1, BlotName.WORD, generateId());
       this.concurrentTextChange = false;
     }
 
@@ -271,7 +272,7 @@ export class XecEditor {
         const prevSpaceIndex = instance.getText().lastIndexOf(' ', retain);
         const nextSpaceIndex = instance.getText().indexOf(' ', retain);
         const length = nextSpaceIndex - prevSpaceIndex;
-        instance.formatText(prevSpaceIndex, length, 'word', generateId());
+        instance.formatText(prevSpaceIndex + 1, length, BlotName.WORD, generateId());
       }
       this.concurrentTextChange = false;
     }
@@ -287,12 +288,12 @@ export class XecEditor {
         // Handle editing from the end of the text
         if (nextSpaceIndex === -1) nextSpaceIndex = instance.getLength();
         const nextWordLength = nextSpaceIndex - retain;
-        instance.formatText(retain, nextWordLength, 'word', generateId());
+        instance.formatText(retain, nextWordLength, BlotName.WORD, generateId());
       }
       if (nextChar === ' ' && prevChar !== ' ') {
         const prevSpaceIndex = instance.getText().lastIndexOf(' ', retain);
         const prevWordLength = retain - prevSpaceIndex;
-        instance.formatText(prevSpaceIndex, prevWordLength + 1, 'word', generateId());
+        instance.formatText(prevSpaceIndex, prevWordLength + 1, BlotName.WORD, generateId());
       }
       this.concurrentTextChange = false;
     }
@@ -367,37 +368,40 @@ export class XecEditor {
   private onSubmitBlankSpaceForm(event: XecBlankSpaceFormCustomEvent<XecBlankSpaceFormValues>): void {
     this.popupElement.closePopup();
     this.activeInstance.focus();
-    const range = this.activeInstance.getSelection();
-    this.activeInstance.insertEmbed(range.index, 'blank-space', event.detail);
-    this.activeInstance.setSelection({ index: range.index + 1, length: 0 });
+    this.concurrentTextChange = true;
+    QuillService.insertEmbed(TagName.BLANK_SPACE, '_', [
+      { key: 'unit', value: event.detail.unit },
+      { key: 'value', value: event.detail.value.toString() },
+    ]);
+    this.concurrentTextChange = false;
   }
 
   private onClickUnclear(event: CustomEvent<UnionUnclearReason>): void {
     const { detail: reason } = event;
-    this.activeInstance.format('unclear', reason);
+    this.activeInstance.format(BlotName.UNCLEAR, reason);
   }
 
   private onClickHighlighted(event: CustomEvent<UnionHighlightedRend>): void {
     const { detail: rend } = event;
-    this.activeInstance.format('highlighted', rend);
+    this.activeInstance.format(BlotName.HIGHLIGHTED, rend);
   }
 
   private onClickDeleted(event: CustomEvent<UnionDeletedRend>): void {
     const { detail: rend } = event;
-    this.activeInstance.format('deleted', rend);
+    this.activeInstance.format(BlotName.DELETED, rend);
   }
 
   private onClickAbbreviation(event: CustomEvent<UnionAbbreviationType>): void {
     const { detail: type } = event;
-    this.activeInstance.format('abbreviation', type);
+    this.activeInstance.format(BlotName.ABBREVIATION, type);
   }
 
   private onClickPunctuation(event: CustomEvent<typeof Punctuations[number]>): void {
     const { detail: type } = event;
     this.activeInstance.focus();
-    const range = this.activeInstance.getSelection();
-    this.activeInstance.insertEmbed(range.index, 'punctuation', type);
-    this.activeInstance.setSelection({ index: range.index + 1, length: 0 });
+    this.concurrentTextChange = true;
+    QuillService.insertEmbed(TagName.PUNCTUATION, type);
+    this.concurrentTextChange = false;
   }
 
   private onClickLayout(): void {
@@ -416,8 +420,10 @@ export class XecEditor {
     this.activeInstance.focus();
     const range = this.activeInstance.getSelection();
     const text = this.activeInstance.getText(range.index, range.length);
+    this.concurrentTextChange = true;
     this.activeInstance.deleteText(range);
     this.activeInstance.insertText(range.index, text);
+    this.concurrentTextChange = false;
   }
 
   private onClickStructure(): void {
@@ -432,12 +438,12 @@ export class XecEditor {
   private onSubmitStructureForm(event: CustomEvent<XecStructureFormValues>): void {
     this.concurrentTextChange = true;
     this.popupElement.closePopup();
-    const blot = event.detail.type === 'anonymous-block' ? 'anonymous-block' : 'structure';
-    const params = event.detail.type === 'anonymous-block' ? event.detail.ref : { type: event.detail.type, n: event.detail.ref };
+    const blot = event.detail.type === BlotName.ANONYMOUS_BLOCK ? BlotName.ANONYMOUS_BLOCK : BlotName.STRUCTURE;
+    const params = event.detail.type === BlotName.ANONYMOUS_BLOCK ? event.detail.ref : { type: event.detail.type, n: event.detail.ref };
     this.activeInstance.focus();
     const range = this.activeInstance.getSelection();
 
-    if (event.detail.type === 'anonymous-block') {
+    if (event.detail.type === BlotName.ANONYMOUS_BLOCK) {
       QuillService.wrap(
         this.activeInstance,
         range,
@@ -509,7 +515,7 @@ export class XecEditor {
 
   private onClickReconstruction(event: CustomEvent<UnionReconstructionReason>): void {
     const { detail: reason } = event;
-    this.activeInstance.format('reconstruction', reason);
+    this.activeInstance.format(BlotName.RECONSTRUCTION, reason);
   }
 
   /**
