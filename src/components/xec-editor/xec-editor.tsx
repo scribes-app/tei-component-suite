@@ -327,6 +327,7 @@ export class XecEditor {
    */
   private onClickViewRaw(): void {
     const editorState = this.editorStates.get(this.activeEditor);
+    this.concurrentTextChange = true;
     if (editorState.viewType === 'raw') {
       const editorContent = XMLTransformerService.XML2Editor(this.activeTextarea.value);
       this.activeInstance.root.innerHTML = XMLTransformerService.addClasses(editorContent);
@@ -334,6 +335,7 @@ export class XecEditor {
       const xmlContent = XMLTransformerService.editor2XML(this.activeInstance.root.innerHTML);
       this.activeTextarea.value = XMLTransformerService.removeClasses(xmlContent);
     }
+    this.concurrentTextChange = false;
     this.setActiveEditorState('viewType', editorState.viewType === 'raw' ? 'default' : 'raw');
   }
 

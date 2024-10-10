@@ -154,7 +154,7 @@ export class XMLTransformerService {
     const root = document.createElement(TagName.ROOT);
     root.innerHTML = html
       // Replace autoclosing tags to HTML closing tags such as <lb /> to <lb></lb>
-      .replace(/<([A-z]+)( [\w\"\=]*)?\/>/gm, '<$1 $2><\/$1>');
+      .replace(/<([A-z]+)([ \w\"\=]*)?\/>/gm, '<$1 $2><\/$1>');
 
     const parsed = formatXml.minify(root.outerHTML, {
         collapseContent: true,
@@ -422,6 +422,11 @@ export class XMLTransformerService {
     const clonedLine = line.cloneNode(true) as HTMLElement;
     clonedLine.querySelectorAll(TagName.BLANK_SPACE).forEach(blankSpace => {
       blankSpace.textContent = '_';
+      blankSpace.setAttribute('contenteditable', 'false');
+    });
+
+    clonedLine.querySelectorAll(TagName.PUNCTUATION).forEach(punctuation => {
+      punctuation.setAttribute('contenteditable', 'false');
     });
 
     clonedLine.querySelectorAll(TagName.WORD).forEach(word => {
@@ -444,21 +449,22 @@ export class XMLTransformerService {
     const blankSpaces = Array.from(clonedLine.querySelectorAll(TagName.BLANK_SPACE));
     blankSpaces.forEach(blankSpace => {
       const hasWordAfter = blankSpace.nextElementSibling?.nodeName === TagName.WORD;
-      if (!hasWordAfter) insertSpace(blankSpace);
+      if (hasWordAfter) insertSpace(blankSpace);
     });
 
     // Insert space after punctuation
     const punctuations = Array.from(clonedLine.querySelectorAll(TagName.PUNCTUATION));
     punctuations.forEach(punctuation => {
       const hasWordAfter = punctuation.nextElementSibling?.nodeName === TagName.WORD;
-      if (!hasWordAfter) insertSpace(punctuation);
+      if (hasWordAfter) insertSpace(punctuation);
     });
 
     // Insert spaces
     const words = Array.from(clonedLine.querySelectorAll(TagName.WORD));
     words.forEach(word => {
       const isLastWord = Array.from(clonedLine.querySelectorAll(TagName.WORD)).pop().isSameNode(word) || word.nextElementSibling?.nodeName === TagName.PUNCTUATION;
-      if (!isLastWord) insertSpace(word);
+      const isSpace = word.textContent === ' ';
+      if (!isLastWord && !isSpace) insertSpace(word);
     });
 
     return clonedLine;
