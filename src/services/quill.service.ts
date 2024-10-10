@@ -98,26 +98,17 @@ export class QuillService {
   }
 
   static insertEmbed(blot: TagName, content: string, attrinutes?: Attribute[]) {
-    // const clone = document.createElement(TagName.ROOT);
-    // clone.innerHTML = instance.root.innerHTML;
-
     const node = window.getSelection().anchorNode;
     const offset = window.getSelection().anchorOffset;
     const element = node.nodeType === Node.TEXT_NODE ? node.parentElement.closest('w') : (node as HTMLElement).closest('w');
-    // const cloneElement = clone.querySelector('w[x="' + element.getAttribute('x') + '"]');
     const atEnd = offset / node.textContent.length > 0.5 ? true : false;
 
     const embed = document.createElement(blot);
-    const inner = document.createElement('span');
-    embed.appendChild(inner);
-
     embed.setAttribute('contenteditable', 'false');
-    inner.setAttribute('contenteditable', 'false');
-    inner.textContent = content;
+    embed.textContent = content;
 
     attrinutes?.forEach(({ key, value }) => embed.setAttribute(key, value));
     element[atEnd ? 'after' : 'before'](embed);
-    // instance.root.innerHTML = clone.innerHTML;
   }
 
 }

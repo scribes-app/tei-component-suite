@@ -1,12 +1,10 @@
 import { BlotConstructor, InlineBlot, TextBlot } from 'parchment';
-import Break from 'quill/blots/break';
 import { BlotName, Punctuations, TagName } from '../helper';
 
 export class PunctuationBlot extends InlineBlot {
   static blotName = BlotName.PUNCTUATION;
   static tagName = TagName.PUNCTUATION;
   static allowedChildren: BlotConstructor[] = [
-    Break,
     TextBlot
   ];
 

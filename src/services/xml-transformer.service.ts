@@ -325,10 +325,16 @@ export class XMLTransformerService {
         nodes.forEach(node => element.appendChild(node));
         return element;
       }
-
       case TagName.PUNCTUATION: {
-        const element = document.createElement(TagName.PUNCTUATION);
+        const element = node.cloneNode(false) as HTMLElement;
+        element.removeAttribute('contenteditable');
         element.textContent = node.textContent;
+        return element;
+      }
+
+      case TagName.BLANK_SPACE: {
+        const element = node.cloneNode(false) as HTMLElement;
+        element.removeAttribute('contenteditable');
         return element;
       }
 
@@ -338,7 +344,6 @@ export class XMLTransformerService {
       case TagName.DELETED:
       case TagName.ABBREVIATION:
       case TagName.HIGHLIGHTED:
-      case TagName.BLANK_SPACE:
       case TagName.ANNOTATION:
       case TagName.RECONSTRUCTION: {
         const element = node.cloneNode(false) as HTMLElement;
@@ -416,10 +421,7 @@ export class XMLTransformerService {
   static processCustomTagFromXML(line: HTMLElement): HTMLElement {
     const clonedLine = line.cloneNode(true) as HTMLElement;
     clonedLine.querySelectorAll(TagName.BLANK_SPACE).forEach(blankSpace => {
-      const inner = document.createElement('span');
-      inner.textContent = '_';
-      inner.setAttribute('contenteditable', 'false');
-      blankSpace.appendChild(inner);
+      blankSpace.textContent = '_';
     });
 
     clonedLine.querySelectorAll(TagName.WORD).forEach(word => {

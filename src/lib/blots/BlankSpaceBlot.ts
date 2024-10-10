@@ -1,10 +1,13 @@
-import { InlineBlot } from 'parchment';
+import { BlotConstructor, InlineBlot, TextBlot } from 'parchment';
 import { BlotName, TagName } from '../helper';
 import { BlankSpaceAttributes } from '../types';
 
 export class BlankSpaceBlot extends InlineBlot {
   static blotName = BlotName.BLANK_SPACE;
   static tagName = TagName.BLANK_SPACE;
+  static allowedChildren: BlotConstructor[] = [
+    TextBlot,
+  ]
 
   static create(attr: BlankSpaceAttributes) {
     const node = super.create();
