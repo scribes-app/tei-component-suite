@@ -47,6 +47,7 @@ export type UnionUnclearReason = (
 
 export type UnionStructureType = (
   'book'|
+  'part'|
   'chapter'|
   'verse'|
   'inscriptio'|
