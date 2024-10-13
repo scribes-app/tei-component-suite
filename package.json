@@ -51,6 +51,7 @@
     "@stencil/angular-output-target": "^0.8.4",
     "@stencil/react-output-target": "^0.5.3",
     "@stencil/sass": "^3.0.12",
+    "@stencil/vue-output-target": "^0.8.9",
     "@types/html-escaper": "^3.0.2",
     "classnames": "^2.5.1",
     "parchment": "^3.0.0",
