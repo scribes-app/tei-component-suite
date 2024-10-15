@@ -21,6 +21,10 @@ xec-editor {
   --xec-editor-tabs-button-color: #{$color-slate-500};
   --xec-editor-tabs-button-hover-background-color: #{$color-slate-100};
 
+  --xec-editor-faded-text-color: #{$color-slate-500};
+  --xec-editor-high-faded-text-color: #{$color-slate-300};
+  --xec-editor-danger-text-color: #{$color-red-800};
+
   position: relative;
 
   .toolbar {
@@ -224,16 +228,15 @@ xec-editor {
             display: inline;
           }
           unclear,
-          del,
+          del[rend=strikethrough],
+          del[rend=other],
           h,
           space,
           seg,
-          supplied,
+          // supplied,
           pc,
           abbr {
             position: relative;
-            border: 1px solid var(--xec-editor-text-element-border-color);
-            background-color: var(--xec-editor-text-element-background-color);
             &::before {
               @include shadow;
               z-index: 20;
@@ -255,21 +258,17 @@ xec-editor {
               }
             }
           }
-          space {
-            text-align: center;
-            display: inline-block;
-            width: 20px;
-          }
           unclear:hover::before {
             content: 'unclear: (' attr(reason) ')';
           }
           seg:hover::before {
             content: 'annotation: (' attr(type) ', ' attr(rend) ', ' attr(hand) ')';
           }
-          supplied:hover::before {
-            content: 'reconstruction: (' attr(reason) ')';
-          }
-          del:hover::before {
+          // supplied:hover::before {
+          //   content: 'reconstruction: (' attr(reason) ')';
+          // }
+          del[rend=strikethrough]:hover::before,
+          del[rend=other]:hover::before {
             content: 'deleted: (' attr(rend) ')';
           }
           h:hover::before {
@@ -284,6 +283,103 @@ xec-editor {
           pc:hover::before {
             content: 'punctuation';
           }
+
+          seg {
+            border: 1px solid var(--xec-editor-text-element-border-color);
+            background-color: var(--xec-editor-text-element-background-color);
+          }
+
+          space {
+            text-align: center;
+            display: inline-block;
+            width: 20px;
+          }
+
+          unclear[reason=legible_incomplete] {
+            text-emphasis: circle;
+          }
+
+          unclear[reason=uncertain] {
+            text-emphasis: open;
+          }
+
+          unclear[reason=faded] {
+            text-emphasis: open;
+            color: var(--xec-editor-high-faded-text-color);
+          }
+
+          unclear[reason=background_noise] {
+            text-emphasis: open;
+            color: var(--xec-editor-faded-text-color);
+          }
+
+          supplied {
+            color: var(--xec-editor-faded-text-color);
+            &::before {
+              color: var(--xec-editor-text-color);
+              display: inline;
+              content: '[';
+            }
+            &::after {
+              color: var(--xec-editor-text-color);
+              display: inline;
+              content: ']';
+            }
+          }
+
+          del[rend=erased] {
+            color: var(--xec-editor-faded-text-color);
+            &::before {
+              color: var(--xec-editor-text-color);
+              display: inline;
+              content: '{';
+            }
+            &::after {
+              color: var(--xec-editor-text-color);
+              display: inline;
+              content: '}';
+            }
+          }
+
+          del[rend=dotted] {
+            text-emphasis: dot;
+            text-emphasis-position: under;
+          }
+
+          del[rend=underline] {
+            text-decoration: underline;
+          }
+
+          abbr {
+            color: var(--xec-editor-danger-text-color);
+          }
+
+          h[rend=enlarged],
+          h[rend=bigger] {
+            display: inline-block;
+            font-size: 1.2em;
+            margin: 0 .2ch;
+            &:before {
+              font-size: .85em;
+            }
+          }
+
+          h[rend=supralinear],
+          h[rend=displaced-above] {
+            vertical-align: super;
+          }
+
+          h[rend=infralinear],
+          h[rend=displaced-below] {
+            vertical-align: sub;
+          }
+
+          h[rend=doted] {
+            text-emphasis: dot;
+            text-emphasis-position: under;
+          }
+
+
           div.first {
             &[type="part"]::before {
               content: '[p]: ' attr(n) ' ';
