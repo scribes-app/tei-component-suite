@@ -33,7 +33,7 @@ export class QuillService {
       // Find targetted word ids
       const wordIds = instance
         .getContents(selection.index, selection.length)
-        .map((op) => op.attributes.word ?? op.attributes.x);
+        .map((op) => op.attributes.word ?? op.attributes.space);
 
       // Find relative word elements
       let words = Array.from(instance.root.querySelectorAll([TagName.WORD, TagName.SPACE].join(',')))
