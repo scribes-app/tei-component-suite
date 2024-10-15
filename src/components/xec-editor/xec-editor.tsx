@@ -150,7 +150,7 @@ export class XecEditor {
   public componentDidLoad(): void {
     this.initQuillInstances();
     this.initTextareaElements();
-    this.onClickTextSize();
+    this.initTextSize();
   }
 
   /**
@@ -188,6 +188,18 @@ export class XecEditor {
     }
 
     this.activeInstance = this.editorInstances.get(this.activeEditor);
+  }
+
+  /**
+   * Initialize the text size
+   */
+  private initTextSize(): void {
+    this.editorInstances.forEach((instance) => {
+      instance.container.classList.add(`text-size-${this.textSize}`);
+    });
+    this.textareaElements.forEach((element) => {
+      element.classList.add(`text-size-${this.textSize}`);
+    });
   }
 
   /**
