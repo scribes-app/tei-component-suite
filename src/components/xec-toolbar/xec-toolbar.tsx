@@ -48,6 +48,9 @@ export class XecToolbar {
   private readonly clickLTR: EventEmitter<void>;
 
   @Event()
+  private readonly clickTextSize: EventEmitter<void>;
+
+  @Event()
   private readonly clickLayout: EventEmitter<void>;
 
   @Event()
@@ -100,6 +103,7 @@ export class XecToolbar {
       clickSettings,
       clickAnnotation,
       clickReconstruction,
+      clickTextSize,
       textDirection,
       layoutType,
       viewRaw,
@@ -341,6 +345,14 @@ export class XecToolbar {
           )}
           <div class="alignRight">
             <xec-icon icon={locked ? 'lock' : 'unlock'} />
+            {config.controls.settings && (
+              <xec-button
+                onClickButton={clickTextSize.emit.bind(this)}
+                iconOnly
+                icon="text-size"
+                disabled={locked}
+              />
+            )}
             {config.controls.settings && (
               <xec-button
                 onClickButton={clickSettings.emit.bind(this)}

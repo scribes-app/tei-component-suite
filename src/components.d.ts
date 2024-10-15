@@ -302,6 +302,7 @@ declare global {
         "clickBlankSpace": void;
         "clickRTL": void;
         "clickLTR": void;
+        "clickTextSize": void;
         "clickLayout": void;
         "clickRemove": void;
         "clickSettings": void;
@@ -422,6 +423,7 @@ declare namespace LocalJSX {
         "onClickRemove"?: (event: XecToolbarCustomEvent<void>) => void;
         "onClickSettings"?: (event: XecToolbarCustomEvent<void>) => void;
         "onClickStructure"?: (event: XecToolbarCustomEvent<UnionStructureType|'anonymous-block'>) => void;
+        "onClickTextSize"?: (event: XecToolbarCustomEvent<void>) => void;
         "onClickUnclear"?: (event: XecToolbarCustomEvent<UnionUnclearReason>) => void;
         "onClickViewRaw"?: (event: XecToolbarCustomEvent<void>) => void;
         "textDirection"?: 'LTR'|'RTL';

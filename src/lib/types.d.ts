@@ -9,6 +9,7 @@ export type UnionIcons = (
   'code-simple' |
   'align-left' |
   'align-right' |
+  'text-size' |
   'cross' |
   'angle-down' |
   'paragraph-rtl' |
@@ -164,6 +165,7 @@ export type ToolbarConfig = {
     unclear?: boolean;
     viewRaw?: boolean;
     textDirection?: boolean;
+    textSize?: boolean;
   }
 }
 

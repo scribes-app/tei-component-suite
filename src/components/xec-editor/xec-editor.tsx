@@ -64,6 +64,9 @@ export class XecEditor {
   @State()
   private locked: boolean = false;
 
+  @State()
+  private textSize: 's'|'m'|'l'|'xl' = 's';
+
   @Method()
   public async getQuillInstances(): Promise<Map<UnionEditorType, QuillInstance>> {
     return this.editorInstances;
@@ -147,6 +150,7 @@ export class XecEditor {
   public componentDidLoad(): void {
     this.initQuillInstances();
     this.initTextareaElements();
+    this.onClickTextSize();
   }
 
   /**
@@ -211,6 +215,26 @@ export class XecEditor {
     this.activeInstance = this.editorInstances.get(editorType);
     this.activeTextarea = this.textareaElements.get(editorType);
     this.activeEditor = editorType;
+  }
+
+  /**
+   * Switch between different text size
+   */
+  private onClickTextSize(): void {
+    const sizes: (typeof XecEditor.prototype.textSize)[] = [
+      's', 'm', 'l', 'xl'
+    ];
+    const currentIndex = sizes.indexOf(this.textSize);
+    const nextIndex = currentIndex === sizes.length - 1 ? 0 : currentIndex + 1;
+    this.editorInstances.forEach((instance) => {
+      instance.container.classList.remove(`text-size-${this.textSize}`);
+      instance.container.classList.add(`text-size-${sizes[nextIndex]}`);
+    });
+    this.textareaElements.forEach((element) => {
+      element.classList.remove(`text-size-${this.textSize}`);
+      element.classList.add(`text-size-${sizes[nextIndex]}`);
+    });
+    this.textSize = sizes[nextIndex];
   }
 
   /**
@@ -541,6 +565,7 @@ export class XecEditor {
       onClickTab,
       onClickLTR,
       onClickRTL,
+      onClickTextSize,
       onClickViewRaw,
       onClickUnclear,
       onClickHighlighted,
@@ -582,6 +607,7 @@ export class XecEditor {
           onClickSettings={onClickSettings.bind(this)}
           onClickReconstruction={onClickReconstruction.bind(this)}
           onClickAnnotation={onClickAnnotation.bind(this)}
+          onClickTextSize={onClickTextSize.bind(this)}
           layoutType={layoutType}
           textDirection={editorStates.get(activeEditor).textDirection}
           viewRaw={editorStates.get(activeEditor).viewType === 'raw'}
@@ -721,6 +747,7 @@ const defaultToolbarConfig: ToolbarConfig = {
     unclear: true,
     viewRaw: true,
     textDirection: true,
+    textSize: true,
     blankSpace: true,
   },
 };
