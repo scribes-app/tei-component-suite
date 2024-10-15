@@ -1,6 +1,7 @@
 import { Component, Host, Method, State, h } from '@stencil/core';
-import { JSX } from '@stencil/core/internal';
+import { Element, JSX } from '@stencil/core/internal';
 import classNames from 'classnames';
+import { onClickOutside, removeClickOutside } from '../../lib/helper';
 
 @Component({
   tag: 'xec-popup',
@@ -8,6 +9,12 @@ import classNames from 'classnames';
   shadow: true,
 })
 export class XecPopup {
+
+  private _listener: ReturnType<typeof onClickOutside>;
+  private openedTimestamp: number = 0;
+
+  @Element()
+  private element: HTMLElement;
 
   @State()
   private open: boolean = false;
@@ -18,6 +25,7 @@ export class XecPopup {
   @Method()
   public async openPopup(): Promise<void> {
     this.open = true;
+    this.openedTimestamp = Date.now();
   }
 
   @Method()
@@ -30,7 +38,21 @@ export class XecPopup {
     this.content = content;
   }
 
-  onClickClose(): void {
+  componentDidLoad() {
+    this._listener = onClickOutside(this.element, this.onClickOutside.bind(this));
+  }
+
+  disconnectedCallback() {
+    removeClickOutside(this._listener);
+  }
+
+  private onClickOutside(): void {
+    if (Date.now() - this.openedTimestamp > 100) {
+      this.closePopup();
+    }
+  }
+
+  private onClickClose(): void {
     this.closePopup();
   }
 

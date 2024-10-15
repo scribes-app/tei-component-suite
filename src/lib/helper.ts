@@ -63,10 +63,10 @@ export const delayed = async (fn: Function, ms: number) => {
 /**
  * Add a listener to know whenever an element is clicked outside
  */
-export const onClickOutside = (element: HTMLElement, callback: Function, trigger?: HTMLElement): ((this: Window, ev: MouseEvent) => any) => {
+export const onClickOutside = (element: HTMLElement, callback: Function, ...triggers: HTMLElement[]): ((this: Window, ev: MouseEvent) => any) => {
   let _listener = (e: MouseEvent) => {
     const eventPaths: HTMLElement[] = (e.composedPath() as HTMLElement[]).filter(n => n.isSameNode);
-    const isTriggerElement = trigger && eventPaths.some(n => n.isSameNode(trigger));
+    const isTriggerElement = triggers.some(trigger => trigger && eventPaths.some(n => n.isSameNode(trigger)));
     if (isTriggerElement) return;
     const isCurrentElement = eventPaths.some(n => n.isSameNode(element));
     const isElementChild = eventPaths.some(n => element.contains(n));
