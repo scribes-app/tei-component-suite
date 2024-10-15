@@ -7,6 +7,7 @@ import { AnonymousBlockBlot } from './AnonymousBlockBlot';
 import { BlankSpaceBlot } from './BlankSpaceBlot';
 import { PunctuationBlot } from './PunctuationBlot';
 import { WordBlot } from './WordBlot';
+import { SpaceBlot } from './SpaceBlot';
 
 export class StructureBlot extends InlineBlot {
   static blotName = BlotName.STRUCTURE;
@@ -16,6 +17,7 @@ export class StructureBlot extends InlineBlot {
     AnnotationBlot,
     BlankSpaceBlot,
     PunctuationBlot,
+    SpaceBlot,
     WordBlot,
     Break,
     TextBlot

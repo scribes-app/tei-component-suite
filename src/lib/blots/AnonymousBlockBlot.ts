@@ -5,6 +5,7 @@ import { AnnotationBlot } from './AnnotationBlot';
 import { BlankSpaceBlot } from './BlankSpaceBlot';
 import { PunctuationBlot } from './PunctuationBlot';
 import { WordBlot } from './WordBlot';
+import { SpaceBlot } from './SpaceBlot';
 
 export class AnonymousBlockBlot extends InlineBlot {
   static blotName = BlotName.ANONYMOUS_BLOCK;
@@ -14,6 +15,7 @@ export class AnonymousBlockBlot extends InlineBlot {
     BlankSpaceBlot,
     PunctuationBlot,
     WordBlot,
+    SpaceBlot,
     Break,
     TextBlot
   ];

@@ -6,8 +6,8 @@ import { Delta, Range } from 'quill/core';
 import { XecBlankSpaceFormCustomEvent } from '../../components';
 import { BlotName, Punctuations, TagName, capitalize, delayed, generateId, registerBlots } from '../../lib/helper';
 import { EditorFormattedTEI, EditorSettings, EditorState, QuillInstance, ToolbarConfig, UnionAbbreviationType, UnionCommentType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionLayoutType, UnionReconstructionReason, UnionUnclearReason, XecAnnotationFormValues, XecBlankSpaceFormValues, XecSettingsFormValues, XecStructureFormValues } from '../../lib/types';
-import { XMLTransformerService } from '../../services/xml-transformer.service';
 import { QuillService } from '../../services/quill.service';
+import { XMLTransformerService } from '../../services/xml-transformer.service';
 @Component({
   tag: 'xec-editor',
   styleUrls: [
@@ -258,7 +258,7 @@ export class XecEditor {
     if (isSpace) {
       this.concurrentTextChange = true;
       const instance = this.editorInstances.get(editorType);
-      instance.formatText(range.index - 1, 1, BlotName.WORD, generateId());
+      instance.formatText(range.index - 1, 1, BlotName.SPACE, generateId());
       this.concurrentTextChange = false;
     }
 

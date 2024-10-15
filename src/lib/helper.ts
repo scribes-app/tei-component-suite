@@ -11,6 +11,7 @@ import { PunctuationBlot } from './blots/PunctuationBlot';
 import { AnnotationBlot } from './blots/AnnotationBlot';
 import { ReconstructionBlot } from './blots/ReconstructionBlot';
 import { WordBlot } from './blots/WordBlot';
+import { SpaceBlot } from './blots/SpaceBlot';
 
 /**
  * Check if two objects are equal (this is the fastest way with JSON.stringify do not use lodash anymore)
@@ -35,6 +36,7 @@ export const registerBlots = () => {
     DeletedBlot,
     AbbreviationBlot,
     WordBlot,
+    SpaceBlot,
     BlankSpaceBlot,
     PunctuationBlot,
     AnonymousBlockBlot,
@@ -119,6 +121,7 @@ export const XMLAvailableTagsList: (TagName|string)[] =  [
   TagName.DELETED,
   TagName.BLANK_SPACE,
   TagName.TEXT,
+  TagName.SPACE,
   TagName.WORD,
   TagName.PUNCTUATION,
   TagName.LINE_BREAK,
@@ -134,6 +137,7 @@ export const enum BlotName {
   ABBREVIATION = 'abbreviation',
   DELETED = 'deleted',
   BLANK_SPACE = 'blank-space',
+  SPACE = 'space',
   WORD = 'word',
   PUNCTUATION = 'punctuation',
   ANNOTATION = 'annotation',

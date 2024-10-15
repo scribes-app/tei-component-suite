@@ -19,22 +19,24 @@ export class QuillService {
       const depthMap = new Map([
         [TagName.ANONYMOUS_BLOCK, [
           TagName.WORD,
+          TagName.SPACE,
           TagName.PUNCTUATION,
           TagName.BLANK_SPACE,
           TagName.ANNOTATION
         ]],
         [TagName.ANNOTATION, [
           TagName.WORD,
+          TagName.SPACE,
         ]]
       ]);
 
       // Find targetted word ids
       const wordIds = instance
         .getContents(selection.index, selection.length)
-        .map((op) => op.attributes.word);
+        .map((op) => op.attributes.word ?? op.attributes.x);
 
       // Find relative word elements
-      let words = Array.from(instance.root.querySelectorAll(TagName.WORD))
+      let words = Array.from(instance.root.querySelectorAll([TagName.WORD, TagName.SPACE].join(',')))
         .filter((word) => wordIds.includes(word.getAttribute('x'))) as HTMLElement[];
 
       // Restructure injectable elements according to depth map
@@ -81,7 +83,7 @@ export class QuillService {
 
     wordPositions.forEach(({ index, length }) => {
       instance.formatText(index, length, BlotName.WORD, true, 'silent');
-      instance.formatText(index - 1, 1, BlotName.WORD, true, 'silent');
+      instance.formatText(index - 1, 1, BlotName.SPACE, true, 'silent');
     });
   }
 
@@ -92,7 +94,7 @@ export class QuillService {
     words.forEach((word, i) => {
       const spaceAtStart = i === 0 ? 0 : 1;
       instance.insertText(currentIndex, word, BlotName.WORD, generateId(), 'silent');
-      if (spaceAtStart) instance.insertText(currentIndex, ' ', BlotName.WORD, generateId(), 'silent');
+      if (spaceAtStart) instance.insertText(currentIndex, ' ', BlotName.SPACE, generateId(), 'silent');
       currentIndex += word.length + spaceAtStart;
     });
   }

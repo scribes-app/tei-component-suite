@@ -1,6 +1,6 @@
 import formatXml, { XMLFormatterOptions } from 'xml-formatter';
-import { TagName, XMLAvailableTagsList, generateId } from '../lib/helper';
 import { EditorSettings } from '../components';
+import { generateId, TagName, XMLAvailableTagsList } from '../lib/helper';
 
 /**
  * @description This class is responsible for performing any transformation on the from or to XML data
@@ -433,13 +433,17 @@ export class XMLTransformerService {
       word.setAttribute('x', generateId());
     });
 
+    clonedLine.querySelectorAll(TagName.SPACE).forEach(space => {
+      space.setAttribute('x', generateId());
+    });
+
     return clonedLine;
   }
 
   static unwrapWordsFromXML(line: HTMLElement): HTMLElement {
     const clonedLine = line.cloneNode(true) as HTMLElement;
     const insertSpace = (element: Element) => {
-      const space = document.createElement(TagName.WORD);
+      const space = document.createElement(TagName.SPACE);
       space.setAttribute('x', generateId());
       space.textContent = ' ';
       element.after(space);
