@@ -94,9 +94,15 @@ export class QuillService {
     words.forEach((word, i) => {
       const spaceAtStart = i === 0 ? 0 : 1;
       instance.insertText(currentIndex, word, BlotName.WORD, generateId(), 'silent');
-      if (spaceAtStart) instance.insertText(currentIndex, ' ', BlotName.SPACE, generateId(), 'silent');
+      // This is not possible in Quill, so we need to insert a space blot manually after splitting words...
+      // Otherwise Quill merge space in word...
+      if (spaceAtStart) instance.insertText(currentIndex, ' ', BlotName.WORD, generateId(), 'silent');
       currentIndex += word.length + spaceAtStart;
     });
+
+    // Replace empty <w> that contains just a space with a <sp>
+    instance.root.innerHTML = instance.root.innerHTML.replace(/<w x="([\d\w]+)"> <\/w>/g, '<sp x="$1"> </sp>');
+
   }
 
   static insertEmbed(blot: TagName, content: string, attrinutes?: Attribute[]) {
