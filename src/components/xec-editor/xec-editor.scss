@@ -435,6 +435,29 @@ xec-editor {
         }
 
       }
+      .note {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 5px;
+        background-color: white;
+        border: {
+          top: 1px solid var(--xec-editor-border-color);
+          bottom-left-radius: var(--xec-editor-border-radius);
+          bottom-right-radius: var(--xec-editor-border-radius);
+        };
+        font: {
+          size: 10px;
+          weight: 400;
+        }
+        &.warning {
+          color: var(--xec-editor-danger-text-color);
+        }
+        &.hidden {
+          display: none;
+        }
+      }
     }
   }
 

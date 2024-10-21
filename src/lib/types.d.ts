@@ -135,6 +135,7 @@ export type AnnotationAttributes = {
 export type EditorState = {
   viewType: 'default'|'raw';
   textDirection: 'LTR'|'RTL';
+  clean: boolean;
 }
 
 export type DropdownConfig = {

@@ -46,10 +46,10 @@ export class XecEditor {
 
   @State()
   private editorStates: Map<UnionEditorType, EditorState> = new Map([
-    ['transcribe', { viewType: 'default', textDirection: 'LTR' }],
-    ['translate', { viewType: 'default', textDirection: 'LTR' }],
-    ['comment_line', { viewType: 'default', textDirection: 'LTR' }],
-    ['comment_verse', { viewType: 'default', textDirection: 'LTR' }],
+    ['transcribe', { viewType: 'default', textDirection: 'LTR', clean: true }],
+    ['translate', { viewType: 'default', textDirection: 'LTR', clean: true }],
+    ['comment_line', { viewType: 'default', textDirection: 'LTR', clean: true }],
+    ['comment_verse', { viewType: 'default', textDirection: 'LTR', clean: true }],
   ]);
 
   @State()
@@ -333,6 +333,26 @@ export class XecEditor {
       }
       this.concurrentTextChange = false;
     }
+
+
+    // Check structure
+    if (editorType === 'transcribe') {
+      this.checkTranscribeStructure();
+    }
+  }
+
+  private checkTranscribeStructure(): void {
+    const instance = this.editorInstances.get('transcribe');
+    const clean = Array.from(instance.root.querySelectorAll(TagName.BLOCK))
+    .every(block => {
+      const hasChild = Boolean(block.children.length);
+      if (!hasChild) return false;
+      const onlyBreak = block.children.length === 1 && Array.from(block.children).at(0).tagName === TagName.HTML_LINE_BREAK;
+      const isStructure = Array.from(block.children).every(e => e.tagName === TagName.STRUCTURE && ['part', 'chapter'].includes(e.getAttribute('type')));
+      return onlyBreak || isStructure;
+    });
+
+  this.setActiveEditorState('clean', clean);
   }
 
   /**
@@ -500,6 +520,7 @@ export class XecEditor {
 
     delayed(() => {
       this.activeInstance.setSelection(range);
+      this.checkTranscribeStructure();
       this.concurrentTextChange = false;
     }, 15);
   }
@@ -649,6 +670,18 @@ export class XecEditor {
               })}
               ref={el => this.textareaElements.set('transcribe', el)}
             />
+            <div class={classNames({
+              note: true,
+              hidden: editorStates.get('transcribe').viewType === 'raw',
+              warning: !editorStates.get('transcribe').clean,
+            })}>
+              {!editorStates.get('transcribe').clean && (
+                '⚠️ Your document structure is not clean. Please check the structure and correct it (for example chapter is required at root).'
+              )}
+              {editorStates.get('transcribe').clean && (
+                'Your document structure is clean.'
+              )}
+            </div>
           </div>
 
           <div class={classNames({

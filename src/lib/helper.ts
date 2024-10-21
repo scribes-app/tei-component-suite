@@ -109,7 +109,8 @@ export const enum TagName {
   FOLIO = 'pb',
   TEXT = '#text',
   UNKNOWN = 'UNKNOWN',
-  LINE_BREAK = 'LB'
+  LINE_BREAK = 'LB',
+  HTML_LINE_BREAK = 'BR'
 }
 
 export const XMLAvailableTagsList: (TagName|string)[] =  [
