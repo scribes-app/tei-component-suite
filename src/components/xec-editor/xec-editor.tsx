@@ -679,7 +679,7 @@ export class XecEditor {
                 '⚠️ Your document structure is not clean. Please check the structure and correct it (for example chapter is required at root).'
               )}
               {editorStates.get('transcribe').clean && (
-                'Your document structure is clean.'
+                '✅ Your document structure is clean.'
               )}
             </div>
           </div>
