@@ -7,10 +7,12 @@
 
 ## Properties
 
-| Property   | Attribute  | Description | Type                                        | Default                                              |
-| ---------- | ---------- | ----------- | ------------------------------------------- | ---------------------------------------------------- |
-| `config`   | --         |             | `{ label: string; items: DropdownItem[]; }` | `{     label: '__dropdown_label',     items: []   }` |
-| `disabled` | `disabled` |             | `boolean`                                   | `false`                                              |
+| Property   | Attribute   | Description | Type                                        | Default                                              |
+| ---------- | ----------- | ----------- | ------------------------------------------- | ---------------------------------------------------- |
+| `config`   | --          |             | `{ label: string; items: DropdownItem[]; }` | `{     label: '__dropdown_label',     items: []   }` |
+| `disabled` | `disabled`  |             | `boolean`                                   | `false`                                              |
+| `display`  | `display`   |             | `"default" \| "slim"`                       | `'default'`                                          |
+| `slimText` | `slim-text` |             | `string`                                    | `undefined`                                          |
 
 
 ## Methods

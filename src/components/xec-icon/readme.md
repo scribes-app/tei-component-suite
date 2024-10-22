@@ -7,11 +7,11 @@
 
 ## Properties
 
-| Property  | Attribute  | Description | Type                                                                                                                                                                                                             | Default     |
-| --------- | ---------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
-| `icon`    | `icon`     |             | `"align-left" \| "align-right" \| "angle-down" \| "broom" \| "code-simple" \| "columns" \| "cross" \| "lock" \| "message-code" \| "paragraph-ltr" \| "paragraph-rtl" \| "settings" \| "unlock" \| "white-space"` | `undefined` |
-| `library` | `library`  |             | `string`                                                                                                                                                                                                         | `undefined` |
-| `viewBox` | `view-box` |             | `string`                                                                                                                                                                                                         | `undefined` |
+| Property  | Attribute  | Description | Type                                                                                                                                                                                                                            | Default     |
+| --------- | ---------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| `icon`    | `icon`     |             | `"align-left" \| "align-right" \| "angle-down" \| "broom" \| "code-simple" \| "columns" \| "cross" \| "lock" \| "message-code" \| "paragraph-ltr" \| "paragraph-rtl" \| "settings" \| "text-size" \| "unlock" \| "white-space"` | `undefined` |
+| `library` | `library`  |             | `string`                                                                                                                                                                                                                        | `undefined` |
+| `viewBox` | `view-box` |             | `string`                                                                                                                                                                                                                        | `undefined` |
 
 
 ## Events
