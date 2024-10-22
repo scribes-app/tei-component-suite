@@ -18,17 +18,18 @@ export const config: Config = {
   ],
   outputTargets: [
     angularOutputTarget({
-      componentCorePackage: 'xml-editor-library',
+      componentCorePackage: '@metztheolab/xml-editor-library',
+      outputType: 'component',
       directivesProxyFile: 'dist/ng/components.ts',
       directivesArrayFile: 'dist/ng/index.ts',
     }),
     reactOutputTarget({
-      componentCorePackage: 'xml-editor-library',
+      componentCorePackage: '@metztheolab/xml-editor-library',
       proxiesFile: 'dist/react/index.ts',
       includeDefineCustomElements: true,
     }),
     vueOutputTarget({
-      componentCorePackage: 'xml-editor-library',
+      componentCorePackage: '@metztheolab/xml-editor-library',
       proxiesFile: 'dist/vue/index.ts',
       includeDefineCustomElements: true,
     }),
