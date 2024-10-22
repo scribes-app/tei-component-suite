@@ -40,6 +40,12 @@ export class XecButton {
   public readonly active?: boolean;
 
   @Prop()
+  public readonly display?: 'slim'|'default' = 'default';
+
+  @Prop()
+  public readonly slimText?: string;
+
+  @Prop()
   public readonly rotateOnActive?: boolean;
 
   public onClickButton(): void {
@@ -58,7 +64,9 @@ export class XecButton {
       iconOnly,
       rotateOnActive,
       disabled,
-      active
+      active,
+      display,
+      slimText
     } = this;
 
     return (
@@ -72,11 +80,19 @@ export class XecButton {
           disabled,
           rotateOnActive,
           stretched,
+          [`display-${display}`]: true,
           [`icon-position-${iconPosition}`]: true,
           [`variation-${variation}`]: true
         })}>
         {icon && iconPosition === 'leading' && (<xec-icon icon={icon} class="icon" />)}
-        <slot />
+        {display === 'default' && (
+          <slot />
+        )}
+        {display === 'slim' && (
+          <div class="slimText">
+            {slimText}
+          </div>
+        )}
         {icon && iconPosition === 'trailing' && (<xec-icon icon={icon} class="icon" />)}
       </Host>
     );

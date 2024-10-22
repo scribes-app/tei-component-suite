@@ -17,12 +17,14 @@ export namespace Components {
     interface XecButton {
         "active"?: boolean;
         "disabled"?: boolean;
+        "display"?: 'slim'|'default';
         "icon"?: UnionIcons;
         "iconOnly"?: boolean;
         "iconPosition"?: 'leading' | 'trailing';
         "outlined"?: boolean;
         "rotateOnActive"?: boolean;
         "rounded"?: boolean;
+        "slimText"?: string;
         "stretched"?: boolean;
         "variation"?: 'default';
     }
@@ -30,7 +32,9 @@ export namespace Components {
         "close": () => Promise<void>;
         "config": DropdownConfig;
         "disabled": boolean;
+        "display"?: 'slim'|'default';
         "open": () => Promise<void>;
+        "slimText"?: string;
     }
     interface XecEditor {
         "getFormattedTEI": () => Promise<EditorFormattedTEI>;
@@ -348,6 +352,7 @@ declare namespace LocalJSX {
     interface XecButton {
         "active"?: boolean;
         "disabled"?: boolean;
+        "display"?: 'slim'|'default';
         "icon"?: UnionIcons;
         "iconOnly"?: boolean;
         "iconPosition"?: 'leading' | 'trailing';
@@ -355,12 +360,15 @@ declare namespace LocalJSX {
         "outlined"?: boolean;
         "rotateOnActive"?: boolean;
         "rounded"?: boolean;
+        "slimText"?: string;
         "stretched"?: boolean;
         "variation"?: 'default';
     }
     interface XecDropdown {
         "config"?: DropdownConfig;
         "disabled"?: boolean;
+        "display"?: 'slim'|'default';
+        "slimText"?: string;
     }
     interface XecEditor {
         "settings"?: EditorSettings;

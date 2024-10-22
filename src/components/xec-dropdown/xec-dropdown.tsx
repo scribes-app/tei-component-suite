@@ -24,6 +24,12 @@ export class XecDropdown {
   @Prop()
   public readonly disabled: boolean = false;
 
+  @Prop()
+  public readonly display?: 'slim'|'default' = 'default';
+
+  @Prop()
+  public readonly slimText?: string;
+
   @State()
   private isOpen = false;
 
@@ -69,6 +75,8 @@ export class XecDropdown {
       onClickItem,
       config: { items, label },
       disabled,
+      display,
+      slimText,
       isOpen
     } = this;
     return (
@@ -79,6 +87,8 @@ export class XecDropdown {
           icon="angle-down"
           iconPosition="trailing"
           disabled={disabled}
+          display={display}
+          slimText={slimText}
           rotateOnActive>
           {label}
         </xec-button>

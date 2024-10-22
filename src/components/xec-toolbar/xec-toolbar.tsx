@@ -1,5 +1,5 @@
 import { Component, Host, h } from '@stencil/core';
-import { Event, EventEmitter, Fragment, JSX, Prop, Watch } from '@stencil/core/internal';
+import { Element, Event, EventEmitter, Fragment, JSX, Prop, State, Watch } from '@stencil/core/internal';
 import classNames from 'classnames';
 import { Punctuations, isEqual } from '../../lib/helper';
 import { ToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionHighlightedRend, UnionLayoutType, UnionReconstructionReason, UnionStructureType, UnionUnclearReason } from '../../lib/types';
@@ -10,6 +10,9 @@ import { ToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionHighlighte
   shadow: true,
 })
 export class XecToolbar {
+
+  @Element()
+  private element: HTMLElement;
 
   @Event()
   private readonly clickViewRaw: EventEmitter<void>;
@@ -77,13 +80,30 @@ export class XecToolbar {
   @Prop()
   public readonly locked: boolean = false;
 
+  @State()
+  private display: 'slim'|'default' = 'default';
+
   @Watch('config')
   public watchConfig(next: ToolbarConfig, prev: ToolbarConfig): void {
     if (!isEqual(next, prev)) this.initConfig();
   }
 
+  componentDidLoad(): void {
+    this.initConfig();
+    this.initObserver();
+  }
+
   private initConfig(): void {
     // Do something with the config
+  }
+
+  private initObserver(): void {
+    const observer = new ResizeObserver(this.handleResize.bind(this));
+    observer.observe(this.element);
+  }
+
+  private handleResize(): void {
+    this.display = this.element.clientWidth < 1050 ? 'slim' : 'default';
   }
 
   public render(): JSX.Element {
@@ -109,7 +129,8 @@ export class XecToolbar {
       viewRaw,
       locked,
       disabled,
-      config
+      config,
+      display
     } = this;
     return (
       <Host
@@ -163,6 +184,8 @@ export class XecToolbar {
             )}
           {config.controls.structure && (
             <xec-button
+              display={display}
+              slimText="Struc"
               onClickButton={clickStructure.emit.bind(this)}
               disabled={viewRaw || locked}>
               Structure
@@ -170,6 +193,8 @@ export class XecToolbar {
           )}
           {config.controls.annotation && (
             <xec-button
+              display={display}
+              slimText="Ann"
               onClickButton={clickAnnotation.emit.bind(this)}
               disabled={viewRaw || locked}>
               Annotation
@@ -177,6 +202,8 @@ export class XecToolbar {
           )}
           {config.controls.reconstruction && (
             <xec-dropdown
+              display={display}
+              slimText="Rec"
               disabled={viewRaw || locked}
               config={{
                 label: 'Reconstruction',
@@ -202,6 +229,8 @@ export class XecToolbar {
           )}
           {config.controls.unclear && (
             <xec-dropdown
+              display={display}
+              slimText="Unc"
               disabled={viewRaw || locked}
               config={{
                 label: 'Unclear',
@@ -232,6 +261,8 @@ export class XecToolbar {
           )}
           {config.controls.highlighted && (
             <xec-dropdown
+              display={display}
+              slimText="High"
               disabled={viewRaw || locked}
               config={{
                 label: 'Highlighted',
@@ -277,6 +308,8 @@ export class XecToolbar {
           )}
           {config.controls.deleted && (
             <xec-dropdown
+              display={display}
+              slimText="Del"
               disabled={viewRaw || locked}
               config={{
                 label: 'Deleted',
@@ -312,6 +345,8 @@ export class XecToolbar {
           )}
           {config.controls.abbreviation && (
             <xec-dropdown
+              display={display}
+              slimText="Abbr"
               disabled={viewRaw || locked}
               config={{
                 label: 'Abbreviation',
@@ -332,6 +367,8 @@ export class XecToolbar {
           )}
           {config.controls.punctuation && (
             <xec-dropdown
+              display={display}
+              slimText="Punc"
               disabled={viewRaw || locked}
               config={{
                 label: 'Punctuation',

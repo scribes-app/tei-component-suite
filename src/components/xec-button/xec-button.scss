@@ -18,6 +18,10 @@
   --xec-button-disabled-border-color: #{$color-slate-100};
   --xec-button-disabled-background-color: #{$color-slate-100};
 
+  --xec-button-display-slim-text-background-color: #{$color-slate-400};
+  --xec-button-display-slim-text-color: white;
+
+
   cursor: pointer;
   display: inline-flex;
   justify-content: flex-start;
@@ -101,5 +105,26 @@
   background-color: var(--xec-button-disabled-background-color);
   .icon {
     color: var(--xec-button-disabled-icon-color);
+  }
+}
+
+:host(.display-slim.icon-position-trailing:not(.iconOnly)) {
+  .icon {
+    margin-left: 5px;
+  }
+}
+
+:host(.display-slim:not(.iconOnly)) {
+  font: { size: 10px; weight: 700 }
+  padding: 7px 5px;
+  .slimText {
+    padding: 3px;
+    border-radius: 3px;
+    background-color: var(--xec-button-display-slim-text-background-color);
+    color: var(--xec-button-display-slim-text-color);
+  }
+  .icon {
+    width: 7px;
+    height: 7px;
   }
 }
