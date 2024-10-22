@@ -259,6 +259,11 @@ export class XecEditor {
     instance.deleteText(range);
     QuillService.incomingText2Words(instance, range, content.text);
 
+    // Check structure
+    if (editorType === 'transcribe') {
+      this.checkTranscribeStructure();
+    }
+
     this.concurrentTextChange = false;
   }
 
@@ -284,37 +289,36 @@ export class XecEditor {
       const nextPosition = (range?.index ?? 0) + (isNewBlock ? 1 : 0);
 
       this.syncLines();
+
+      // Merge words while deleting a space
+      if (isDelete) {
+        const retain = delta.ops.at(0)?.retain as number ?? 0;
+        const prevChar = instance.getText(new Range(retain - 1, 1))
+        const nextChar = instance.getText(new Range(retain + 1, 1))
+        if (prevChar !== ' ' && nextChar !== ' ') {
+          const prevSpaceIndex = instance.getText().lastIndexOf(' ', retain);
+          const nextSpaceIndex = instance.getText().indexOf(' ', retain);
+          const length = nextSpaceIndex - prevSpaceIndex;
+          instance.formatText(prevSpaceIndex + 1, length, BlotName.WORD, generateId());
+        }
+      }
+
       delayed(() => {
         instance.setSelection({ index: nextPosition, length: 0 });
         this.concurrentTextChange = false;
-      }, 15);
+      }, 15)
     }
 
     // Wrap words at each space
-    if (isSpace) {
+    if (isSpace && !this.concurrentTextChange) {
       this.concurrentTextChange = true;
       const instance = this.editorInstances.get(editorType);
       instance.formatText(range.index - 1, 1, BlotName.SPACE, generateId());
       this.concurrentTextChange = false;
     }
 
-    // Merge words while deleting a space
-    if (isDelete) {
-      this.concurrentTextChange = true;
-      const retain = delta.ops.at(0)?.retain as number ?? 0;
-      const prevChar = instance.getText(new Range(retain - 1, 1))
-      const nextChar = instance.getText(new Range(retain + 1, 1))
-      if (prevChar !== ' ' && nextChar !== ' ') {
-        const prevSpaceIndex = instance.getText().lastIndexOf(' ', retain);
-        const nextSpaceIndex = instance.getText().indexOf(' ', retain);
-        const length = nextSpaceIndex - prevSpaceIndex;
-        instance.formatText(prevSpaceIndex + 1, length, BlotName.WORD, generateId());
-      }
-      this.concurrentTextChange = false;
-    }
-
     // Merge words while typing a character at the end or the beginning of a word
-    if (isCharacter) {
+    if (isCharacter && !this.concurrentTextChange) {
       this.concurrentTextChange = true;
       const retain = delta.ops.at(0)?.retain as number ?? 0;
       const prevChar = instance.getText(new Range(retain - 1, 1))
@@ -333,7 +337,6 @@ export class XecEditor {
       }
       this.concurrentTextChange = false;
     }
-
 
     // Check structure
     if (editorType === 'transcribe') {
