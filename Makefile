@@ -30,6 +30,7 @@ dev:
 	bash .docker/commands/stencil build --dev --watch --serve
 
 build:
+	rm -rf dist loader
 	bash .docker/commands/icons
 	bash .docker/commands/stencil build
 
@@ -42,6 +43,7 @@ stencil:
 	bash .docker/commands/stencil $$command
 
 publish:
+	rm -rf dist loader
 	bash .docker/commands/icons
 	bash .docker/commands/stencil build
 	read -p "Which kind of version would you like to publish (major | minor | patch): " version; \

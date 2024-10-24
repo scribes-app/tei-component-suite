@@ -12,6 +12,8 @@ This project is a web component library that provide a main component `XecEditor
 
 ### Installation
 
+Whatever the framework you are using, you can install the package with npm:
+
 ```bash
 npm install @metztheolab/xml-editor-library
 ```
@@ -106,17 +108,20 @@ export default App;
 
 **Angular**
 
-Create a setup.sh file in the root of your project, this will copy the necessary files to the location of your choice:
+⚠️ Standalone Angular components are not supported, you need to use the Angular directives provided by the library.
+So, do not initialize your project as a standalone Angular application, but as a regular Angular application.
+
+Create a `setup-component-library.sh` file in the root of your project, this will copy the necessary files to the location of your choice:
 
 ```bash
 #!/bin/bash
 
 set -e
 
-# Removes the existing ng-xec-editor folder
-rm -rf src/lib/ng-xec-editor
-# Copies the necessary files to the src/lib/ng-xec-editor folder
-cp -r node_modules/@metztheolab/xml-editor-library/dist/ng src/lib/ng-xec-editor
+# Removes the existing library if already exists
+rm -rf src/lib/component-library
+# Copies the necessary files to the src/lib/component-library folder
+cp -r node_modules/@metztheolab/xml-editor-library/dist/ng src/lib/component-library
 # Copies the symbols.svg file to the public/assets folder
 cp node_modules/@metztheolab/xml-editor-library/dist/collection/symbols.svg public/assets/symbols.svg
 ```
@@ -127,7 +132,7 @@ In the package.json file, add postinstall script:
 // ...
   "scripts": {
     // ...
-    "postinstall": "./setup.sh"
+    "postinstall": "./setup-component-library.sh"
   }
 // ...
 ```
@@ -145,16 +150,16 @@ import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { DIRECTIVES as XecWebComponents } from '../lib/ng-xec-editor';
+import { DIRECTIVES as XecEditorComponents } from '../lib/component-library';
 import { defineCustomElements } from '@metztheolab/xml-editor-library/loader';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ...XecWebComponents
+    ...XecEditorComponents
   ],
   exports: [
-    ...XecWebComponents
+    ...XecEditorComponents
   ],
   imports: [
     BrowserModule,
