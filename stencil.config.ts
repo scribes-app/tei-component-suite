@@ -34,6 +34,7 @@ export const config: Config = {
     }),
     reactOutputTarget({
       outDir: 'dist/react',
+      esModules: true,
     }),
     vueOutputTarget({
       componentCorePackage: '@metztheolab/xml-editor-library',
