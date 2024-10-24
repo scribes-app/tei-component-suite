@@ -33,12 +33,10 @@ export const config: Config = {
       directivesArrayFile: 'dist/ng/index.ts',
     }),
     reactOutputTarget({
-      componentCorePackage: 'xml-editor-library',
-      proxiesFile: 'dist/react/index.ts',
-      includeDefineCustomElements: true,
+      outDir: 'dist/react',
     }),
     vueOutputTarget({
-      componentCorePackage: 'xml-editor-library',
+      componentCorePackage: '@metztheolab/xml-editor-library',
       proxiesFile: 'dist/vue/index.ts',
       includeDefineCustomElements: true,
     }),
@@ -49,7 +47,7 @@ export const config: Config = {
       type: 'www',
       serviceWorker: null,
       copy: [
-        { src: 'symbols.svg', dest: 'symbols.svg' },
+        { src: 'symbols.svg' },
       ]
     },
   ],

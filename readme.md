@@ -120,8 +120,11 @@ set -e
 
 # Removes the existing library if already exists
 rm -rf src/lib/component-library
+# Create folders
+mkdir -p src/lib/component-library
+mkdir -p public/assets
 # Copies the necessary files to the src/lib/component-library folder
-cp -r node_modules/@metztheolab/xml-editor-library/dist/ng src/lib/component-library
+cp -r node_modules/@metztheolab/xml-editor-library/dist/ng/ src/lib/component-library/
 # Copies the symbols.svg file to the public/assets folder
 cp node_modules/@metztheolab/xml-editor-library/dist/collection/symbols.svg public/assets/symbols.svg
 ```
