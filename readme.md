@@ -76,8 +76,6 @@ In the package.json file, add postinstall script:
 // ...
 ```
 
-```json
-
 Re-run the installation to trigger the postinstall script:
 
 ```bash
@@ -170,8 +168,6 @@ In the package.json file, add postinstall script:
   }
 // ...
 ```
-
-```json
 
 Re-run the installation to trigger the postinstall script:
 
