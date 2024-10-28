@@ -1,0 +1,26 @@
+#!/usr/bin/env /bin/bash
+
+set -e
+source "$(dirname $0)/../.env"
+
+DIRECTORY="$(dirname $0)/../../dist/vue"
+
+echo "Finalize vue output..."
+
+# Create file with the contents of the output
+cat <<EOF > "$DIRECTORY/plugin.ts"
+import { type Plugin } from 'vue';
+import { defineCustomElements } from '@metztheolab/xml-editor-library';
+
+export const ComponentLibrary: Plugin = {
+  async install() {
+    defineCustomElements();
+  },
+};
+EOF
+cat <<EOF > "$DIRECTORY/index.ts"
+export * from './components';
+export * from './plugin';
+EOF
+
+echo "Finalize vue output complete"

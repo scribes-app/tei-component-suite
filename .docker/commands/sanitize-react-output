@@ -5,10 +5,12 @@ source "$(dirname $0)/../.env"
 
 DIRECTORY="$(dirname $0)/../../dist/react"
 
+echo "Sanitize react output..."
+
 # Find all files in the directory and its subdirectories
 find "$DIRECTORY" -type f | while read -r FILE; do
   # Use sed to replace all occurrences of .js" with "
   sed -i '' 's/\.js"/"/g' "$FILE"
 done
 
-echo "Sanitization complete."
+echo "Sanitize react output complete"

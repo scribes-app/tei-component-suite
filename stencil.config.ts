@@ -39,8 +39,8 @@ export const config: Config = {
     }),
     vueOutputTarget({
       componentCorePackage: '@metztheolab/xml-editor-library',
-      proxiesFile: 'dist/vue/index.ts',
-      includeDefineCustomElements: true,
+      proxiesFile: 'dist/vue/components.ts',
+      loaderDir: '/'
     }),
     {
       type: 'docs-readme',

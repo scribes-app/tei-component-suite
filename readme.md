@@ -45,6 +45,80 @@ Use components in your HTML file:
 </body>
 ```
 
+**Vue 3**
+
+Create a setup-component-library.sh file in the root of your project, this will copy the necessary files to the location of your choice:
+
+```bash
+#!/bin/bash
+
+set -e
+
+# Removes the existing component-library folder
+rm -rf src/lib/component-library
+# Create folders
+mkdir -p src/lib/component-library
+mkdir -p public/assets
+# Copies the necessary files to the src/lib/component-library folder
+cp -r node_modules/@metztheolab/xml-editor-library/dist/vue/ src/lib/component-library/
+# Copies the symbols.svg file to the public/assets folder
+cp node_modules/@metztheolab/xml-editor-library/dist/collection/symbols.svg public/assets/symbols.svg
+```
+
+In the package.json file, add postinstall script:
+
+```json
+// ...
+  "scripts": {
+    // ...
+    "postinstall": "bash setup-component-library.sh"
+  }
+// ...
+```
+
+```json
+
+Re-run the installation to trigger the postinstall script:
+
+```bash
+npm install
+```
+
+Use the Vue Plugin in your main.ts file:
+
+```ts
+import './assets/main.css'
+import { createApp } from 'vue'
+import App from './App.vue'
+import router from './router'
+import { ComponentLibrary } from './lib/component-library'
+
+const app = createApp(App)
+
+app
+  .use(router)
+  .use(ComponentLibrary).mount('#app')
+```
+
+Define the symbols path in your Vue app (wherever you want, in App.vue for example):
+
+```js
+// ...
+globalThis.XecConfig = {
+  symbolsPath: '/assets/symbols.svg',
+}
+```
+
+Use components in your Vue app:
+
+```vue
+<template>
+  <!-- ... -->
+  <xec-editor />
+  <!-- ... -->
+</template>
+```
+
 **React**
 
 Create a setup-component-library.sh file in the root of your project, this will copy the necessary files to the location of your choice:
