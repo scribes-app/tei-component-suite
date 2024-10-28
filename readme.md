@@ -25,7 +25,7 @@ In the head of your HTML file, include the following:
 ```html
 <head>
   <script type="module">
-    import { defineCustomElements } from '[package-url-or-cdn]/loader/index.es2017.mjs';
+    import { defineCustomElements } from '[package-url-or-cdn]/loader/index.es2017.js';
     defineCustomElements();
   </script>
   <script>
@@ -111,7 +111,7 @@ Use components in your React app:
 ```tsx
 import React from 'react';
 import './App.css';
-import { XecEditor } from './lib/reac-xec-editor';
+import XecEditor from './lib/component-library/XecEditor';
 
 function App() {
   return (
@@ -172,7 +172,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DIRECTIVES as XecEditorComponents } from '../lib/component-library';
-import { defineCustomElements } from '@metztheolab/xml-editor-library/loader';
+import { defineCustomElements } from '@metztheolab/xml-editor-library';
 
 @NgModule({
   declarations: [
