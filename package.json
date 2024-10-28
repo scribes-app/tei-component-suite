@@ -10,17 +10,57 @@
   "unpkg": "dist/xml-editor-library/xml-editor-library.esm.js",
   "exports": {
     ".": {
-      "import": "./dist/xml-editor-library/xml-editor-library.esm.js",
-      "require": "./dist/xml-editor-library/xml-editor-library.cjs.js"
-    },
-    "./my-component": {
-      "import": "./dist/components/my-component.js",
-      "types": "./dist/components/my-component.d.ts"
-    },
-    "./loader": {
       "import": "./loader/index.js",
       "require": "./loader/index.cjs",
       "types": "./loader/index.d.ts"
+    },
+    "./components/xec-annotation-form": {
+      "import": "./dist/components/xec-annotation-form.js",
+      "types": "./dist/components/xec-annotation-form.d.ts"
+    },
+    "./components/xec-blank-space-form": {
+      "import": "./dist/components/xec-blank-space-form.js",
+      "types": "./dist/components/xec-blank-space-form.d.ts"
+    },
+    "./components/xec-button": {
+      "import": "./dist/components/xec-button.js",
+      "types": "./dist/components/xec-button.d.ts"
+    },
+    "./components/xec-dropdown": {
+      "import": "./dist/components/xec-dropdown.js",
+      "types": "./dist/components/xec-dropdown.d.ts"
+    },
+    "./components/xec-editor": {
+      "import": "./dist/components/xec-editor.js",
+      "types": "./dist/components/xec-editor.d.ts"
+    },
+    "./components/xec-icon": {
+      "import": "./dist/components/xec-icon.js",
+      "types": "./dist/components/xec-icon.d.ts"
+    },
+    "./components/xec-popup": {
+      "import": "./dist/components/xec-popup.js",
+      "types": "./dist/components/xec-popup.d.ts"
+    },
+    "./components/xec-select": {
+      "import": "./dist/components/xec-select.js",
+      "types": "./dist/components/xec-select.d.ts"
+    },
+    "./components/xec-settings-form": {
+      "import": "./dist/components/xec-settings-form.js",
+      "types": "./dist/components/xec-settings-form.d.ts"
+    },
+    "./components/xec-structure-form": {
+      "import": "./dist/components/xec-structure-form.js",
+      "types": "./dist/components/xec-structure-form.d.ts"
+    },
+    "./components/xec-textfield": {
+      "import": "./dist/components/xec-textfield.js",
+      "types": "./dist/components/xec-textfield.d.ts"
+    },
+    "./components/xec-toolbar": {
+      "import": "./dist/components/xec-toolbar.js",
+      "types": "./dist/components/xec-toolbar.d.ts"
     }
   },
   "repository": {
@@ -29,6 +69,7 @@
   },
   "files": [
     "dist/",
+    "dist/components/",
     "loader/"
   ],
   "scripts": {

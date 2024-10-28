@@ -47,17 +47,20 @@ Use components in your HTML file:
 
 **React**
 
-Create a setup.sh file in the root of your project, this will copy the necessary files to the location of your choice:
+Create a setup-component-library.sh file in the root of your project, this will copy the necessary files to the location of your choice:
 
 ```bash
 #!/bin/bash
 
 set -e
 
-# Removes the existing react-xec-editor folder
-rm -rf src/lib/react-xec-editor
-# Copies the necessary files to the src/lib/react-xec-editor folder
-cp -r node_modules/@metztheolab/xml-editor-library/dist/react src/lib/react-xec-editor
+# Removes the existing component-library folder
+rm -rf src/lib/component-library
+# Create folders
+mkdir -p src/lib/component-library
+mkdir -p public/assets
+# Copies the necessary files to the src/lib/component-library folder
+cp -r node_modules/@metztheolab/xml-editor-library/dist/react/ src/lib/component-library/
 # Copies the symbols.svg file to the public/assets folder
 cp node_modules/@metztheolab/xml-editor-library/dist/collection/symbols.svg public/assets/symbols.svg
 ```
@@ -68,15 +71,30 @@ In the package.json file, add postinstall script:
 // ...
   "scripts": {
     // ...
-    "postinstall": "./setup.sh"
+    "postinstall": "bash setup-component-library.sh"
   }
 // ...
 ```
+
+```json
 
 Re-run the installation to trigger the postinstall script:
 
 ```bash
 npm install
+```
+
+
+Configure the TypeScript compiler, especially module resolution, to allow the import of the components:
+
+```json
+{
+  "compilerOptions": {
+    // ...
+    "module": "esnext",
+    "moduleResolution": "bundler",
+  }
+}
 ```
 
 Define the symbols path in your React app (wherever you want, in app.tsx for example):
@@ -135,7 +153,7 @@ In the package.json file, add postinstall script:
 // ...
   "scripts": {
     // ...
-    "postinstall": "./setup-component-library.sh"
+    "postinstall": "bash setup-component-library.sh"
   }
 // ...
 ```

@@ -33,6 +33,7 @@ build:
 	rm -rf dist loader
 	bash .docker/commands/icons
 	bash .docker/commands/stencil build
+	bash .docker/commands/sanitize-react-output
 
 npm:
 	read -p "Enter the npm command: " command; \
@@ -46,6 +47,8 @@ publish:
 	rm -rf dist loader
 	bash .docker/commands/icons
 	bash .docker/commands/stencil build
+	bash .docker/commands/sanitize-react-output
+
 	read -p "Which kind of version would you like to publish (major | minor | patch): " version; \
 	npm version $$version
 	bash .docker/commands/publish

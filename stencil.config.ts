@@ -27,13 +27,14 @@ export const config: Config = {
       externalRuntime: false,
     },
     angularOutputTarget({
-      componentCorePackage: '@metztheolab/xml-editor-library/loader',
+      componentCorePackage: '@metztheolab/xml-editor-library',
       outputType: 'component',
       directivesProxyFile: 'dist/ng/components.ts',
       directivesArrayFile: 'dist/ng/index.ts',
     }),
     reactOutputTarget({
       outDir: 'dist/react',
+      customElementsDir: 'components',
       esModules: true,
     }),
     vueOutputTarget({
