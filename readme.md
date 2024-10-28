@@ -84,6 +84,27 @@ Re-run the installation to trigger the postinstall script:
 npm install
 ```
 
+Configure Vite to accept JSX :
+
+```js
+// ...
+export default defineConfig({
+  plugins: [
+    vue({
+      template: {
+        compilerOptions: {
+          // treat all tags with a dash as custom elements
+          isCustomElement: (tag) => tag.includes('-'),
+        },
+      },
+    }),
+    // Import the plugin
+    vueJsx(),
+  ]
+  // ...
+})
+```
+
 Use the Vue Plugin in your main.ts file:
 
 ```ts
