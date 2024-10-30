@@ -1,0 +1,15 @@
+@import 'manifest';
+
+:host {
+  @include component;
+
+  --tcs-icon-color: #{$color-slate-400};
+
+  position: relative;
+  display: block;
+  color: var(--tcs-icon-color);
+  svg {
+    position: absolute;
+    inset: 0;
+  }
+}

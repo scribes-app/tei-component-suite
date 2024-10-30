@@ -1,0 +1,14 @@
+@import 'manifest';
+
+:host {
+  @include component;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  tcs-select {
+    width: 100%;
+    margin-bottom: 10px;
+    //
+  }
+}

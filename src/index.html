@@ -5,20 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
     <title>Stencil Component Starter</title>
 
-    <script type="module" src="/build/xml-editor-library.esm.js"></script>
-    <script nomodule src="/build/xml-editor-library.js"></script>
+    <script type="module" src="/build/tei-component-suite.esm.js"></script>
+    <script nomodule src="/build/tei-component-suite.js"></script>
     <script>
       // This is used to set the path to the symbols.svg file which contains the icons used in the editor.
-      globalThis.XecConfig = {
+      globalThis.TcsConfig = {
         symbolsPath: '/symbols.svg',
       }
     </script>
   </head>
   <body style="margin-top: 200px; max-width: 100vw;">
-    <xec-editor
-      id="editor"
-    ></xec-editor>
+    <tcs-button id="button-editor">See editor</tcs-button>
+    <tcs-button id="button-visualizer">See Visualizer</tcs-button>
+
+    <tcs-editor style="display: none;" id="editor"></tcs-editor>
+    <tcs-visualizer style="display: none;" id="visualizer"></tcs-visualizer>
     <script>
+      // Create a switch to toggle between the editor and the visualizer
+      document.querySelector('#button-editor').addEventListener('clickButton', () => {
+        document.getElementById('editor').style.display = 'block';
+        document.getElementById('visualizer').style.display = 'none';
+      });
+
+      document.querySelector('#button-visualizer').addEventListener('clickButton', () => {
+        document.getElementById('editor').style.display = 'none';
+        document.getElementById('visualizer').style.display = 'block';
+      });
+
+      // EXAMPLES
+
       const editor = document.getElementById('editor');
       // UNCOMMENT TO SEE THE TEI OUTPUT IN THE CONSOLE EVERY 3 SECONDS
       // ------------------------------
@@ -192,5 +207,7 @@
       // }, 200);
       // ------------------------------
     </script>
+    <!-- FIX WEBSOCKET BY INJECTING IT (the <body> tag in the comment create the issue)  -->
+    <iframe title="Stencil Dev Server Connector 4.22.2 &#9889;" src="http://localhost:3333/~dev-server" style="display:block;width:0;height:0;border:0;visibility:hidden" aria-hidden="true"></iframe>
   </body>
 </html>

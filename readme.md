@@ -1,21 +1,21 @@
-# XML TEI Editor for Scribes app
+# Lorraine University TEI Component Suite (LU-TCS)
 
 ## Description
 
-This project is a web component library that provide a main component `XecEditor` to edit XML TEI files. It is designed to be used in the [Scribes app](https://github.com/scribes-app).
+This project is a web component library that provide a main component `TcsEditor` to edit XML TEI files. It is designed to be used in the [Scribes app](https://github.com/scribes-app).
 
 ## Usage
 
 ### NPM Package
 
-[https://www.npmjs.com/package/@metztheolab/xml-editor-library]()
+[https://www.npmjs.com/package/@metztheolab/tei-component-suite]()
 
 ### Installation
 
 Whatever the framework you are using, you can install the package with npm:
 
 ```bash
-npm install @metztheolab/xml-editor-library
+npm install @metztheolab/tei-component-suite
 ```
 
 **Without framework**
@@ -29,7 +29,7 @@ In the head of your HTML file, include the following:
     defineCustomElements();
   </script>
   <script>
-    globalThis.XecConfig = {
+    globalThis.TcsConfig = {
       // This is used to set the path to the symbols.svg file which contains the icons used in the editor.
       symbolsPath: '[url]/symbols.svg',
     }
@@ -41,7 +41,7 @@ Use components in your HTML file:
 
 ```html
 <body>
-  <xec-editor></xec-editor>
+  <Tcs-editor></Tcs-editor>
 </body>
 ```
 
@@ -60,9 +60,9 @@ rm -rf src/lib/component-library
 mkdir -p src/lib/component-library
 mkdir -p public/assets
 # Copies the necessary files to the src/lib/component-library folder
-cp -r node_modules/@metztheolab/xml-editor-library/dist/vue/ src/lib/component-library/
+cp -r node_modules/@metztheolab/tei-component-suite/dist/vue/ src/lib/component-library/
 # Copies the symbols.svg file to the public/assets folder
-cp node_modules/@metztheolab/xml-editor-library/dist/collection/symbols.svg public/assets/symbols.svg
+cp node_modules/@metztheolab/tei-component-suite/dist/collection/symbols.svg public/assets/symbols.svg
 ```
 
 In the package.json file, add postinstall script:
@@ -123,7 +123,7 @@ Define the symbols path in your Vue app (wherever you want, in App.vue for examp
 
 ```js
 // ...
-globalThis.XecConfig = {
+globalThis.TcsConfig = {
   symbolsPath: '/assets/symbols.svg',
 }
 ```
@@ -133,7 +133,7 @@ Use components in your Vue app:
 ```vue
 <template>
   <!-- ... -->
-  <xec-editor />
+  <Tcs-editor />
   <!-- ... -->
 </template>
 ```
@@ -153,9 +153,9 @@ rm -rf src/lib/component-library
 mkdir -p src/lib/component-library
 mkdir -p public/assets
 # Copies the necessary files to the src/lib/component-library folder
-cp -r node_modules/@metztheolab/xml-editor-library/dist/react/ src/lib/component-library/
+cp -r node_modules/@metztheolab/tei-component-suite/dist/react/ src/lib/component-library/
 # Copies the symbols.svg file to the public/assets folder
-cp node_modules/@metztheolab/xml-editor-library/dist/collection/symbols.svg public/assets/symbols.svg
+cp node_modules/@metztheolab/tei-component-suite/dist/collection/symbols.svg public/assets/symbols.svg
 ```
 
 In the package.json file, add postinstall script:
@@ -192,7 +192,7 @@ Define the symbols path in your React app (wherever you want, in app.tsx for exa
 
 ```js
 // ...
-globalThis.XecConfig = {
+globalThis.TcsConfig = {
   symbolsPath: '/assets/symbols.svg',
 }
 ```
@@ -202,12 +202,12 @@ Use components in your React app:
 ```tsx
 import React from 'react';
 import './App.css';
-import XecEditor from './lib/component-library/XecEditor';
+import TcsEditor from './lib/component-library/TcsEditor';
 
 function App() {
   return (
     <div className="App">
-      <XecEditor />
+      <TcsEditor />
     </div>
   );
 }
@@ -233,9 +233,9 @@ rm -rf src/lib/component-library
 mkdir -p src/lib/component-library
 mkdir -p public/assets
 # Copies the necessary files to the src/lib/component-library folder
-cp -r node_modules/@metztheolab/xml-editor-library/dist/ng/ src/lib/component-library/
+cp -r node_modules/@metztheolab/tei-component-suite/dist/ng/ src/lib/component-library/
 # Copies the symbols.svg file to the public/assets folder
-cp node_modules/@metztheolab/xml-editor-library/dist/collection/symbols.svg public/assets/symbols.svg
+cp node_modules/@metztheolab/tei-component-suite/dist/collection/symbols.svg public/assets/symbols.svg
 ```
 
 In the package.json file, add postinstall script:
@@ -262,16 +262,16 @@ import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { DIRECTIVES as XecEditorComponents } from '../lib/component-library';
-import { defineCustomElements } from '@metztheolab/xml-editor-library';
+import { DIRECTIVES as TcsEditorComponents } from '../lib/component-library';
+import { defineCustomElements } from '@metztheolab/tei-component-suite';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ...XecEditorComponents
+    ...TcsEditorComponents
   ],
   exports: [
-    ...XecEditorComponents
+    ...TcsEditorComponents
   ],
   imports: [
     BrowserModule,
@@ -293,7 +293,7 @@ Define the symbols path in your Angular app (wherever you want, in main.ts for e
 
 ```ts
 // ...
-globalThis.XecConfig = {
+globalThis.TcsConfig = {
   symbolsPath: '/assets/symbols.svg',
 }
 ```
@@ -302,7 +302,7 @@ Use components in your Angular template files:
 
 ```html
 <!-- ... -->
-<xec-editor></xec-editor>
+<Tcs-editor></Tcs-editor>
 ```
 
 ### Main component usage
@@ -310,7 +310,7 @@ Use components in your Angular template files:
 ```html
 <body>
   <!-- You can use attributes such as toolbarConfig or settings, see the appropriate readme for more information -->
-  <xec-editor id="editor"></xec-editor>
+  <Tcs-editor id="editor"></Tcs-editor>
   <script>
     const editor = document.querySelector('#editor');
     // Get the current formatted TEI content

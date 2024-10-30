@@ -1,66 +1,66 @@
 {
-  "name": "@metztheolab/xml-editor-library",
+  "name": "@metztheolab/tei-component-suite",
   "version": "0.1.7",
-  "description": "XML Editor Components Library",
+  "description": "Lorraine University TEI Component Suite (LU-TCS)",
   "main": "dist/index.cjs.js",
   "module": "dist/index.js",
   "types": "dist/types/index.d.ts",
   "collection": "dist/collection/collection-manifest.json",
   "collection:main": "dist/collection/index.js",
-  "unpkg": "dist/xml-editor-library/xml-editor-library.esm.js",
+  "unpkg": "dist/tei-component-suite/tei-component-suite.esm.js",
   "exports": {
     ".": {
       "import": "./loader/index.js",
       "require": "./loader/index.cjs",
       "types": "./loader/index.d.ts"
     },
-    "./components/xec-annotation-form": {
-      "import": "./dist/components/xec-annotation-form.js",
-      "types": "./dist/components/xec-annotation-form.d.ts"
+    "./components/tcs-annotation-form": {
+      "import": "./dist/components/tcs-annotation-form.js",
+      "types": "./dist/components/tcs-annotation-form.d.ts"
     },
-    "./components/xec-blank-space-form": {
-      "import": "./dist/components/xec-blank-space-form.js",
-      "types": "./dist/components/xec-blank-space-form.d.ts"
+    "./components/tcs-blank-space-form": {
+      "import": "./dist/components/tcs-blank-space-form.js",
+      "types": "./dist/components/tcs-blank-space-form.d.ts"
     },
-    "./components/xec-button": {
-      "import": "./dist/components/xec-button.js",
-      "types": "./dist/components/xec-button.d.ts"
+    "./components/tcs-button": {
+      "import": "./dist/components/tcs-button.js",
+      "types": "./dist/components/tcs-button.d.ts"
     },
-    "./components/xec-dropdown": {
-      "import": "./dist/components/xec-dropdown.js",
-      "types": "./dist/components/xec-dropdown.d.ts"
+    "./components/tcs-dropdown": {
+      "import": "./dist/components/tcs-dropdown.js",
+      "types": "./dist/components/tcs-dropdown.d.ts"
     },
-    "./components/xec-editor": {
-      "import": "./dist/components/xec-editor.js",
-      "types": "./dist/components/xec-editor.d.ts"
+    "./components/tcs-editor": {
+      "import": "./dist/components/tcs-editor.js",
+      "types": "./dist/components/tcs-editor.d.ts"
     },
-    "./components/xec-icon": {
-      "import": "./dist/components/xec-icon.js",
-      "types": "./dist/components/xec-icon.d.ts"
+    "./components/tcs-icon": {
+      "import": "./dist/components/tcs-icon.js",
+      "types": "./dist/components/tcs-icon.d.ts"
     },
-    "./components/xec-popup": {
-      "import": "./dist/components/xec-popup.js",
-      "types": "./dist/components/xec-popup.d.ts"
+    "./components/tcs-popup": {
+      "import": "./dist/components/tcs-popup.js",
+      "types": "./dist/components/tcs-popup.d.ts"
     },
-    "./components/xec-select": {
-      "import": "./dist/components/xec-select.js",
-      "types": "./dist/components/xec-select.d.ts"
+    "./components/tcs-select": {
+      "import": "./dist/components/tcs-select.js",
+      "types": "./dist/components/tcs-select.d.ts"
     },
-    "./components/xec-settings-form": {
-      "import": "./dist/components/xec-settings-form.js",
-      "types": "./dist/components/xec-settings-form.d.ts"
+    "./components/tcs-settings-form": {
+      "import": "./dist/components/tcs-settings-form.js",
+      "types": "./dist/components/tcs-settings-form.d.ts"
     },
-    "./components/xec-structure-form": {
-      "import": "./dist/components/xec-structure-form.js",
-      "types": "./dist/components/xec-structure-form.d.ts"
+    "./components/tcs-structure-form": {
+      "import": "./dist/components/tcs-structure-form.js",
+      "types": "./dist/components/tcs-structure-form.d.ts"
     },
-    "./components/xec-textfield": {
-      "import": "./dist/components/xec-textfield.js",
-      "types": "./dist/components/xec-textfield.d.ts"
+    "./components/tcs-textfield": {
+      "import": "./dist/components/tcs-textfield.js",
+      "types": "./dist/components/tcs-textfield.d.ts"
     },
-    "./components/xec-toolbar": {
-      "import": "./dist/components/xec-toolbar.js",
-      "types": "./dist/components/xec-toolbar.d.ts"
+    "./components/tcs-toolbar": {
+      "import": "./dist/components/tcs-toolbar.js",
+      "types": "./dist/components/tcs-toolbar.d.ts"
     }
   },
   "repository": {
@@ -89,7 +89,7 @@
   "license": "MIT",
   "dependencies": {
     "@stencil/angular-output-target": "^0.9.1",
-    "@stencil/core": "^4.22.1",
+    "@stencil/core": "^4.22.2",
     "@stencil/react-output-target": "^0.7.3",
     "@stencil/sass": "^3.0.12",
     "@stencil/vue-output-target": "^0.9.0",

@@ -190,29 +190,29 @@ export type EditorFormattedTEI = {
  */
 export type QuillInstance = Quill.default;
 
-export type XecSelectEntry = {
+export type TcsSelectEntry = {
   label: string;
   id: string|number;
   normalized?: string;
 };
 
-export type XecBlankSpaceFormValues = {
+export type TcsBlankSpaceFormValues = {
   unit: UnionBlankSpaceUnit;
   value: number;
 };
 
-export type XecStructureFormValues = {
+export type TcsStructureFormValues = {
   type: UnionStructureType|'anonymous-block';
   ref: string;
 };
 
-export type XecSettingsFormValues = {
+export type TcsSettingsFormValues = {
   column?: string;
   folio?: string;
   book?: string;
 };
 
-export type XecAnnotationFormValues = {
+export type TcsAnnotationFormValues = {
   type?: UnionAnnotationType;
   rend?: UnionAnnotationRend;
   hand?: UnionAnnotationHand;

@@ -5,16 +5,16 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { DropdownConfig, EditorFormattedTEI, EditorSettings, QuillInstance, ToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionIcons, UnionLayoutType, UnionReconstructionReason, UnionStructureType, UnionUnclearReason, XecAnnotationFormValues, XecBlankSpaceFormValues, XecSelectEntry, XecSettingsFormValues, XecStructureFormValues } from "./lib/types";
-export { DropdownConfig, EditorFormattedTEI, EditorSettings, QuillInstance, ToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionIcons, UnionLayoutType, UnionReconstructionReason, UnionStructureType, UnionUnclearReason, XecAnnotationFormValues, XecBlankSpaceFormValues, XecSelectEntry, XecSettingsFormValues, XecStructureFormValues } from "./lib/types";
+import { DropdownConfig, EditorFormattedTEI, EditorSettings, QuillInstance, TcsAnnotationFormValues, TcsBlankSpaceFormValues, TcsSelectEntry, TcsSettingsFormValues, TcsStructureFormValues, ToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionIcons, UnionLayoutType, UnionReconstructionReason, UnionStructureType, UnionUnclearReason } from "./lib/types";
+export { DropdownConfig, EditorFormattedTEI, EditorSettings, QuillInstance, TcsAnnotationFormValues, TcsBlankSpaceFormValues, TcsSelectEntry, TcsSettingsFormValues, TcsStructureFormValues, ToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionIcons, UnionLayoutType, UnionReconstructionReason, UnionStructureType, UnionUnclearReason } from "./lib/types";
 export namespace Components {
-    interface XecAnnotationForm {
+    interface TcsAnnotationForm {
         "isValid": () => Promise<boolean>;
     }
-    interface XecBlankSpaceForm {
+    interface TcsBlankSpaceForm {
         "isValid": () => Promise<boolean>;
     }
-    interface XecButton {
+    interface TcsButton {
         "active"?: boolean;
         "disabled"?: boolean;
         "display"?: 'slim'|'default';
@@ -28,7 +28,7 @@ export namespace Components {
         "stretched"?: boolean;
         "variation"?: 'default';
     }
-    interface XecDropdown {
+    interface TcsDropdown {
         "close": () => Promise<void>;
         "config": DropdownConfig;
         "disabled": boolean;
@@ -36,7 +36,7 @@ export namespace Components {
         "open": () => Promise<void>;
         "slimText"?: string;
     }
-    interface XecEditor {
+    interface TcsEditor {
         "getFormattedTEI": () => Promise<EditorFormattedTEI>;
         "getQuillInstances": () => Promise<Map<UnionEditorType, QuillInstance>>;
         "getSettings": () => Promise<EditorSettings>;
@@ -46,18 +46,18 @@ export namespace Components {
         "toolbarConfig": ToolbarConfig;
         "unlock": () => Promise<void>;
     }
-    interface XecIcon {
+    interface TcsIcon {
         "icon": UnionIcons;
         "library"?: string;
         "viewBox"?: string;
     }
-    interface XecPopup {
+    interface TcsPopup {
         "closePopup": () => Promise<void>;
         "openPopup": () => Promise<void>;
         "setContent": (content: string) => Promise<void>;
     }
-    interface XecSelect {
-        "entries": XecSelectEntry[];
+    interface TcsSelect {
+        "entries": TcsSelectEntry[];
         "getValue": () => Promise<string | number>;
         "inputId": string;
         "inputName": string;
@@ -66,14 +66,14 @@ export namespace Components {
         "required"?: boolean;
         "setValue": (value: string) => Promise<void>;
     }
-    interface XecSettingsForm {
-        "defaultValues": XecSettingsFormValues;
+    interface TcsSettingsForm {
+        "defaultValues": TcsSettingsFormValues;
         "isValid": () => Promise<boolean>;
     }
-    interface XecStructureForm {
+    interface TcsStructureForm {
         "isValid": () => Promise<boolean>;
     }
-    interface XecTextfield {
+    interface TcsTextfield {
         "allowedValues"?: (string|number)[];
         "defaultValue": string;
         "getValue": () => Promise<string>;
@@ -89,7 +89,7 @@ export namespace Components {
         "setValue": (value: string) => Promise<void>;
         "type": 'text'|'password'|'number'|'email';
     }
-    interface XecToolbar {
+    interface TcsToolbar {
         "config": ToolbarConfig;
         "disabled": boolean;
         "layoutType": UnionLayoutType;
@@ -97,203 +97,205 @@ export namespace Components {
         "textDirection": 'LTR'|'RTL';
         "viewRaw": boolean;
     }
+    interface TcsVisualizer {
+    }
 }
-export interface XecAnnotationFormCustomEvent<T> extends CustomEvent<T> {
+export interface TcsAnnotationFormCustomEvent<T> extends CustomEvent<T> {
     detail: T;
-    target: HTMLXecAnnotationFormElement;
+    target: HTMLTcsAnnotationFormElement;
 }
-export interface XecBlankSpaceFormCustomEvent<T> extends CustomEvent<T> {
+export interface TcsBlankSpaceFormCustomEvent<T> extends CustomEvent<T> {
     detail: T;
-    target: HTMLXecBlankSpaceFormElement;
+    target: HTMLTcsBlankSpaceFormElement;
 }
-export interface XecButtonCustomEvent<T> extends CustomEvent<T> {
+export interface TcsButtonCustomEvent<T> extends CustomEvent<T> {
     detail: T;
-    target: HTMLXecButtonElement;
+    target: HTMLTcsButtonElement;
 }
-export interface XecIconCustomEvent<T> extends CustomEvent<T> {
+export interface TcsIconCustomEvent<T> extends CustomEvent<T> {
     detail: T;
-    target: HTMLXecIconElement;
+    target: HTMLTcsIconElement;
 }
-export interface XecSelectCustomEvent<T> extends CustomEvent<T> {
+export interface TcsSelectCustomEvent<T> extends CustomEvent<T> {
     detail: T;
-    target: HTMLXecSelectElement;
+    target: HTMLTcsSelectElement;
 }
-export interface XecSettingsFormCustomEvent<T> extends CustomEvent<T> {
+export interface TcsSettingsFormCustomEvent<T> extends CustomEvent<T> {
     detail: T;
-    target: HTMLXecSettingsFormElement;
+    target: HTMLTcsSettingsFormElement;
 }
-export interface XecStructureFormCustomEvent<T> extends CustomEvent<T> {
+export interface TcsStructureFormCustomEvent<T> extends CustomEvent<T> {
     detail: T;
-    target: HTMLXecStructureFormElement;
+    target: HTMLTcsStructureFormElement;
 }
-export interface XecTextfieldCustomEvent<T> extends CustomEvent<T> {
+export interface TcsTextfieldCustomEvent<T> extends CustomEvent<T> {
     detail: T;
-    target: HTMLXecTextfieldElement;
+    target: HTMLTcsTextfieldElement;
 }
-export interface XecToolbarCustomEvent<T> extends CustomEvent<T> {
+export interface TcsToolbarCustomEvent<T> extends CustomEvent<T> {
     detail: T;
-    target: HTMLXecToolbarElement;
+    target: HTMLTcsToolbarElement;
 }
 declare global {
-    interface HTMLXecAnnotationFormElementEventMap {
-        "formChange": XecAnnotationFormValues;
-        "formSubmit": XecAnnotationFormValues;
+    interface HTMLTcsAnnotationFormElementEventMap {
+        "formChange": TcsAnnotationFormValues;
+        "formSubmit": TcsAnnotationFormValues;
     }
-    interface HTMLXecAnnotationFormElement extends Components.XecAnnotationForm, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLXecAnnotationFormElementEventMap>(type: K, listener: (this: HTMLXecAnnotationFormElement, ev: XecAnnotationFormCustomEvent<HTMLXecAnnotationFormElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+    interface HTMLTcsAnnotationFormElement extends Components.TcsAnnotationForm, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLTcsAnnotationFormElementEventMap>(type: K, listener: (this: HTMLTcsAnnotationFormElement, ev: TcsAnnotationFormCustomEvent<HTMLTcsAnnotationFormElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLXecAnnotationFormElementEventMap>(type: K, listener: (this: HTMLXecAnnotationFormElement, ev: XecAnnotationFormCustomEvent<HTMLXecAnnotationFormElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLTcsAnnotationFormElementEventMap>(type: K, listener: (this: HTMLTcsAnnotationFormElement, ev: TcsAnnotationFormCustomEvent<HTMLTcsAnnotationFormElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
-    var HTMLXecAnnotationFormElement: {
-        prototype: HTMLXecAnnotationFormElement;
-        new (): HTMLXecAnnotationFormElement;
+    var HTMLTcsAnnotationFormElement: {
+        prototype: HTMLTcsAnnotationFormElement;
+        new (): HTMLTcsAnnotationFormElement;
     };
-    interface HTMLXecBlankSpaceFormElementEventMap {
-        "formChange": XecBlankSpaceFormValues;
-        "formSubmit": XecBlankSpaceFormValues;
+    interface HTMLTcsBlankSpaceFormElementEventMap {
+        "formChange": TcsBlankSpaceFormValues;
+        "formSubmit": TcsBlankSpaceFormValues;
     }
-    interface HTMLXecBlankSpaceFormElement extends Components.XecBlankSpaceForm, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLXecBlankSpaceFormElementEventMap>(type: K, listener: (this: HTMLXecBlankSpaceFormElement, ev: XecBlankSpaceFormCustomEvent<HTMLXecBlankSpaceFormElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+    interface HTMLTcsBlankSpaceFormElement extends Components.TcsBlankSpaceForm, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLTcsBlankSpaceFormElementEventMap>(type: K, listener: (this: HTMLTcsBlankSpaceFormElement, ev: TcsBlankSpaceFormCustomEvent<HTMLTcsBlankSpaceFormElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLXecBlankSpaceFormElementEventMap>(type: K, listener: (this: HTMLXecBlankSpaceFormElement, ev: XecBlankSpaceFormCustomEvent<HTMLXecBlankSpaceFormElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLTcsBlankSpaceFormElementEventMap>(type: K, listener: (this: HTMLTcsBlankSpaceFormElement, ev: TcsBlankSpaceFormCustomEvent<HTMLTcsBlankSpaceFormElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
-    var HTMLXecBlankSpaceFormElement: {
-        prototype: HTMLXecBlankSpaceFormElement;
-        new (): HTMLXecBlankSpaceFormElement;
+    var HTMLTcsBlankSpaceFormElement: {
+        prototype: HTMLTcsBlankSpaceFormElement;
+        new (): HTMLTcsBlankSpaceFormElement;
     };
-    interface HTMLXecButtonElementEventMap {
+    interface HTMLTcsButtonElementEventMap {
         "clickButton": HTMLDivElement;
     }
-    interface HTMLXecButtonElement extends Components.XecButton, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLXecButtonElementEventMap>(type: K, listener: (this: HTMLXecButtonElement, ev: XecButtonCustomEvent<HTMLXecButtonElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+    interface HTMLTcsButtonElement extends Components.TcsButton, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLTcsButtonElementEventMap>(type: K, listener: (this: HTMLTcsButtonElement, ev: TcsButtonCustomEvent<HTMLTcsButtonElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLXecButtonElementEventMap>(type: K, listener: (this: HTMLXecButtonElement, ev: XecButtonCustomEvent<HTMLXecButtonElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLTcsButtonElementEventMap>(type: K, listener: (this: HTMLTcsButtonElement, ev: TcsButtonCustomEvent<HTMLTcsButtonElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
-    var HTMLXecButtonElement: {
-        prototype: HTMLXecButtonElement;
-        new (): HTMLXecButtonElement;
+    var HTMLTcsButtonElement: {
+        prototype: HTMLTcsButtonElement;
+        new (): HTMLTcsButtonElement;
     };
-    interface HTMLXecDropdownElement extends Components.XecDropdown, HTMLStencilElement {
+    interface HTMLTcsDropdownElement extends Components.TcsDropdown, HTMLStencilElement {
     }
-    var HTMLXecDropdownElement: {
-        prototype: HTMLXecDropdownElement;
-        new (): HTMLXecDropdownElement;
+    var HTMLTcsDropdownElement: {
+        prototype: HTMLTcsDropdownElement;
+        new (): HTMLTcsDropdownElement;
     };
-    interface HTMLXecEditorElement extends Components.XecEditor, HTMLStencilElement {
+    interface HTMLTcsEditorElement extends Components.TcsEditor, HTMLStencilElement {
     }
-    var HTMLXecEditorElement: {
-        prototype: HTMLXecEditorElement;
-        new (): HTMLXecEditorElement;
+    var HTMLTcsEditorElement: {
+        prototype: HTMLTcsEditorElement;
+        new (): HTMLTcsEditorElement;
     };
-    interface HTMLXecIconElementEventMap {
+    interface HTMLTcsIconElementEventMap {
         "clickIcon": SVGElement;
     }
-    interface HTMLXecIconElement extends Components.XecIcon, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLXecIconElementEventMap>(type: K, listener: (this: HTMLXecIconElement, ev: XecIconCustomEvent<HTMLXecIconElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+    interface HTMLTcsIconElement extends Components.TcsIcon, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLTcsIconElementEventMap>(type: K, listener: (this: HTMLTcsIconElement, ev: TcsIconCustomEvent<HTMLTcsIconElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLXecIconElementEventMap>(type: K, listener: (this: HTMLXecIconElement, ev: XecIconCustomEvent<HTMLXecIconElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLTcsIconElementEventMap>(type: K, listener: (this: HTMLTcsIconElement, ev: TcsIconCustomEvent<HTMLTcsIconElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
-    var HTMLXecIconElement: {
-        prototype: HTMLXecIconElement;
-        new (): HTMLXecIconElement;
+    var HTMLTcsIconElement: {
+        prototype: HTMLTcsIconElement;
+        new (): HTMLTcsIconElement;
     };
-    interface HTMLXecPopupElement extends Components.XecPopup, HTMLStencilElement {
+    interface HTMLTcsPopupElement extends Components.TcsPopup, HTMLStencilElement {
     }
-    var HTMLXecPopupElement: {
-        prototype: HTMLXecPopupElement;
-        new (): HTMLXecPopupElement;
+    var HTMLTcsPopupElement: {
+        prototype: HTMLTcsPopupElement;
+        new (): HTMLTcsPopupElement;
     };
-    interface HTMLXecSelectElementEventMap {
-        "selectChange": XecSelectEntry|undefined;
+    interface HTMLTcsSelectElementEventMap {
+        "selectChange": TcsSelectEntry|undefined;
     }
-    interface HTMLXecSelectElement extends Components.XecSelect, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLXecSelectElementEventMap>(type: K, listener: (this: HTMLXecSelectElement, ev: XecSelectCustomEvent<HTMLXecSelectElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+    interface HTMLTcsSelectElement extends Components.TcsSelect, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLTcsSelectElementEventMap>(type: K, listener: (this: HTMLTcsSelectElement, ev: TcsSelectCustomEvent<HTMLTcsSelectElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLXecSelectElementEventMap>(type: K, listener: (this: HTMLXecSelectElement, ev: XecSelectCustomEvent<HTMLXecSelectElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLTcsSelectElementEventMap>(type: K, listener: (this: HTMLTcsSelectElement, ev: TcsSelectCustomEvent<HTMLTcsSelectElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
-    var HTMLXecSelectElement: {
-        prototype: HTMLXecSelectElement;
-        new (): HTMLXecSelectElement;
+    var HTMLTcsSelectElement: {
+        prototype: HTMLTcsSelectElement;
+        new (): HTMLTcsSelectElement;
     };
-    interface HTMLXecSettingsFormElementEventMap {
-        "formChange": XecSettingsFormValues;
-        "formSubmit": XecSettingsFormValues;
+    interface HTMLTcsSettingsFormElementEventMap {
+        "formChange": TcsSettingsFormValues;
+        "formSubmit": TcsSettingsFormValues;
     }
-    interface HTMLXecSettingsFormElement extends Components.XecSettingsForm, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLXecSettingsFormElementEventMap>(type: K, listener: (this: HTMLXecSettingsFormElement, ev: XecSettingsFormCustomEvent<HTMLXecSettingsFormElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+    interface HTMLTcsSettingsFormElement extends Components.TcsSettingsForm, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLTcsSettingsFormElementEventMap>(type: K, listener: (this: HTMLTcsSettingsFormElement, ev: TcsSettingsFormCustomEvent<HTMLTcsSettingsFormElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLXecSettingsFormElementEventMap>(type: K, listener: (this: HTMLXecSettingsFormElement, ev: XecSettingsFormCustomEvent<HTMLXecSettingsFormElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLTcsSettingsFormElementEventMap>(type: K, listener: (this: HTMLTcsSettingsFormElement, ev: TcsSettingsFormCustomEvent<HTMLTcsSettingsFormElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
-    var HTMLXecSettingsFormElement: {
-        prototype: HTMLXecSettingsFormElement;
-        new (): HTMLXecSettingsFormElement;
+    var HTMLTcsSettingsFormElement: {
+        prototype: HTMLTcsSettingsFormElement;
+        new (): HTMLTcsSettingsFormElement;
     };
-    interface HTMLXecStructureFormElementEventMap {
-        "formChange": XecStructureFormValues;
-        "formSubmit": XecStructureFormValues;
+    interface HTMLTcsStructureFormElementEventMap {
+        "formChange": TcsStructureFormValues;
+        "formSubmit": TcsStructureFormValues;
     }
-    interface HTMLXecStructureFormElement extends Components.XecStructureForm, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLXecStructureFormElementEventMap>(type: K, listener: (this: HTMLXecStructureFormElement, ev: XecStructureFormCustomEvent<HTMLXecStructureFormElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+    interface HTMLTcsStructureFormElement extends Components.TcsStructureForm, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLTcsStructureFormElementEventMap>(type: K, listener: (this: HTMLTcsStructureFormElement, ev: TcsStructureFormCustomEvent<HTMLTcsStructureFormElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLXecStructureFormElementEventMap>(type: K, listener: (this: HTMLXecStructureFormElement, ev: XecStructureFormCustomEvent<HTMLXecStructureFormElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLTcsStructureFormElementEventMap>(type: K, listener: (this: HTMLTcsStructureFormElement, ev: TcsStructureFormCustomEvent<HTMLTcsStructureFormElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
-    var HTMLXecStructureFormElement: {
-        prototype: HTMLXecStructureFormElement;
-        new (): HTMLXecStructureFormElement;
+    var HTMLTcsStructureFormElement: {
+        prototype: HTMLTcsStructureFormElement;
+        new (): HTMLTcsStructureFormElement;
     };
-    interface HTMLXecTextfieldElementEventMap {
+    interface HTMLTcsTextfieldElementEventMap {
         "textfieldChange": string;
     }
-    interface HTMLXecTextfieldElement extends Components.XecTextfield, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLXecTextfieldElementEventMap>(type: K, listener: (this: HTMLXecTextfieldElement, ev: XecTextfieldCustomEvent<HTMLXecTextfieldElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+    interface HTMLTcsTextfieldElement extends Components.TcsTextfield, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLTcsTextfieldElementEventMap>(type: K, listener: (this: HTMLTcsTextfieldElement, ev: TcsTextfieldCustomEvent<HTMLTcsTextfieldElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLXecTextfieldElementEventMap>(type: K, listener: (this: HTMLXecTextfieldElement, ev: XecTextfieldCustomEvent<HTMLXecTextfieldElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLTcsTextfieldElementEventMap>(type: K, listener: (this: HTMLTcsTextfieldElement, ev: TcsTextfieldCustomEvent<HTMLTcsTextfieldElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
-    var HTMLXecTextfieldElement: {
-        prototype: HTMLXecTextfieldElement;
-        new (): HTMLXecTextfieldElement;
+    var HTMLTcsTextfieldElement: {
+        prototype: HTMLTcsTextfieldElement;
+        new (): HTMLTcsTextfieldElement;
     };
-    interface HTMLXecToolbarElementEventMap {
+    interface HTMLTcsToolbarElementEventMap {
         "clickViewRaw": void;
         "clickUnclear": UnionUnclearReason;
         "clickReconstruction": UnionReconstructionReason;
@@ -311,52 +313,59 @@ declare global {
         "clickRemove": void;
         "clickSettings": void;
     }
-    interface HTMLXecToolbarElement extends Components.XecToolbar, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLXecToolbarElementEventMap>(type: K, listener: (this: HTMLXecToolbarElement, ev: XecToolbarCustomEvent<HTMLXecToolbarElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+    interface HTMLTcsToolbarElement extends Components.TcsToolbar, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLTcsToolbarElementEventMap>(type: K, listener: (this: HTMLTcsToolbarElement, ev: TcsToolbarCustomEvent<HTMLTcsToolbarElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLXecToolbarElementEventMap>(type: K, listener: (this: HTMLXecToolbarElement, ev: XecToolbarCustomEvent<HTMLXecToolbarElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLTcsToolbarElementEventMap>(type: K, listener: (this: HTMLTcsToolbarElement, ev: TcsToolbarCustomEvent<HTMLTcsToolbarElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
-    var HTMLXecToolbarElement: {
-        prototype: HTMLXecToolbarElement;
-        new (): HTMLXecToolbarElement;
+    var HTMLTcsToolbarElement: {
+        prototype: HTMLTcsToolbarElement;
+        new (): HTMLTcsToolbarElement;
+    };
+    interface HTMLTcsVisualizerElement extends Components.TcsVisualizer, HTMLStencilElement {
+    }
+    var HTMLTcsVisualizerElement: {
+        prototype: HTMLTcsVisualizerElement;
+        new (): HTMLTcsVisualizerElement;
     };
     interface HTMLElementTagNameMap {
-        "xec-annotation-form": HTMLXecAnnotationFormElement;
-        "xec-blank-space-form": HTMLXecBlankSpaceFormElement;
-        "xec-button": HTMLXecButtonElement;
-        "xec-dropdown": HTMLXecDropdownElement;
-        "xec-editor": HTMLXecEditorElement;
-        "xec-icon": HTMLXecIconElement;
-        "xec-popup": HTMLXecPopupElement;
-        "xec-select": HTMLXecSelectElement;
-        "xec-settings-form": HTMLXecSettingsFormElement;
-        "xec-structure-form": HTMLXecStructureFormElement;
-        "xec-textfield": HTMLXecTextfieldElement;
-        "xec-toolbar": HTMLXecToolbarElement;
+        "tcs-annotation-form": HTMLTcsAnnotationFormElement;
+        "tcs-blank-space-form": HTMLTcsBlankSpaceFormElement;
+        "tcs-button": HTMLTcsButtonElement;
+        "tcs-dropdown": HTMLTcsDropdownElement;
+        "tcs-editor": HTMLTcsEditorElement;
+        "tcs-icon": HTMLTcsIconElement;
+        "tcs-popup": HTMLTcsPopupElement;
+        "tcs-select": HTMLTcsSelectElement;
+        "tcs-settings-form": HTMLTcsSettingsFormElement;
+        "tcs-structure-form": HTMLTcsStructureFormElement;
+        "tcs-textfield": HTMLTcsTextfieldElement;
+        "tcs-toolbar": HTMLTcsToolbarElement;
+        "tcs-visualizer": HTMLTcsVisualizerElement;
     }
 }
 declare namespace LocalJSX {
-    interface XecAnnotationForm {
-        "onFormChange"?: (event: XecAnnotationFormCustomEvent<XecAnnotationFormValues>) => void;
-        "onFormSubmit"?: (event: XecAnnotationFormCustomEvent<XecAnnotationFormValues>) => void;
+    interface TcsAnnotationForm {
+        "onFormChange"?: (event: TcsAnnotationFormCustomEvent<TcsAnnotationFormValues>) => void;
+        "onFormSubmit"?: (event: TcsAnnotationFormCustomEvent<TcsAnnotationFormValues>) => void;
     }
-    interface XecBlankSpaceForm {
-        "onFormChange"?: (event: XecBlankSpaceFormCustomEvent<XecBlankSpaceFormValues>) => void;
-        "onFormSubmit"?: (event: XecBlankSpaceFormCustomEvent<XecBlankSpaceFormValues>) => void;
+    interface TcsBlankSpaceForm {
+        "onFormChange"?: (event: TcsBlankSpaceFormCustomEvent<TcsBlankSpaceFormValues>) => void;
+        "onFormSubmit"?: (event: TcsBlankSpaceFormCustomEvent<TcsBlankSpaceFormValues>) => void;
     }
-    interface XecButton {
+    interface TcsButton {
         "active"?: boolean;
         "disabled"?: boolean;
         "display"?: 'slim'|'default';
         "icon"?: UnionIcons;
         "iconOnly"?: boolean;
         "iconPosition"?: 'leading' | 'trailing';
-        "onClickButton"?: (event: XecButtonCustomEvent<HTMLDivElement>) => void;
+        "onClickButton"?: (event: TcsButtonCustomEvent<HTMLDivElement>) => void;
         "outlined"?: boolean;
         "rotateOnActive"?: boolean;
         "rounded"?: boolean;
@@ -364,42 +373,42 @@ declare namespace LocalJSX {
         "stretched"?: boolean;
         "variation"?: 'default';
     }
-    interface XecDropdown {
+    interface TcsDropdown {
         "config"?: DropdownConfig;
         "disabled"?: boolean;
         "display"?: 'slim'|'default';
         "slimText"?: string;
     }
-    interface XecEditor {
+    interface TcsEditor {
         "settings"?: EditorSettings;
         "toolbarConfig"?: ToolbarConfig;
     }
-    interface XecIcon {
+    interface TcsIcon {
         "icon"?: UnionIcons;
         "library"?: string;
-        "onClickIcon"?: (event: XecIconCustomEvent<SVGElement>) => void;
+        "onClickIcon"?: (event: TcsIconCustomEvent<SVGElement>) => void;
         "viewBox"?: string;
     }
-    interface XecPopup {
+    interface TcsPopup {
     }
-    interface XecSelect {
-        "entries"?: XecSelectEntry[];
+    interface TcsSelect {
+        "entries"?: TcsSelectEntry[];
         "inputId"?: string;
         "inputName"?: string;
-        "onSelectChange"?: (event: XecSelectCustomEvent<XecSelectEntry|undefined>) => void;
+        "onSelectChange"?: (event: TcsSelectCustomEvent<TcsSelectEntry|undefined>) => void;
         "placeholder"?: string;
         "required"?: boolean;
     }
-    interface XecSettingsForm {
-        "defaultValues"?: XecSettingsFormValues;
-        "onFormChange"?: (event: XecSettingsFormCustomEvent<XecSettingsFormValues>) => void;
-        "onFormSubmit"?: (event: XecSettingsFormCustomEvent<XecSettingsFormValues>) => void;
+    interface TcsSettingsForm {
+        "defaultValues"?: TcsSettingsFormValues;
+        "onFormChange"?: (event: TcsSettingsFormCustomEvent<TcsSettingsFormValues>) => void;
+        "onFormSubmit"?: (event: TcsSettingsFormCustomEvent<TcsSettingsFormValues>) => void;
     }
-    interface XecStructureForm {
-        "onFormChange"?: (event: XecStructureFormCustomEvent<XecStructureFormValues>) => void;
-        "onFormSubmit"?: (event: XecStructureFormCustomEvent<XecStructureFormValues>) => void;
+    interface TcsStructureForm {
+        "onFormChange"?: (event: TcsStructureFormCustomEvent<TcsStructureFormValues>) => void;
+        "onFormSubmit"?: (event: TcsStructureFormCustomEvent<TcsStructureFormValues>) => void;
     }
-    interface XecTextfield {
+    interface TcsTextfield {
         "allowedValues"?: (string|number)[];
         "defaultValue"?: string;
         "inputId"?: string;
@@ -407,67 +416,71 @@ declare namespace LocalJSX {
         "integer"?: boolean;
         "max"?: number;
         "min"?: number;
-        "onTextfieldChange"?: (event: XecTextfieldCustomEvent<string>) => void;
+        "onTextfieldChange"?: (event: TcsTextfieldCustomEvent<string>) => void;
         "pattern"?: string;
         "placeholder"?: string;
         "required"?: boolean;
         "type"?: 'text'|'password'|'number'|'email';
     }
-    interface XecToolbar {
+    interface TcsToolbar {
         "config"?: ToolbarConfig;
         "disabled"?: boolean;
         "layoutType"?: UnionLayoutType;
         "locked"?: boolean;
-        "onClickAbbreviation"?: (event: XecToolbarCustomEvent<UnionAbbreviationType>) => void;
-        "onClickAnnotation"?: (event: XecToolbarCustomEvent<void>) => void;
-        "onClickBlankSpace"?: (event: XecToolbarCustomEvent<void>) => void;
-        "onClickDeleted"?: (event: XecToolbarCustomEvent<UnionDeletedRend>) => void;
-        "onClickHighlighted"?: (event: XecToolbarCustomEvent<UnionHighlightedRend>) => void;
-        "onClickLTR"?: (event: XecToolbarCustomEvent<void>) => void;
-        "onClickLayout"?: (event: XecToolbarCustomEvent<void>) => void;
-        "onClickPunctuation"?: (event: XecToolbarCustomEvent<string>) => void;
-        "onClickRTL"?: (event: XecToolbarCustomEvent<void>) => void;
-        "onClickReconstruction"?: (event: XecToolbarCustomEvent<UnionReconstructionReason>) => void;
-        "onClickRemove"?: (event: XecToolbarCustomEvent<void>) => void;
-        "onClickSettings"?: (event: XecToolbarCustomEvent<void>) => void;
-        "onClickStructure"?: (event: XecToolbarCustomEvent<UnionStructureType|'anonymous-block'>) => void;
-        "onClickTextSize"?: (event: XecToolbarCustomEvent<void>) => void;
-        "onClickUnclear"?: (event: XecToolbarCustomEvent<UnionUnclearReason>) => void;
-        "onClickViewRaw"?: (event: XecToolbarCustomEvent<void>) => void;
+        "onClickAbbreviation"?: (event: TcsToolbarCustomEvent<UnionAbbreviationType>) => void;
+        "onClickAnnotation"?: (event: TcsToolbarCustomEvent<void>) => void;
+        "onClickBlankSpace"?: (event: TcsToolbarCustomEvent<void>) => void;
+        "onClickDeleted"?: (event: TcsToolbarCustomEvent<UnionDeletedRend>) => void;
+        "onClickHighlighted"?: (event: TcsToolbarCustomEvent<UnionHighlightedRend>) => void;
+        "onClickLTR"?: (event: TcsToolbarCustomEvent<void>) => void;
+        "onClickLayout"?: (event: TcsToolbarCustomEvent<void>) => void;
+        "onClickPunctuation"?: (event: TcsToolbarCustomEvent<string>) => void;
+        "onClickRTL"?: (event: TcsToolbarCustomEvent<void>) => void;
+        "onClickReconstruction"?: (event: TcsToolbarCustomEvent<UnionReconstructionReason>) => void;
+        "onClickRemove"?: (event: TcsToolbarCustomEvent<void>) => void;
+        "onClickSettings"?: (event: TcsToolbarCustomEvent<void>) => void;
+        "onClickStructure"?: (event: TcsToolbarCustomEvent<UnionStructureType|'anonymous-block'>) => void;
+        "onClickTextSize"?: (event: TcsToolbarCustomEvent<void>) => void;
+        "onClickUnclear"?: (event: TcsToolbarCustomEvent<UnionUnclearReason>) => void;
+        "onClickViewRaw"?: (event: TcsToolbarCustomEvent<void>) => void;
         "textDirection"?: 'LTR'|'RTL';
         "viewRaw"?: boolean;
     }
+    interface TcsVisualizer {
+    }
     interface IntrinsicElements {
-        "xec-annotation-form": XecAnnotationForm;
-        "xec-blank-space-form": XecBlankSpaceForm;
-        "xec-button": XecButton;
-        "xec-dropdown": XecDropdown;
-        "xec-editor": XecEditor;
-        "xec-icon": XecIcon;
-        "xec-popup": XecPopup;
-        "xec-select": XecSelect;
-        "xec-settings-form": XecSettingsForm;
-        "xec-structure-form": XecStructureForm;
-        "xec-textfield": XecTextfield;
-        "xec-toolbar": XecToolbar;
+        "tcs-annotation-form": TcsAnnotationForm;
+        "tcs-blank-space-form": TcsBlankSpaceForm;
+        "tcs-button": TcsButton;
+        "tcs-dropdown": TcsDropdown;
+        "tcs-editor": TcsEditor;
+        "tcs-icon": TcsIcon;
+        "tcs-popup": TcsPopup;
+        "tcs-select": TcsSelect;
+        "tcs-settings-form": TcsSettingsForm;
+        "tcs-structure-form": TcsStructureForm;
+        "tcs-textfield": TcsTextfield;
+        "tcs-toolbar": TcsToolbar;
+        "tcs-visualizer": TcsVisualizer;
     }
 }
 export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
-            "xec-annotation-form": LocalJSX.XecAnnotationForm & JSXBase.HTMLAttributes<HTMLXecAnnotationFormElement>;
-            "xec-blank-space-form": LocalJSX.XecBlankSpaceForm & JSXBase.HTMLAttributes<HTMLXecBlankSpaceFormElement>;
-            "xec-button": LocalJSX.XecButton & JSXBase.HTMLAttributes<HTMLXecButtonElement>;
-            "xec-dropdown": LocalJSX.XecDropdown & JSXBase.HTMLAttributes<HTMLXecDropdownElement>;
-            "xec-editor": LocalJSX.XecEditor & JSXBase.HTMLAttributes<HTMLXecEditorElement>;
-            "xec-icon": LocalJSX.XecIcon & JSXBase.HTMLAttributes<HTMLXecIconElement>;
-            "xec-popup": LocalJSX.XecPopup & JSXBase.HTMLAttributes<HTMLXecPopupElement>;
-            "xec-select": LocalJSX.XecSelect & JSXBase.HTMLAttributes<HTMLXecSelectElement>;
-            "xec-settings-form": LocalJSX.XecSettingsForm & JSXBase.HTMLAttributes<HTMLXecSettingsFormElement>;
-            "xec-structure-form": LocalJSX.XecStructureForm & JSXBase.HTMLAttributes<HTMLXecStructureFormElement>;
-            "xec-textfield": LocalJSX.XecTextfield & JSXBase.HTMLAttributes<HTMLXecTextfieldElement>;
-            "xec-toolbar": LocalJSX.XecToolbar & JSXBase.HTMLAttributes<HTMLXecToolbarElement>;
+            "tcs-annotation-form": LocalJSX.TcsAnnotationForm & JSXBase.HTMLAttributes<HTMLTcsAnnotationFormElement>;
+            "tcs-blank-space-form": LocalJSX.TcsBlankSpaceForm & JSXBase.HTMLAttributes<HTMLTcsBlankSpaceFormElement>;
+            "tcs-button": LocalJSX.TcsButton & JSXBase.HTMLAttributes<HTMLTcsButtonElement>;
+            "tcs-dropdown": LocalJSX.TcsDropdown & JSXBase.HTMLAttributes<HTMLTcsDropdownElement>;
+            "tcs-editor": LocalJSX.TcsEditor & JSXBase.HTMLAttributes<HTMLTcsEditorElement>;
+            "tcs-icon": LocalJSX.TcsIcon & JSXBase.HTMLAttributes<HTMLTcsIconElement>;
+            "tcs-popup": LocalJSX.TcsPopup & JSXBase.HTMLAttributes<HTMLTcsPopupElement>;
+            "tcs-select": LocalJSX.TcsSelect & JSXBase.HTMLAttributes<HTMLTcsSelectElement>;
+            "tcs-settings-form": LocalJSX.TcsSettingsForm & JSXBase.HTMLAttributes<HTMLTcsSettingsFormElement>;
+            "tcs-structure-form": LocalJSX.TcsStructureForm & JSXBase.HTMLAttributes<HTMLTcsStructureFormElement>;
+            "tcs-textfield": LocalJSX.TcsTextfield & JSXBase.HTMLAttributes<HTMLTcsTextfieldElement>;
+            "tcs-toolbar": LocalJSX.TcsToolbar & JSXBase.HTMLAttributes<HTMLTcsToolbarElement>;
+            "tcs-visualizer": LocalJSX.TcsVisualizer & JSXBase.HTMLAttributes<HTMLTcsVisualizerElement>;
         }
     }
 }

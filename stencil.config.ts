@@ -6,7 +6,7 @@ import { vueOutputTarget } from '@stencil/vue-output-target';
 import { resolve } from 'path';
 
 export const config: Config = {
-  namespace: 'xml-editor-library',
+  namespace: 'tei-component-suite',
   globalStyle: 'src/global.scss',
   plugins: [
     sass({
@@ -27,7 +27,7 @@ export const config: Config = {
       externalRuntime: false,
     },
     angularOutputTarget({
-      componentCorePackage: '@metztheolab/xml-editor-library',
+      componentCorePackage: '@metztheolab/tei-component-suite',
       outputType: 'component',
       directivesProxyFile: 'dist/ng/components.ts',
       directivesArrayFile: 'dist/ng/index.ts',
@@ -38,7 +38,7 @@ export const config: Config = {
       esModules: true,
     }),
     vueOutputTarget({
-      componentCorePackage: '@metztheolab/xml-editor-library',
+      componentCorePackage: '@metztheolab/tei-component-suite',
       proxiesFile: 'dist/vue/components.ts',
       loaderDir: '/'
     }),

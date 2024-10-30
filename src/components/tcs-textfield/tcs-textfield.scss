@@ -1,0 +1,29 @@
+@import 'manifest';
+
+:host {
+  @include component;
+
+  --tcs-textfield-placeholder-color: #{$color-slate-300};
+  --tcs-textfield-color: #{$color-slate-500};
+  --tcs-textfield-border-color: #{$color-slate-200};
+  --tcs-textfield-focus-border-color: #{$color-slate-300};
+
+  input {
+    border: none;
+    outline: none;
+    appearance: none;
+
+    font: { size: 12px; }
+    color: var(--tcs-textfield-color);
+    padding: 5px 0;
+    width: 100%;
+    border-bottom: 2px solid var(--tcs-textfield-border-color);
+    transition: border-color 0.2s ease;
+    &::placeholder {
+      color: var(--tcs-textfield-placeholder-color);
+    }
+    &:hover, &:focus {
+      border-color: var(--tcs-textfield-focus-border-color);
+    }
+  }
+}

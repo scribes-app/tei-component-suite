@@ -1,0 +1,130 @@
+@import 'manifest';
+
+:host {
+  @include component;
+
+  --tcs-button-color: #{$color-slate-400};
+  --tcs-button-icon-color: #{$color-slate-400};
+  --tcs-button-border-color: #{$color-slate-300};
+  --tcs-button-background-color: white;
+
+  --tcs-button-hover-color: #{$color-slate-600};
+  --tcs-button-hover-icon-color: #{$color-slate-600};
+  --tcs-button-hover-border-color: #{$color-slate-600};
+  --tcs-button-hover-background-color: #{$color-slate-100};
+
+  --tcs-button-disabled-color: #{$color-slate-300};
+  --tcs-button-disabled-icon-color: #{$color-slate-300};
+  --tcs-button-disabled-border-color: #{$color-slate-100};
+  --tcs-button-disabled-background-color: #{$color-slate-100};
+
+  --tcs-button-display-slim-text-background-color: #{$color-slate-400};
+  --tcs-button-display-slim-text-color: white;
+
+
+  cursor: pointer;
+  display: inline-flex;
+  justify-content: flex-start;
+  align-items: center;
+  font: { size: 12px; }
+  background-color: var(--tcs-button-background-color);
+  padding: 10px 12px;
+  color: var(--tcs-button-color);
+  transition: border-color 0.2s ease,
+              background-color 0.2s ease,
+              color 0.2s ease;
+  .icon {
+    display: block;
+    height: 10px;
+    width: 10px;
+    color: var(--tcs-button-icon-color);
+    transition: color 0.2s ease;
+  }
+}
+
+:host(:hover),
+:host(.active) {
+  color: var(--tcs-button-hover-color);
+  background-color: var(--tcs-button-hover-background-color);
+  .icon {
+    color: var(--tcs-button-hover-icon-color);
+  }
+}
+
+:host(.rotateOnActive) {
+  .icon {
+    transition: transform 0.2s ease;
+  }
+  &:host(.active) {
+    .icon {
+      backface-visibility: visible;
+      transform: rotate3d(1, 0, 0, 180deg);
+    }
+  }
+}
+
+:host(.iconOnly) {
+  padding: 10px;
+  .icon {
+    height: 12px;
+    width: 12px;
+  }
+}
+
+:host(.rounded) {
+  border-radius: 5px;
+}
+
+:host(.outlined) {
+  border: 1px solid var(--tcs-button-border-color);
+  &:hover {
+    border-color: var(--tcs-button-hover-border-color);
+  }
+}
+
+:host(.stretched) {
+  width: 100%;
+}
+
+:host(.icon-position-leading:not(.iconOnly)) {
+  .icon {
+    margin-right: 8px;
+  }
+}
+
+:host(.icon-position-trailing:not(.iconOnly)) {
+  .icon {
+    margin-left: 8px;
+  }
+}
+
+:host(.disabled) {
+  cursor: not-allowed;
+  color: var(--tcs-button-disabled-color);
+  border-color: var(--tcs-button-disabled-border-color);
+  background-color: var(--tcs-button-disabled-background-color);
+  .icon {
+    color: var(--tcs-button-disabled-icon-color);
+  }
+}
+
+:host(.display-slim.icon-position-trailing:not(.iconOnly)) {
+  .icon {
+    margin-left: 5px;
+  }
+}
+
+:host(.display-slim:not(.iconOnly)) {
+  font: { size: 10px; weight: 700 }
+  padding: 7px 5px;
+  .slimText {
+    padding: 3px;
+    border-radius: 3px;
+    background-color: var(--tcs-button-display-slim-text-background-color);
+    color: var(--tcs-button-display-slim-text-color);
+  }
+  .icon {
+    width: 7px;
+    height: 7px;
+  }
+}
