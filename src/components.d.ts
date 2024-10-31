@@ -5,8 +5,8 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { DropdownConfig, EditorFormattedTEI, EditorSettings, QuillInstance, TcsAnnotationFormValues, TcsBlankSpaceFormValues, TcsSelectEntry, TcsSettingsFormValues, TcsStructureFormValues, ToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionIcons, UnionLayoutType, UnionReconstructionReason, UnionStructureType, UnionUnclearReason } from "./lib/types";
-export { DropdownConfig, EditorFormattedTEI, EditorSettings, QuillInstance, TcsAnnotationFormValues, TcsBlankSpaceFormValues, TcsSelectEntry, TcsSettingsFormValues, TcsStructureFormValues, ToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionIcons, UnionLayoutType, UnionReconstructionReason, UnionStructureType, UnionUnclearReason } from "./lib/types";
+import { DropdownConfig, EditorFormattedTEI, EditorSettings, EditorToolbarConfig, QuillInstance, TcsAnnotationFormValues, TcsBlankSpaceFormValues, TcsSelectEntry, TcsSettingsFormValues, TcsStructureFormValues, UnionAbbreviationType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionIcons, UnionLayoutType, UnionReconstructionReason, UnionStructureType, UnionUnclearReason } from "./lib/types";
+export { DropdownConfig, EditorFormattedTEI, EditorSettings, EditorToolbarConfig, QuillInstance, TcsAnnotationFormValues, TcsBlankSpaceFormValues, TcsSelectEntry, TcsSettingsFormValues, TcsStructureFormValues, UnionAbbreviationType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionIcons, UnionLayoutType, UnionReconstructionReason, UnionStructureType, UnionUnclearReason } from "./lib/types";
 export namespace Components {
     interface TcsAnnotationForm {
         "isValid": () => Promise<boolean>;
@@ -43,8 +43,16 @@ export namespace Components {
         "lock": () => Promise<void>;
         "setFormattedTEI": (tei: EditorFormattedTEI) => Promise<void>;
         "settings": EditorSettings;
-        "toolbarConfig": ToolbarConfig;
+        "toolbarConfig": EditorToolbarConfig;
         "unlock": () => Promise<void>;
+    }
+    interface TcsEditorToolbar {
+        "config": EditorToolbarConfig;
+        "disabled": boolean;
+        "layoutType": UnionLayoutType;
+        "locked": boolean;
+        "textDirection": 'LTR'|'RTL';
+        "viewRaw": boolean;
     }
     interface TcsIcon {
         "icon": UnionIcons;
@@ -89,14 +97,6 @@ export namespace Components {
         "setValue": (value: string) => Promise<void>;
         "type": 'text'|'password'|'number'|'email';
     }
-    interface TcsToolbar {
-        "config": ToolbarConfig;
-        "disabled": boolean;
-        "layoutType": UnionLayoutType;
-        "locked": boolean;
-        "textDirection": 'LTR'|'RTL';
-        "viewRaw": boolean;
-    }
     interface TcsVisualizer {
     }
 }
@@ -111,6 +111,10 @@ export interface TcsBlankSpaceFormCustomEvent<T> extends CustomEvent<T> {
 export interface TcsButtonCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLTcsButtonElement;
+}
+export interface TcsEditorToolbarCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLTcsEditorToolbarElement;
 }
 export interface TcsIconCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -131,10 +135,6 @@ export interface TcsStructureFormCustomEvent<T> extends CustomEvent<T> {
 export interface TcsTextfieldCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLTcsTextfieldElement;
-}
-export interface TcsToolbarCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLTcsToolbarElement;
 }
 declare global {
     interface HTMLTcsAnnotationFormElementEventMap {
@@ -201,6 +201,38 @@ declare global {
     var HTMLTcsEditorElement: {
         prototype: HTMLTcsEditorElement;
         new (): HTMLTcsEditorElement;
+    };
+    interface HTMLTcsEditorToolbarElementEventMap {
+        "clickViewRaw": void;
+        "clickUnclear": UnionUnclearReason;
+        "clickReconstruction": UnionReconstructionReason;
+        "clickAnnotation": void;
+        "clickHighlighted": UnionHighlightedRend;
+        "clickDeleted": UnionDeletedRend;
+        "clickAbbreviation": UnionAbbreviationType;
+        "clickPunctuation": string;
+        "clickStructure": UnionStructureType|'anonymous-block';
+        "clickBlankSpace": void;
+        "clickRTL": void;
+        "clickLTR": void;
+        "clickTextSize": void;
+        "clickLayout": void;
+        "clickRemove": void;
+        "clickSettings": void;
+    }
+    interface HTMLTcsEditorToolbarElement extends Components.TcsEditorToolbar, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLTcsEditorToolbarElementEventMap>(type: K, listener: (this: HTMLTcsEditorToolbarElement, ev: TcsEditorToolbarCustomEvent<HTMLTcsEditorToolbarElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLTcsEditorToolbarElementEventMap>(type: K, listener: (this: HTMLTcsEditorToolbarElement, ev: TcsEditorToolbarCustomEvent<HTMLTcsEditorToolbarElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLTcsEditorToolbarElement: {
+        prototype: HTMLTcsEditorToolbarElement;
+        new (): HTMLTcsEditorToolbarElement;
     };
     interface HTMLTcsIconElementEventMap {
         "clickIcon": SVGElement;
@@ -295,38 +327,6 @@ declare global {
         prototype: HTMLTcsTextfieldElement;
         new (): HTMLTcsTextfieldElement;
     };
-    interface HTMLTcsToolbarElementEventMap {
-        "clickViewRaw": void;
-        "clickUnclear": UnionUnclearReason;
-        "clickReconstruction": UnionReconstructionReason;
-        "clickAnnotation": void;
-        "clickHighlighted": UnionHighlightedRend;
-        "clickDeleted": UnionDeletedRend;
-        "clickAbbreviation": UnionAbbreviationType;
-        "clickPunctuation": string;
-        "clickStructure": UnionStructureType|'anonymous-block';
-        "clickBlankSpace": void;
-        "clickRTL": void;
-        "clickLTR": void;
-        "clickTextSize": void;
-        "clickLayout": void;
-        "clickRemove": void;
-        "clickSettings": void;
-    }
-    interface HTMLTcsToolbarElement extends Components.TcsToolbar, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLTcsToolbarElementEventMap>(type: K, listener: (this: HTMLTcsToolbarElement, ev: TcsToolbarCustomEvent<HTMLTcsToolbarElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLTcsToolbarElementEventMap>(type: K, listener: (this: HTMLTcsToolbarElement, ev: TcsToolbarCustomEvent<HTMLTcsToolbarElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLTcsToolbarElement: {
-        prototype: HTMLTcsToolbarElement;
-        new (): HTMLTcsToolbarElement;
-    };
     interface HTMLTcsVisualizerElement extends Components.TcsVisualizer, HTMLStencilElement {
     }
     var HTMLTcsVisualizerElement: {
@@ -339,13 +339,13 @@ declare global {
         "tcs-button": HTMLTcsButtonElement;
         "tcs-dropdown": HTMLTcsDropdownElement;
         "tcs-editor": HTMLTcsEditorElement;
+        "tcs-editor-toolbar": HTMLTcsEditorToolbarElement;
         "tcs-icon": HTMLTcsIconElement;
         "tcs-popup": HTMLTcsPopupElement;
         "tcs-select": HTMLTcsSelectElement;
         "tcs-settings-form": HTMLTcsSettingsFormElement;
         "tcs-structure-form": HTMLTcsStructureFormElement;
         "tcs-textfield": HTMLTcsTextfieldElement;
-        "tcs-toolbar": HTMLTcsToolbarElement;
         "tcs-visualizer": HTMLTcsVisualizerElement;
     }
 }
@@ -381,7 +381,31 @@ declare namespace LocalJSX {
     }
     interface TcsEditor {
         "settings"?: EditorSettings;
-        "toolbarConfig"?: ToolbarConfig;
+        "toolbarConfig"?: EditorToolbarConfig;
+    }
+    interface TcsEditorToolbar {
+        "config"?: EditorToolbarConfig;
+        "disabled"?: boolean;
+        "layoutType"?: UnionLayoutType;
+        "locked"?: boolean;
+        "onClickAbbreviation"?: (event: TcsEditorToolbarCustomEvent<UnionAbbreviationType>) => void;
+        "onClickAnnotation"?: (event: TcsEditorToolbarCustomEvent<void>) => void;
+        "onClickBlankSpace"?: (event: TcsEditorToolbarCustomEvent<void>) => void;
+        "onClickDeleted"?: (event: TcsEditorToolbarCustomEvent<UnionDeletedRend>) => void;
+        "onClickHighlighted"?: (event: TcsEditorToolbarCustomEvent<UnionHighlightedRend>) => void;
+        "onClickLTR"?: (event: TcsEditorToolbarCustomEvent<void>) => void;
+        "onClickLayout"?: (event: TcsEditorToolbarCustomEvent<void>) => void;
+        "onClickPunctuation"?: (event: TcsEditorToolbarCustomEvent<string>) => void;
+        "onClickRTL"?: (event: TcsEditorToolbarCustomEvent<void>) => void;
+        "onClickReconstruction"?: (event: TcsEditorToolbarCustomEvent<UnionReconstructionReason>) => void;
+        "onClickRemove"?: (event: TcsEditorToolbarCustomEvent<void>) => void;
+        "onClickSettings"?: (event: TcsEditorToolbarCustomEvent<void>) => void;
+        "onClickStructure"?: (event: TcsEditorToolbarCustomEvent<UnionStructureType|'anonymous-block'>) => void;
+        "onClickTextSize"?: (event: TcsEditorToolbarCustomEvent<void>) => void;
+        "onClickUnclear"?: (event: TcsEditorToolbarCustomEvent<UnionUnclearReason>) => void;
+        "onClickViewRaw"?: (event: TcsEditorToolbarCustomEvent<void>) => void;
+        "textDirection"?: 'LTR'|'RTL';
+        "viewRaw"?: boolean;
     }
     interface TcsIcon {
         "icon"?: UnionIcons;
@@ -422,30 +446,6 @@ declare namespace LocalJSX {
         "required"?: boolean;
         "type"?: 'text'|'password'|'number'|'email';
     }
-    interface TcsToolbar {
-        "config"?: ToolbarConfig;
-        "disabled"?: boolean;
-        "layoutType"?: UnionLayoutType;
-        "locked"?: boolean;
-        "onClickAbbreviation"?: (event: TcsToolbarCustomEvent<UnionAbbreviationType>) => void;
-        "onClickAnnotation"?: (event: TcsToolbarCustomEvent<void>) => void;
-        "onClickBlankSpace"?: (event: TcsToolbarCustomEvent<void>) => void;
-        "onClickDeleted"?: (event: TcsToolbarCustomEvent<UnionDeletedRend>) => void;
-        "onClickHighlighted"?: (event: TcsToolbarCustomEvent<UnionHighlightedRend>) => void;
-        "onClickLTR"?: (event: TcsToolbarCustomEvent<void>) => void;
-        "onClickLayout"?: (event: TcsToolbarCustomEvent<void>) => void;
-        "onClickPunctuation"?: (event: TcsToolbarCustomEvent<string>) => void;
-        "onClickRTL"?: (event: TcsToolbarCustomEvent<void>) => void;
-        "onClickReconstruction"?: (event: TcsToolbarCustomEvent<UnionReconstructionReason>) => void;
-        "onClickRemove"?: (event: TcsToolbarCustomEvent<void>) => void;
-        "onClickSettings"?: (event: TcsToolbarCustomEvent<void>) => void;
-        "onClickStructure"?: (event: TcsToolbarCustomEvent<UnionStructureType|'anonymous-block'>) => void;
-        "onClickTextSize"?: (event: TcsToolbarCustomEvent<void>) => void;
-        "onClickUnclear"?: (event: TcsToolbarCustomEvent<UnionUnclearReason>) => void;
-        "onClickViewRaw"?: (event: TcsToolbarCustomEvent<void>) => void;
-        "textDirection"?: 'LTR'|'RTL';
-        "viewRaw"?: boolean;
-    }
     interface TcsVisualizer {
     }
     interface IntrinsicElements {
@@ -454,13 +454,13 @@ declare namespace LocalJSX {
         "tcs-button": TcsButton;
         "tcs-dropdown": TcsDropdown;
         "tcs-editor": TcsEditor;
+        "tcs-editor-toolbar": TcsEditorToolbar;
         "tcs-icon": TcsIcon;
         "tcs-popup": TcsPopup;
         "tcs-select": TcsSelect;
         "tcs-settings-form": TcsSettingsForm;
         "tcs-structure-form": TcsStructureForm;
         "tcs-textfield": TcsTextfield;
-        "tcs-toolbar": TcsToolbar;
         "tcs-visualizer": TcsVisualizer;
     }
 }
@@ -473,13 +473,13 @@ declare module "@stencil/core" {
             "tcs-button": LocalJSX.TcsButton & JSXBase.HTMLAttributes<HTMLTcsButtonElement>;
             "tcs-dropdown": LocalJSX.TcsDropdown & JSXBase.HTMLAttributes<HTMLTcsDropdownElement>;
             "tcs-editor": LocalJSX.TcsEditor & JSXBase.HTMLAttributes<HTMLTcsEditorElement>;
+            "tcs-editor-toolbar": LocalJSX.TcsEditorToolbar & JSXBase.HTMLAttributes<HTMLTcsEditorToolbarElement>;
             "tcs-icon": LocalJSX.TcsIcon & JSXBase.HTMLAttributes<HTMLTcsIconElement>;
             "tcs-popup": LocalJSX.TcsPopup & JSXBase.HTMLAttributes<HTMLTcsPopupElement>;
             "tcs-select": LocalJSX.TcsSelect & JSXBase.HTMLAttributes<HTMLTcsSelectElement>;
             "tcs-settings-form": LocalJSX.TcsSettingsForm & JSXBase.HTMLAttributes<HTMLTcsSettingsFormElement>;
             "tcs-structure-form": LocalJSX.TcsStructureForm & JSXBase.HTMLAttributes<HTMLTcsStructureFormElement>;
             "tcs-textfield": LocalJSX.TcsTextfield & JSXBase.HTMLAttributes<HTMLTcsTextfieldElement>;
-            "tcs-toolbar": LocalJSX.TcsToolbar & JSXBase.HTMLAttributes<HTMLTcsToolbarElement>;
             "tcs-visualizer": LocalJSX.TcsVisualizer & JSXBase.HTMLAttributes<HTMLTcsVisualizerElement>;
         }
     }

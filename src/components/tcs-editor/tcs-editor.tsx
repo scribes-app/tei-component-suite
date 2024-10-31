@@ -5,7 +5,7 @@ import Quill from 'quill';
 import { Delta, Range } from 'quill/core';
 import { TcsBlankSpaceFormCustomEvent } from '../../components';
 import { BlotName, Punctuations, TagName, capitalize, delayed, generateId, registerBlots } from '../../lib/helper';
-import { EditorFormattedTEI, EditorSettings, EditorState, QuillInstance, ToolbarConfig, UnionAbbreviationType, UnionCommentType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionLayoutType, UnionReconstructionReason, UnionUnclearReason, TcsAnnotationFormValues, TcsBlankSpaceFormValues, TcsSettingsFormValues, TcsStructureFormValues } from '../../lib/types';
+import { EditorFormattedTEI, EditorSettings, EditorState, QuillInstance, EditorToolbarConfig, UnionAbbreviationType, UnionCommentType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionLayoutType, UnionReconstructionReason, UnionUnclearReason, TcsAnnotationFormValues, TcsBlankSpaceFormValues, TcsSettingsFormValues, TcsStructureFormValues } from '../../lib/types';
 import { QuillService } from '../../services/quill.service';
 import { XMLTransformerService } from '../../services/xml-transformer.service';
 @Component({
@@ -39,7 +39,7 @@ export class TcsEditor {
   private element: HTMLElement;
 
   @Prop({ mutable: true })
-  public toolbarConfig: ToolbarConfig = defaultToolbarConfig;
+  public toolbarConfig: EditorToolbarConfig = defaultEditorToolbarConfig;
 
   @Prop({ mutable: true })
   public settings: EditorSettings = defaultEditorSettings;
@@ -139,7 +139,7 @@ export class TcsEditor {
   }
 
   @Watch('toolbarConfig')
-  public watchToolbarConfig(next?: string|object): void {
+  public watchEditorToolbarConfig(next?: string|object): void {
     if (!next || typeof next === 'object') return;
     this.toolbarConfig = JSON.parse(next);
   }
@@ -158,7 +158,7 @@ export class TcsEditor {
    */
   public componentWillLoad(): void {
     this.element.getAttribute('settings') ? this.watchSettings(this.element.getAttribute('settings')) : defaultEditorSettings;
-    this.element.getAttribute('toolbarConfig') ? this.watchToolbarConfig(this.element.getAttribute('toolbarConfig')) : defaultToolbarConfig;
+    this.element.getAttribute('toolbarConfig') ? this.watchEditorToolbarConfig(this.element.getAttribute('toolbarConfig')) : defaultEditorToolbarConfig;
 
   }
 
@@ -625,7 +625,7 @@ export class TcsEditor {
     } = this;
     return (
       <Host>
-        <tcs-toolbar
+        <tcs-editor-toolbar
           class="toolbar"
           config={toolbarConfig}
           onClickViewRaw={onClickViewRaw.bind(this)}
@@ -780,7 +780,7 @@ export class TcsEditor {
 }
 
 
-const defaultToolbarConfig: ToolbarConfig = {
+const defaultEditorToolbarConfig: EditorToolbarConfig = {
   controls: {
     settings: true,
     reconstruction: true,

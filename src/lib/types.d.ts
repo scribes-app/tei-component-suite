@@ -150,7 +150,7 @@ export type DropdownItem = {
   items?: DropdownItem[];
 }
 
-export type ToolbarConfig = {
+export type EditorToolbarConfig = {
   controls: {
     settings?: boolean;
     reconstruction?: boolean;

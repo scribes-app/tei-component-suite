@@ -1,18 +1,18 @@
 import { newSpecPage } from '@stencil/core/testing';
-import { TcsToolbar } from '../tcs-toolbar';
+import { TcsEditorToolbar } from '../tcs-editor-toolbar';
 
 describe('tcs-toolbar', () => {
   it('renders', async () => {
     const page = await newSpecPage({
-      components: [TcsToolbar],
-      html: `<tcs-toolbar></tcs-toolbar>`,
+      components: [TcsEditorToolbar],
+      html: `<tcs-editor-toolbar></tcs-editor-toolbar>`,
     });
     expect(page.root).toEqualHtml(`
-      <tcs-toolbar>
+      <tcs-editor-toolbar>
         <mock:shadow-root>
           <slot></slot>
         </mock:shadow-root>
-      </tcs-toolbar>
+      </tcs-editor-toolbar>
     `);
   });
 });

@@ -2,14 +2,14 @@ import { Component, Host, h } from '@stencil/core';
 import { Element, Event, EventEmitter, Fragment, JSX, Prop, State, Watch } from '@stencil/core/internal';
 import classNames from 'classnames';
 import { Punctuations, isEqual } from '../../lib/helper';
-import { ToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionHighlightedRend, UnionLayoutType, UnionReconstructionReason, UnionStructureType, UnionUnclearReason } from '../../lib/types';
+import { EditorToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionHighlightedRend, UnionLayoutType, UnionReconstructionReason, UnionStructureType, UnionUnclearReason } from '../../lib/types';
 
 @Component({
-  tag: 'tcs-toolbar',
-  styleUrl: 'tcs-toolbar.scss',
+  tag: 'tcs-editor-toolbar',
+  styleUrl: 'tcs-editor-toolbar.scss',
   shadow: true,
 })
-export class TcsToolbar {
+export class TcsEditorToolbar {
 
   @Element()
   private element: HTMLElement;
@@ -63,7 +63,7 @@ export class TcsToolbar {
   private readonly clickSettings: EventEmitter<void>;
 
   @Prop()
-  public readonly config: ToolbarConfig;
+  public readonly config: EditorToolbarConfig;
 
   @Prop()
   public readonly textDirection: 'LTR'|'RTL' = 'LTR';
@@ -84,7 +84,7 @@ export class TcsToolbar {
   private display: 'slim'|'default' = 'default';
 
   @Watch('config')
-  public watchConfig(next: ToolbarConfig, prev: ToolbarConfig): void {
+  public watchConfig(next: EditorToolbarConfig, prev: EditorToolbarConfig): void {
     if (!isEqual(next, prev)) this.initConfig();
   }
 
