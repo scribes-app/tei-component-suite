@@ -34,9 +34,15 @@ export type UnionCommentType = (
   'line'
 )
 
-export type UnionLayoutType = (
+export type UnionEditorLayoutType = (
   'tabs' |
   'columns'
+)
+
+export type UnionVisualizerLayoutType = (
+  'rows' |
+  'columns'|
+  'mix'
 )
 
 export type UnionUnclearReason = (
@@ -148,6 +154,12 @@ export type DropdownItem = {
   label: string;
   onClick?: () => any;
   items?: DropdownItem[];
+}
+
+export type VisualizerToolbarConfig = {
+  controls: {
+    layout?: boolean;
+  }
 }
 
 export type EditorToolbarConfig = {

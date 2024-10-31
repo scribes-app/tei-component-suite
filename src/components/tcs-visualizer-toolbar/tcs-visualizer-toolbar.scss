@@ -1,0 +1,54 @@
+:host {
+
+  @include component;
+
+  --tcs-visualizer-toolbar-background-color: white;
+  --tcs-visualizer-toolbar-border-color: #{$color-slate-400};
+  --tcs-visualizer-toolbar-border-radius: 5px;
+  --tcs-visualizer-toolbar-lock-color: #{$color-slate-500};
+
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  border: {
+    top: 1px solid var(--tcs-visualizer-toolbar-border-color);
+    right: 1px solid var(--tcs-visualizer-toolbar-border-color);
+    left: 1px solid var(--tcs-visualizer-toolbar-border-color);
+    top-left-radius: var(--tcs-visualizer-toolbar-border-radius);
+    top-right-radius: var(--tcs-visualizer-toolbar-border-radius);
+  };
+  background-color: var(--tcs-visualizer-toolbar-background-color);
+
+  .controls {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: stretch;
+    width: 100%;
+    > tcs-button {
+      &:first-child {
+        border-top-left-radius: var(--tcs-visualizer-toolbar-border-radius);
+      }
+    }
+    .alignRight {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      align-items: center;
+      margin-left: auto;
+      tcs-icon {
+        display: block;
+        height: 12px;
+        width: 12px;
+        color: var(--tcs-visualizer-toolbar-lock-color);
+        margin-right: 8px;
+      }
+      tcs-button {
+        &:last-child {
+          border-top-right-radius: var(--tcs-visualizer-toolbar-border-radius);
+        }
+      }
+    }
+  }
+}

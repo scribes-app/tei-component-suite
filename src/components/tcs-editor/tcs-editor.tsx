@@ -5,7 +5,7 @@ import Quill from 'quill';
 import { Delta, Range } from 'quill/core';
 import { TcsBlankSpaceFormCustomEvent } from '../../components';
 import { BlotName, Punctuations, TagName, capitalize, delayed, generateId, registerBlots } from '../../lib/helper';
-import { EditorFormattedTEI, EditorSettings, EditorState, QuillInstance, EditorToolbarConfig, UnionAbbreviationType, UnionCommentType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionLayoutType, UnionReconstructionReason, UnionUnclearReason, TcsAnnotationFormValues, TcsBlankSpaceFormValues, TcsSettingsFormValues, TcsStructureFormValues } from '../../lib/types';
+import { EditorFormattedTEI, EditorSettings, EditorState, EditorToolbarConfig, QuillInstance, TcsAnnotationFormValues, TcsBlankSpaceFormValues, TcsSettingsFormValues, TcsStructureFormValues, UnionAbbreviationType, UnionCommentType, UnionDeletedRend, UnionEditorLayoutType, UnionEditorType, UnionHighlightedRend, UnionReconstructionReason, UnionUnclearReason } from '../../lib/types';
 import { QuillService } from '../../services/quill.service';
 import { XMLTransformerService } from '../../services/xml-transformer.service';
 @Component({
@@ -59,7 +59,7 @@ export class TcsEditor {
   private activeCommentTab: UnionCommentType = 'line';
 
   @State()
-  private layoutType: UnionLayoutType = 'columns';
+  private layoutType: UnionEditorLayoutType = 'columns';
 
   @State()
   private locked: boolean = false;

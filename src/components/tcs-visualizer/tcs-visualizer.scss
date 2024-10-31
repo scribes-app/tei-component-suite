@@ -1,5 +1,33 @@
 @import 'manifest';
 
 :host {
-  display: block;
+  @include component;
+
+  --tcs-visualizer-text-color: #{$color-slate-700};
+  --tcs-visualizer-border-color: #{$color-slate-400};
+  --tcs-visualizer-border-radius: 5px;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  border: 1px solid var(--tcs-visualizer-border-color);
+  border-radius: var(--tcs-visualizer-border-radius);
+  width: 100%;
+
+  .toolbar {}
+
+  .documentViewer {
+    flex: 0 0 50%;
+    border-right: 1px solid var(--tcs-visualizer-border-color);
+  }
+
+  .dataViewer {
+    flex: 0 0 50%;
+    .toolbar {}
+    .viewers {
+      .viewer {
+        min-height: 300px;
+      }
+    }
+  }
 }

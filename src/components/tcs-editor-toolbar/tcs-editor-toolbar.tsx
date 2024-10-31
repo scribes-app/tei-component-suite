@@ -2,7 +2,7 @@ import { Component, Host, h } from '@stencil/core';
 import { Element, Event, EventEmitter, Fragment, JSX, Prop, State, Watch } from '@stencil/core/internal';
 import classNames from 'classnames';
 import { Punctuations, isEqual } from '../../lib/helper';
-import { EditorToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionHighlightedRend, UnionLayoutType, UnionReconstructionReason, UnionStructureType, UnionUnclearReason } from '../../lib/types';
+import { EditorToolbarConfig, UnionAbbreviationType, UnionDeletedRend, UnionEditorLayoutType, UnionHighlightedRend, UnionReconstructionReason, UnionStructureType, UnionUnclearReason } from '../../lib/types';
 
 @Component({
   tag: 'tcs-editor-toolbar',
@@ -69,7 +69,7 @@ export class TcsEditorToolbar {
   public readonly textDirection: 'LTR'|'RTL' = 'LTR';
 
   @Prop()
-  public readonly layoutType: UnionLayoutType = 'columns';
+  public readonly layoutType: UnionEditorLayoutType = 'columns';
 
   @Prop()
   public readonly viewRaw: boolean = false;

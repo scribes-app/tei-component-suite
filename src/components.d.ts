@@ -5,8 +5,10 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { DropdownConfig, EditorFormattedTEI, EditorSettings, EditorToolbarConfig, QuillInstance, TcsAnnotationFormValues, TcsBlankSpaceFormValues, TcsSelectEntry, TcsSettingsFormValues, TcsStructureFormValues, UnionAbbreviationType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionIcons, UnionLayoutType, UnionReconstructionReason, UnionStructureType, UnionUnclearReason } from "./lib/types";
-export { DropdownConfig, EditorFormattedTEI, EditorSettings, EditorToolbarConfig, QuillInstance, TcsAnnotationFormValues, TcsBlankSpaceFormValues, TcsSelectEntry, TcsSettingsFormValues, TcsStructureFormValues, UnionAbbreviationType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionIcons, UnionLayoutType, UnionReconstructionReason, UnionStructureType, UnionUnclearReason } from "./lib/types";
+import { DropdownConfig, EditorFormattedTEI, EditorSettings, EditorToolbarConfig, QuillInstance, TcsAnnotationFormValues, TcsBlankSpaceFormValues, TcsSelectEntry, TcsSettingsFormValues, TcsStructureFormValues, UnionAbbreviationType, UnionDeletedRend, UnionEditorLayoutType, UnionEditorType, UnionHighlightedRend, UnionIcons, UnionReconstructionReason, UnionStructureType, UnionUnclearReason, UnionVisualizerLayoutType, VisualizerToolbarConfig } from "./lib/types";
+import { VisualizerToolbarConfig as VisualizerToolbarConfig1 } from "./components";
+export { DropdownConfig, EditorFormattedTEI, EditorSettings, EditorToolbarConfig, QuillInstance, TcsAnnotationFormValues, TcsBlankSpaceFormValues, TcsSelectEntry, TcsSettingsFormValues, TcsStructureFormValues, UnionAbbreviationType, UnionDeletedRend, UnionEditorLayoutType, UnionEditorType, UnionHighlightedRend, UnionIcons, UnionReconstructionReason, UnionStructureType, UnionUnclearReason, UnionVisualizerLayoutType, VisualizerToolbarConfig } from "./lib/types";
+export { VisualizerToolbarConfig as VisualizerToolbarConfig1 } from "./components";
 export namespace Components {
     interface TcsAnnotationForm {
         "isValid": () => Promise<boolean>;
@@ -49,7 +51,7 @@ export namespace Components {
     interface TcsEditorToolbar {
         "config": EditorToolbarConfig;
         "disabled": boolean;
-        "layoutType": UnionLayoutType;
+        "layoutType": UnionEditorLayoutType;
         "locked": boolean;
         "textDirection": 'LTR'|'RTL';
         "viewRaw": boolean;
@@ -98,6 +100,11 @@ export namespace Components {
         "type": 'text'|'password'|'number'|'email';
     }
     interface TcsVisualizer {
+        "toolbarConfig": VisualizerToolbarConfig;
+    }
+    interface TcsVisualizerToolbar {
+        "config": VisualizerToolbarConfig1;
+        "layoutType": UnionVisualizerLayoutType;
     }
 }
 export interface TcsAnnotationFormCustomEvent<T> extends CustomEvent<T> {
@@ -333,6 +340,12 @@ declare global {
         prototype: HTMLTcsVisualizerElement;
         new (): HTMLTcsVisualizerElement;
     };
+    interface HTMLTcsVisualizerToolbarElement extends Components.TcsVisualizerToolbar, HTMLStencilElement {
+    }
+    var HTMLTcsVisualizerToolbarElement: {
+        prototype: HTMLTcsVisualizerToolbarElement;
+        new (): HTMLTcsVisualizerToolbarElement;
+    };
     interface HTMLElementTagNameMap {
         "tcs-annotation-form": HTMLTcsAnnotationFormElement;
         "tcs-blank-space-form": HTMLTcsBlankSpaceFormElement;
@@ -347,6 +360,7 @@ declare global {
         "tcs-structure-form": HTMLTcsStructureFormElement;
         "tcs-textfield": HTMLTcsTextfieldElement;
         "tcs-visualizer": HTMLTcsVisualizerElement;
+        "tcs-visualizer-toolbar": HTMLTcsVisualizerToolbarElement;
     }
 }
 declare namespace LocalJSX {
@@ -386,7 +400,7 @@ declare namespace LocalJSX {
     interface TcsEditorToolbar {
         "config"?: EditorToolbarConfig;
         "disabled"?: boolean;
-        "layoutType"?: UnionLayoutType;
+        "layoutType"?: UnionEditorLayoutType;
         "locked"?: boolean;
         "onClickAbbreviation"?: (event: TcsEditorToolbarCustomEvent<UnionAbbreviationType>) => void;
         "onClickAnnotation"?: (event: TcsEditorToolbarCustomEvent<void>) => void;
@@ -447,6 +461,11 @@ declare namespace LocalJSX {
         "type"?: 'text'|'password'|'number'|'email';
     }
     interface TcsVisualizer {
+        "toolbarConfig"?: VisualizerToolbarConfig;
+    }
+    interface TcsVisualizerToolbar {
+        "config"?: VisualizerToolbarConfig1;
+        "layoutType"?: UnionVisualizerLayoutType;
     }
     interface IntrinsicElements {
         "tcs-annotation-form": TcsAnnotationForm;
@@ -462,6 +481,7 @@ declare namespace LocalJSX {
         "tcs-structure-form": TcsStructureForm;
         "tcs-textfield": TcsTextfield;
         "tcs-visualizer": TcsVisualizer;
+        "tcs-visualizer-toolbar": TcsVisualizerToolbar;
     }
 }
 export { LocalJSX as JSX };
@@ -481,6 +501,7 @@ declare module "@stencil/core" {
             "tcs-structure-form": LocalJSX.TcsStructureForm & JSXBase.HTMLAttributes<HTMLTcsStructureFormElement>;
             "tcs-textfield": LocalJSX.TcsTextfield & JSXBase.HTMLAttributes<HTMLTcsTextfieldElement>;
             "tcs-visualizer": LocalJSX.TcsVisualizer & JSXBase.HTMLAttributes<HTMLTcsVisualizerElement>;
+            "tcs-visualizer-toolbar": LocalJSX.TcsVisualizerToolbar & JSXBase.HTMLAttributes<HTMLTcsVisualizerToolbarElement>;
         }
     }
 }
