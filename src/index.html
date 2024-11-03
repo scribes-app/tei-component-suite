@@ -23,13 +23,13 @@
     <script>
       // Create a switch to toggle between the editor and the visualizer
       document.querySelector('#button-editor').addEventListener('clickButton', () => {
-        document.getElementById('editor').style.display = 'block';
+        document.getElementById('editor').style.removeProperty('display');
         document.getElementById('visualizer').style.display = 'none';
       });
 
       document.querySelector('#button-visualizer').addEventListener('clickButton', () => {
         document.getElementById('editor').style.display = 'none';
-        document.getElementById('visualizer').style.display = 'block';
+        document.getElementById('visualizer').style.removeProperty('display');
       });
 
       // EXAMPLES

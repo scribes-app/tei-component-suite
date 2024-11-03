@@ -1,3 +1,5 @@
+@import 'manifest';
+
 :host {
 
   @include component;
@@ -12,9 +14,7 @@
   justify-content: flex-start;
   align-items: center;
   border: {
-    top: 1px solid var(--tcs-visualizer-toolbar-border-color);
-    right: 1px solid var(--tcs-visualizer-toolbar-border-color);
-    left: 1px solid var(--tcs-visualizer-toolbar-border-color);
+    bottom: 1px solid var(--tcs-visualizer-toolbar-border-color);
     top-left-radius: var(--tcs-visualizer-toolbar-border-radius);
     top-right-radius: var(--tcs-visualizer-toolbar-border-radius);
   };
@@ -44,9 +44,9 @@
         color: var(--tcs-visualizer-toolbar-lock-color);
         margin-right: 8px;
       }
-      tcs-button {
+      tcs-dropdown {
         &:last-child {
-          border-top-right-radius: var(--tcs-visualizer-toolbar-border-radius);
+          --tcs-dropdown-border-top-right-radius: var(--tcs-visualizer-toolbar-border-radius);
         }
       }
     }

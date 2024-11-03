@@ -4,9 +4,19 @@
   @include component;
 
   --tcs-dropdown-background-color: white;
-  --tcs-dropdown-border-radius: 5px;
+  --tcs-dropdown-border-top-left-radius: 0px;
+  --tcs-dropdown-border-top-right-radius: 0px;
+  --tcs-dropdown-border-bottom-left-radius: 0px;
+  --tcs-dropdown-border-bottom-right-radius: 0px;
 
   position: relative;
+
+  > tcs-button {
+    --tcs-button-border-top-left-radius: var(--tcs-dropdown-border-top-left-radius);
+    --tcs-button-border-top-right-radius: var(--tcs-dropdown-border-top-right-radius);
+    --tcs-button-border-bottom-left-radius: var(--tcs-dropdown-border-bottom-left-radius);
+    --tcs-button-border-bottom-right-radius: var(--tcs-dropdown-border-bottom-right-radius);
+  }
   .wrapper {
     @include shadow;
     position: absolute;
@@ -16,7 +26,12 @@
     opacity: 0;
     pointer-events: none;
     z-index: 10;
-    border-radius: var(--tcs-dropdown-border-radius);
+    border: {
+      top-left-radius: var(--tcs-dropdown-border-top-left-radius);
+      top-right-radius: var(--tcs-dropdown-border-top-right-radius);
+      bottom-left-radius: var(--tcs-dropdown-border-bottom-left-radius);
+      bottom-right-radius: var(--tcs-dropdown-border-bottom-right-radius);
+    }
     background-color: var(--tcs-dropdown-background-color);
     transition: top 0.2s ease,
                 opacity 0.2s ease;

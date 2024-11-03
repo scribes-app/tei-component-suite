@@ -6,6 +6,10 @@
   --tcs-button-color: #{$color-slate-400};
   --tcs-button-icon-color: #{$color-slate-400};
   --tcs-button-border-color: #{$color-slate-300};
+  --tcs-button-border-top-right-radius: 0px;
+  --tcs-button-border-top-left-radius: 0px;
+  --tcs-button-border-bottom-right-radius: 0px;
+  --tcs-button-border-bottom-left-radius: 0px;
   --tcs-button-background-color: white;
 
   --tcs-button-hover-color: #{$color-slate-600};
@@ -29,6 +33,12 @@
   font: { size: 12px; }
   background-color: var(--tcs-button-background-color);
   padding: 10px 12px;
+  border: {
+    top-right-radius: var(--tcs-button-border-top-right-radius);
+    top-left-radius: var(--tcs-button-border-top-left-radius);
+    bottom-right-radius: var(--tcs-button-border-bottom-right-radius);
+    bottom-left-radius: var(--tcs-button-border-bottom-left-radius);
+  }
   color: var(--tcs-button-color);
   transition: border-color 0.2s ease,
               background-color 0.2s ease,

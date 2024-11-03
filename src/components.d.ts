@@ -143,6 +143,10 @@ export interface TcsTextfieldCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLTcsTextfieldElement;
 }
+export interface TcsVisualizerToolbarCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLTcsVisualizerToolbarElement;
+}
 declare global {
     interface HTMLTcsAnnotationFormElementEventMap {
         "formChange": TcsAnnotationFormValues;
@@ -340,7 +344,18 @@ declare global {
         prototype: HTMLTcsVisualizerElement;
         new (): HTMLTcsVisualizerElement;
     };
+    interface HTMLTcsVisualizerToolbarElementEventMap {
+        "clickLayout": UnionVisualizerLayoutType;
+    }
     interface HTMLTcsVisualizerToolbarElement extends Components.TcsVisualizerToolbar, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLTcsVisualizerToolbarElementEventMap>(type: K, listener: (this: HTMLTcsVisualizerToolbarElement, ev: TcsVisualizerToolbarCustomEvent<HTMLTcsVisualizerToolbarElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLTcsVisualizerToolbarElementEventMap>(type: K, listener: (this: HTMLTcsVisualizerToolbarElement, ev: TcsVisualizerToolbarCustomEvent<HTMLTcsVisualizerToolbarElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLTcsVisualizerToolbarElement: {
         prototype: HTMLTcsVisualizerToolbarElement;
@@ -466,6 +481,7 @@ declare namespace LocalJSX {
     interface TcsVisualizerToolbar {
         "config"?: VisualizerToolbarConfig1;
         "layoutType"?: UnionVisualizerLayoutType;
+        "onClickLayout"?: (event: TcsVisualizerToolbarCustomEvent<UnionVisualizerLayoutType>) => void;
     }
     interface IntrinsicElements {
         "tcs-annotation-form": TcsAnnotationForm;

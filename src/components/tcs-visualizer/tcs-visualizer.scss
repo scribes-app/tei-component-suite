@@ -3,6 +3,7 @@
 :host {
   @include component;
 
+  --tcs-visualizer-title-color: #{$color-slate-400};
   --tcs-visualizer-text-color: #{$color-slate-700};
   --tcs-visualizer-border-color: #{$color-slate-400};
   --tcs-visualizer-border-radius: 5px;
@@ -14,20 +15,111 @@
   border-radius: var(--tcs-visualizer-border-radius);
   width: 100%;
 
-  .toolbar {}
-
   .documentViewer {
-    flex: 0 0 50%;
+    // You can't set the width of a flex item that use resize
+    flex: 0 0 auto;
+    // Resize control
+    resize: horizontal;
+    overflow-x: hidden;
+    // Define as initial width
+    width: 50%;
+    // Limit the minimum width when resizing
+    min-width: 200px;
+
     border-right: 1px solid var(--tcs-visualizer-border-color);
   }
 
   .dataViewer {
-    flex: 0 0 50%;
-    .toolbar {}
+    position: relative;
+    // Auto resize to fill the remaining space
+    flex: 1 1 auto;
+    // Limit the minimum width when resizing
+    min-width: 200px;
+    .toolbar {
+      position: relative;
+      z-index: 2;
+    }
     .viewers {
+      position: relative;
+      z-index: 1;
       .viewer {
+        position: relative;
         min-height: 300px;
+        &::before {
+          position: absolute;
+          pointer-events: none;
+          top: 15px;
+          right: 30px;
+          color: var(--tcs-visualizer-title-color);
+          font-weight: 700;
+          font-size: 8px;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          transition: color 0.2s ease;
+          z-index: 10;
+        }
+        tcs-dropdown {
+          position: absolute;
+          top: 0;
+          left: 0;
+          z-index: 10;
+        }
+        &.translate {
+          &::before {
+            content: 'Translation';
+          }
+        }
+        &.transcribe {
+          &::before {
+            content: 'Transcription';
+          }
+        }
+        &.comment {
+          &::before {
+            content: 'Comment';
+          }
+        }
       }
+    }
+  }
+}
+
+:host(.rows) {
+  .dataViewer .viewers {
+    .viewer {
+      &:not(:last-child) {
+        border-bottom: 1px solid var(--tcs-visualizer-border-color);
+      }
+    }
+  }
+}
+:host(.columns) {
+  .dataViewer .viewers {
+    display: flex;
+    flex-direction: row;
+    .viewer {
+      flex: 0 0 33.33%;
+      &:not(:last-child) {
+        border-right: 1px solid var(--tcs-visualizer-border-color);
+      }
+    }
+  }
+}
+:host(.mix) {
+  .dataViewer .viewers {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    .viewer:first-child {
+      flex: 0 0 50%;
+      border-right: 1px solid var(--tcs-visualizer-border-color);
+    }
+    .viewer:nth-child(2) {
+      flex: 0 0 50%;
+    }
+    .viewer:last-child {
+      flex: 0 0 100%;
+      border-top: 1px solid var(--tcs-visualizer-border-color);
     }
   }
 }

@@ -1,5 +1,5 @@
-import { Component, Host, Prop, h } from '@stencil/core';
-import { UnionEditorLayoutType, VisualizerToolbarConfig } from '../../components';
+import { Component, Event, EventEmitter, Host, Prop, h } from '@stencil/core';
+import { VisualizerToolbarConfig } from '../../components';
 import { UnionVisualizerLayoutType } from '../../lib/types';
 
 @Component({
@@ -9,6 +9,9 @@ import { UnionVisualizerLayoutType } from '../../lib/types';
 })
 export class TcsVisualizerToolbar {
 
+  @Event()
+  private readonly clickLayout: EventEmitter<UnionVisualizerLayoutType>;
+
   @Prop()
   public readonly config: VisualizerToolbarConfig;
 
@@ -16,12 +19,36 @@ export class TcsVisualizerToolbar {
   public readonly layoutType: UnionVisualizerLayoutType = 'rows';
 
   render() {
+    const {
+      clickLayout
+    } = this;
     return (
       <Host>
         <div class="controls">
-
           <div class="alignRight">
-
+            <tcs-dropdown
+              slimText="Rec"
+              config={{
+                label: 'Layout',
+                items: [
+                  {
+                    id: 'rows',
+                    label: 'Rows',
+                    onClick: clickLayout.emit.bind(this, 'rows' as UnionVisualizerLayoutType)
+                  },
+                  {
+                    id: 'columns',
+                    label: 'Columns',
+                    onClick: clickLayout.emit.bind(this, 'columns' as UnionVisualizerLayoutType)
+                  },
+                  {
+                    id: 'mix',
+                    label: 'Mix',
+                    onClick: clickLayout.emit.bind(this, 'mix' as UnionVisualizerLayoutType)
+                  }
+                ]
+              }}
+            />
           </div>
         </div>
       </Host>
