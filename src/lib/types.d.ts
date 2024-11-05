@@ -19,7 +19,13 @@ export type UnionIcons = (
   'columns' |
   'settings' |
   'lock' |
-  'unlock'
+  'unlock'|
+  'arrows-h'|
+  'brightness'|
+  'contrast'|
+  'zoom-in'|
+  'zoom-out'|
+  'compress'
 )
 
 export type UnionEditorType = (

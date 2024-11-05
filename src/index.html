@@ -21,6 +21,7 @@
     <tcs-editor style="display: none;" id="editor"></tcs-editor>
     <tcs-visualizer style="display: none;" id="visualizer"></tcs-visualizer>
     <script>
+
       // Create a switch to toggle between the editor and the visualizer
       document.querySelector('#button-editor').addEventListener('clickButton', () => {
         document.getElementById('editor').style.removeProperty('display');
@@ -32,7 +33,16 @@
         document.getElementById('visualizer').style.removeProperty('display');
       });
 
-      // EXAMPLES
+      // EXAMPLES VISUALIZER
+      const visualizer = document.getElementById('visualizer');
+      setTimeout(() => {
+        visualizer.setDocumentViewerImage({
+          type: 'image',
+          url: '/assets/folio.jpg',
+        })
+      }, 1000);
+
+      // EXAMPLES EDITOR
 
       const editor = document.getElementById('editor');
       // UNCOMMENT TO SEE THE TEI OUTPUT IN THE CONSOLE EVERY 3 SECONDS

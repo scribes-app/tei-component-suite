@@ -94,7 +94,9 @@
     "@stencil/sass": "^3.0.12",
     "@stencil/vue-output-target": "^0.9.0",
     "@types/html-escaper": "^3.0.2",
+    "@types/openseadragon": "^3.0.10",
     "classnames": "^2.5.1",
+    "openseadragon": "^5.0.0",
     "parchment": "^3.0.0",
     "quill": "^2.0.2",
     "xml-formatter": "^3.6.3"

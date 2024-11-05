@@ -1,7 +1,8 @@
-import { Component, Host, Prop, State, h } from '@stencil/core';
+import { Component, Host, Method, Prop, State, h } from '@stencil/core';
 import classNames from 'classnames';
-import { UnionCommentType, UnionVisualizerLayoutType, VisualizerToolbarConfig } from '../../lib/types';
+import OpenSeadragon from 'openseadragon';
 import { capitalize } from '../../lib/helper';
+import { UnionCommentType, UnionVisualizerLayoutType, VisualizerToolbarConfig } from '../../lib/types';
 
 @Component({
   tag: 'tcs-visualizer',
@@ -9,6 +10,10 @@ import { capitalize } from '../../lib/helper';
   shadow: true,
 })
 export class TcsVisualizer {
+
+  private osViewer: OpenSeadragon.Viewer;
+  private documentViewerElement: HTMLDivElement;
+
 
   @Prop({ mutable: true })
   public toolbarConfig: VisualizerToolbarConfig = defaultVisualizerToolbarConfig;
@@ -18,6 +23,20 @@ export class TcsVisualizer {
 
   @State()
   private layoutType: UnionVisualizerLayoutType = 'rows';
+
+  @Method()
+  public async setDocumentViewerImage(source: OpenSeadragon.TileSourceOptions): Promise<void> {
+    this.osViewer.open(source);
+  }
+
+  public componentDidLoad(): void {
+    this.osViewer = OpenSeadragon({
+      element: this.documentViewerElement,
+      showFullPageControl: false,
+      showHomeControl: false,
+      showZoomControl: false,
+    });
+  }
 
   private onClickLayout(event: CustomEvent<UnionVisualizerLayoutType>) {
     this.layoutType = event.detail;
@@ -40,7 +59,29 @@ export class TcsVisualizer {
         [layoutType]: true,
       })}>
         <div class="documentViewer">
-
+          <div class="controls">
+            <tcs-button
+              icon="brightness"
+              iconOnly
+              outlined
+            />
+            <tcs-button
+              icon="contrast"
+              iconOnly
+              outlined
+            />
+            <tcs-button
+              icon="zoom-in"
+              iconOnly
+              outlined
+            />
+            <tcs-button
+              icon="zoom-out"
+              iconOnly
+              outlined
+            />
+          </div>
+          <div class="viewer" ref={ref => this.documentViewerElement = ref}></div>
         </div>
         <div class="dataViewer">
           <tcs-visualizer-toolbar

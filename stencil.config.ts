@@ -50,6 +50,7 @@ export const config: Config = {
       serviceWorker: null,
       copy: [
         { src: 'symbols.svg' },
+        { src: 'assets' },
       ]
     },
   ],

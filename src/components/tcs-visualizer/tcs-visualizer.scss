@@ -8,6 +8,8 @@
   --tcs-visualizer-border-color: #{$color-slate-400};
   --tcs-visualizer-border-radius: 5px;
 
+  --tcs-visualizer-document-viewer-background-color: #{$color-slate-900};
+
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -16,25 +18,52 @@
   width: 100%;
 
   .documentViewer {
+    position: relative;
     // You can't set the width of a flex item that use resize
     flex: 0 0 auto;
     // Resize control
     resize: horizontal;
     overflow-x: hidden;
+    overflow-y: hidden;
     // Define as initial width
     width: 50%;
     // Limit the minimum width when resizing
     min-width: 200px;
+    max-width: calc(100% - 200px);
 
+    background: var(--tcs-visualizer-document-viewer-background-color);
     border-right: 1px solid var(--tcs-visualizer-border-color);
+
+    .controls {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      z-index: 2;
+      gap: 4px;
+      tcs-button {
+        --tcs-button-border-top-right-radius: 3px;
+        --tcs-button-border-top-left-radius: 3px;
+        --tcs-button-border-bottom-right-radius: 3px;
+        --tcs-button-border-bottom-left-radius: 3px;
+      }
+    }
+
+    .viewer {
+      position: absolute;
+      z-index: 1;
+      inset: 10px;
+    }
+
   }
 
   .dataViewer {
     position: relative;
     // Auto resize to fill the remaining space
     flex: 1 1 auto;
-    // Limit the minimum width when resizing
-    min-width: 200px;
     .toolbar {
       position: relative;
       z-index: 2;
@@ -44,7 +73,7 @@
       z-index: 1;
       .viewer {
         position: relative;
-        min-height: 300px;
+        min-height: 200px;
         &::before {
           position: absolute;
           pointer-events: none;
@@ -119,6 +148,7 @@
     }
     .viewer:last-child {
       flex: 0 0 100%;
+      min-height: 150px;
       border-top: 1px solid var(--tcs-visualizer-border-color);
     }
   }

@@ -100,6 +100,7 @@ export namespace Components {
         "type": 'text'|'password'|'number'|'email';
     }
     interface TcsVisualizer {
+        "setDocumentViewerImage": (source: OpenSeadragon.TileSourceOptions) => Promise<void>;
         "toolbarConfig": VisualizerToolbarConfig;
     }
     interface TcsVisualizerToolbar {
