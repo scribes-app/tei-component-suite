@@ -66,6 +66,18 @@ export namespace Components {
         "openPopup": () => Promise<void>;
         "setContent": (content: string) => Promise<void>;
     }
+    interface TcsRange {
+        "debounce"?: number;
+        "defaultValue"?: number;
+        "max": number;
+        "min": number;
+        "precision": number;
+        "readOnly"?: boolean;
+        "reset": () => Promise<void>;
+        "showRangeMax": boolean;
+        "showRangeMin": boolean;
+        "stylesOverride"?: string;
+    }
     interface TcsSelect {
         "entries": TcsSelectEntry[];
         "getValue": () => Promise<string | number>;
@@ -127,6 +139,10 @@ export interface TcsEditorToolbarCustomEvent<T> extends CustomEvent<T> {
 export interface TcsIconCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLTcsIconElement;
+}
+export interface TcsRangeCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLTcsRangeElement;
 }
 export interface TcsSelectCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -269,6 +285,23 @@ declare global {
         prototype: HTMLTcsPopupElement;
         new (): HTMLTcsPopupElement;
     };
+    interface HTMLTcsRangeElementEventMap {
+        "rangeChange": number;
+    }
+    interface HTMLTcsRangeElement extends Components.TcsRange, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLTcsRangeElementEventMap>(type: K, listener: (this: HTMLTcsRangeElement, ev: TcsRangeCustomEvent<HTMLTcsRangeElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLTcsRangeElementEventMap>(type: K, listener: (this: HTMLTcsRangeElement, ev: TcsRangeCustomEvent<HTMLTcsRangeElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLTcsRangeElement: {
+        prototype: HTMLTcsRangeElement;
+        new (): HTMLTcsRangeElement;
+    };
     interface HTMLTcsSelectElementEventMap {
         "selectChange": TcsSelectEntry|undefined;
     }
@@ -371,6 +404,7 @@ declare global {
         "tcs-editor-toolbar": HTMLTcsEditorToolbarElement;
         "tcs-icon": HTMLTcsIconElement;
         "tcs-popup": HTMLTcsPopupElement;
+        "tcs-range": HTMLTcsRangeElement;
         "tcs-select": HTMLTcsSelectElement;
         "tcs-settings-form": HTMLTcsSettingsFormElement;
         "tcs-structure-form": HTMLTcsStructureFormElement;
@@ -445,6 +479,18 @@ declare namespace LocalJSX {
     }
     interface TcsPopup {
     }
+    interface TcsRange {
+        "debounce"?: number;
+        "defaultValue"?: number;
+        "max"?: number;
+        "min"?: number;
+        "onRangeChange"?: (event: TcsRangeCustomEvent<number>) => void;
+        "precision"?: number;
+        "readOnly"?: boolean;
+        "showRangeMax"?: boolean;
+        "showRangeMin"?: boolean;
+        "stylesOverride"?: string;
+    }
     interface TcsSelect {
         "entries"?: TcsSelectEntry[];
         "inputId"?: string;
@@ -493,6 +539,7 @@ declare namespace LocalJSX {
         "tcs-editor-toolbar": TcsEditorToolbar;
         "tcs-icon": TcsIcon;
         "tcs-popup": TcsPopup;
+        "tcs-range": TcsRange;
         "tcs-select": TcsSelect;
         "tcs-settings-form": TcsSettingsForm;
         "tcs-structure-form": TcsStructureForm;
@@ -513,6 +560,7 @@ declare module "@stencil/core" {
             "tcs-editor-toolbar": LocalJSX.TcsEditorToolbar & JSXBase.HTMLAttributes<HTMLTcsEditorToolbarElement>;
             "tcs-icon": LocalJSX.TcsIcon & JSXBase.HTMLAttributes<HTMLTcsIconElement>;
             "tcs-popup": LocalJSX.TcsPopup & JSXBase.HTMLAttributes<HTMLTcsPopupElement>;
+            "tcs-range": LocalJSX.TcsRange & JSXBase.HTMLAttributes<HTMLTcsRangeElement>;
             "tcs-select": LocalJSX.TcsSelect & JSXBase.HTMLAttributes<HTMLTcsSelectElement>;
             "tcs-settings-form": LocalJSX.TcsSettingsForm & JSXBase.HTMLAttributes<HTMLTcsSettingsFormElement>;
             "tcs-structure-form": LocalJSX.TcsStructureForm & JSXBase.HTMLAttributes<HTMLTcsStructureFormElement>;

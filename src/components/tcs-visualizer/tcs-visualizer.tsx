@@ -13,6 +13,7 @@ export class TcsVisualizer {
 
   private osViewer: OpenSeadragon.Viewer;
   private documentViewerElement: HTMLDivElement;
+  private rangeElement: HTMLTcsRangeElement;
 
 
   @Prop({ mutable: true })
@@ -23,6 +24,18 @@ export class TcsVisualizer {
 
   @State()
   private layoutType: UnionVisualizerLayoutType = 'rows';
+
+  @State()
+  private brightness: number = 50;
+
+  @State()
+  private contrast: number = 50;
+
+  @State()
+  private rangeType: 'brightness'|'contrast' = 'brightness';
+
+  @State()
+  private rangeOpen: boolean = false;
 
   @Method()
   public async setDocumentViewerImage(source: OpenSeadragon.TileSourceOptions): Promise<void> {
@@ -46,13 +59,32 @@ export class TcsVisualizer {
     this.activeCommentTab = type;
   }
 
+  private onControlRangeChange(event: CustomEvent<number>): void {
+    const { rangeType } = this;
+    this[this.rangeType] = event.detail;
+    const value = ((event.detail - 50) / 100) + 1;
+    this.osViewer.element.style.filter = `${rangeType}(${value})`;
+  }
+
+  private onClickControlRange(type: 'brightness'|'contrast'): void {
+    this.rangeOpen = !this.rangeOpen;
+    this.rangeElement.reset();
+    this.rangeType = type;
+  }
+
   render() {
     const {
       onClickLayout,
       onClickCommentDropdown,
+      onControlRangeChange,
+      onClickControlRange,
       activeCommentTab,
       layoutType,
-      toolbarConfig
+      toolbarConfig,
+      rangeOpen,
+      rangeType,
+      brightness,
+      contrast,
     } = this;
     return (
       <Host class={classNames({
@@ -60,15 +92,27 @@ export class TcsVisualizer {
       })}>
         <div class="documentViewer">
           <div class="controls">
+            <div class={classNames({
+              rangeControl: true,
+              open: rangeOpen,
+            })}>
+              <tcs-range
+                ref={ref => this.rangeElement = ref}
+                defaultValue={rangeType === 'brightness' ? brightness : contrast}
+                onRangeChange={onControlRangeChange.bind(this)}
+              />
+            </div>
             <tcs-button
               icon="brightness"
               iconOnly
               outlined
+              onClick={onClickControlRange.bind(this, 'brightness')}
             />
             <tcs-button
               icon="contrast"
               iconOnly
               outlined
+              onClick={onClickControlRange.bind(this, 'contrast')}
             />
             <tcs-button
               icon="zoom-in"
