@@ -1,7 +1,7 @@
 import { Component, Host, Method, Prop, State, h } from '@stencil/core';
 import classNames from 'classnames';
 import OpenSeadragon from 'openseadragon';
-import { capitalize } from '../../lib/helper';
+import { capitalize, onClickOutside, removeClickOutside } from '../../lib/helper';
 import { UnionCommentType, UnionVisualizerLayoutType, VisualizerToolbarConfig } from '../../lib/types';
 
 @Component({
@@ -13,8 +13,11 @@ export class TcsVisualizer {
 
   private osViewer: OpenSeadragon.Viewer;
   private documentViewerElement: HTMLDivElement;
-  private rangeElement: HTMLTcsRangeElement;
-
+  private brightnessControlElement: HTMLDivElement;
+  private contrastControlElement: HTMLDivElement;
+  private brightnessButtonElement: HTMLTcsButtonElement;
+  private contrastButtonElement: HTMLTcsButtonElement;
+  private _listeners: ReturnType<typeof onClickOutside>[] = [];
 
   @Prop({ mutable: true })
   public toolbarConfig: VisualizerToolbarConfig = defaultVisualizerToolbarConfig;
@@ -32,10 +35,10 @@ export class TcsVisualizer {
   private contrast: number = 50;
 
   @State()
-  private rangeType: 'brightness'|'contrast' = 'brightness';
-
-  @State()
-  private rangeOpen: boolean = false;
+  private rangeOpen: { brightness: boolean; contrast: boolean } = {
+    brightness: false,
+    contrast: false
+  }
 
   @Method()
   public async setDocumentViewerImage(source: OpenSeadragon.TileSourceOptions): Promise<void> {
@@ -49,6 +52,22 @@ export class TcsVisualizer {
       showHomeControl: false,
       showZoomControl: false,
     });
+    this.setOnClickOutside();
+  }
+
+  public disconnectedCallback(): void {
+    this.osViewer.destroy();
+    removeClickOutside(...this._listeners);
+  }
+
+  private setOnClickOutside() {
+    const closeBrightnessRange = (() => this.rangeOpen = { ...this.rangeOpen, brightness: false }).bind(this);
+    const closeContrastRange = (() => this.rangeOpen = { ...this.rangeOpen, contrast: false }).bind(this);
+    removeClickOutside(...this._listeners);
+    this._listeners = [
+      onClickOutside(this.brightnessControlElement, closeBrightnessRange, this.brightnessButtonElement),
+      onClickOutside(this.contrastControlElement, closeContrastRange, this.contrastButtonElement)
+    ];
   }
 
   private onClickLayout(event: CustomEvent<UnionVisualizerLayoutType>) {
@@ -59,17 +78,18 @@ export class TcsVisualizer {
     this.activeCommentTab = type;
   }
 
-  private onControlRangeChange(event: CustomEvent<number>): void {
-    const { rangeType } = this;
-    this[this.rangeType] = event.detail;
-    const value = ((event.detail - 50) / 100) + 1;
-    this.osViewer.element.style.filter = `${rangeType}(${value})`;
+  private onControlRangeChange(type: 'brightness'|'contrast', event: CustomEvent<number>): void {
+    this[type] = event.detail;
+    const brigthnessValue = ((this.brightness - 50) / 100) + 1;
+    const contrastValue = ((this.contrast - 50) / 100) + 1;
+    this.osViewer.element.style.filter = `brightness(${brigthnessValue}) contrast(${contrastValue})`;
   }
 
   private onClickControlRange(type: 'brightness'|'contrast'): void {
-    this.rangeOpen = !this.rangeOpen;
-    this.rangeElement.reset();
-    this.rangeType = type;
+    this.rangeOpen = {
+      ...this.rangeOpen,
+      [type]: !this.rangeOpen[type]
+    }
   }
 
   render() {
@@ -82,7 +102,6 @@ export class TcsVisualizer {
       layoutType,
       toolbarConfig,
       rangeOpen,
-      rangeType,
       brightness,
       contrast,
     } = this;
@@ -92,28 +111,44 @@ export class TcsVisualizer {
       })}>
         <div class="documentViewer">
           <div class="controls">
-            <div class={classNames({
-              rangeControl: true,
-              open: rangeOpen,
-            })}>
-              <tcs-range
-                ref={ref => this.rangeElement = ref}
-                defaultValue={rangeType === 'brightness' ? brightness : contrast}
-                onRangeChange={onControlRangeChange.bind(this)}
-              />
-            </div>
             <tcs-button
               icon="brightness"
               iconOnly
               outlined
+              ref={(el) => this.brightnessButtonElement = el}
               onClick={onClickControlRange.bind(this, 'brightness')}
             />
+            <div
+              ref={(el) => this.brightnessControlElement = el}
+              class={classNames({
+                rangeControl: true,
+                brightness: true,
+                open: rangeOpen.brightness,
+              })}>
+              <tcs-range
+                defaultValue={brightness}
+                onRangeChange={onControlRangeChange.bind(this, 'brightness')}
+              />
+            </div>
             <tcs-button
               icon="contrast"
               iconOnly
               outlined
+              ref={(el) => this.contrastButtonElement = el}
               onClick={onClickControlRange.bind(this, 'contrast')}
             />
+            <div
+              ref={(el) => this.contrastControlElement = el}
+              class={classNames({
+                rangeControl: true,
+                contrast: true,
+                open: rangeOpen.contrast
+              })}>
+              <tcs-range
+                defaultValue={contrast}
+                onRangeChange={onControlRangeChange.bind(this, 'contrast')}
+              />
+            </div>
             <tcs-button
               icon="zoom-in"
               iconOnly

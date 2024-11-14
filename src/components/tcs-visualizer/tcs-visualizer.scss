@@ -56,7 +56,6 @@
 
       .rangeControl {
         position: absolute;
-        top: 10px;
         right: calc(100% + 10px);
         width: 200px;
         padding: 10px;
@@ -66,11 +65,22 @@
         pointer-events: none;
         border: 1px solid var(--tcs-visualizer-range-control-border-color);
         transition: opacity 0.2s ease,
-                    top 0.2s ease;
+        top 0.2s ease;
         &.open {
-          top: 0;
           opacity: 1;
           pointer-events: all;
+        }
+        &.brightness {
+          top: 10px;
+          &.open {
+            top: 0;
+          }
+        }
+        &.contrast {
+          top: 48px;
+          &.open {
+            top: 38px;
+          }
         }
       }
     }

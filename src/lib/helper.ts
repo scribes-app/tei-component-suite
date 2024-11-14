@@ -79,8 +79,8 @@ export const onClickOutside = (element: HTMLElement, callback: Function, ...trig
 /**
  * Add a listener to know whenever an element is clicked outside
  */
-export const removeClickOutside = (listener: (this: Window, ev: MouseEvent) => any) => {
-  globalThis.removeEventListener('click', listener);
+export const removeClickOutside = (...listeners: ((this: Window, ev: MouseEvent) => any)[]) => {
+  listeners.forEach(listener => globalThis.removeEventListener('click', listener));
 }
 
 /**
