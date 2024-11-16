@@ -26,22 +26,24 @@ export const config: Config = {
       customElementsExportBehavior: 'auto-define-custom-elements',
       externalRuntime: false,
     },
-    angularOutputTarget({
-      componentCorePackage: '@metztheolab/tei-component-suite',
-      outputType: 'component',
-      directivesProxyFile: 'dist/ng/components.ts',
-      directivesArrayFile: 'dist/ng/index.ts',
-    }),
-    reactOutputTarget({
-      outDir: 'dist/react',
-      customElementsDir: 'components',
-      esModules: true,
-    }),
-    vueOutputTarget({
-      componentCorePackage: '@metztheolab/tei-component-suite',
-      proxiesFile: 'dist/vue/components.ts',
-      loaderDir: '/'
-    }),
+    ...(process.env.DEV === '1' ? [] : [
+      angularOutputTarget({
+        componentCorePackage: '@metztheolab/tei-component-suite',
+        outputType: 'component',
+        directivesProxyFile: 'dist/ng/components.ts',
+        directivesArrayFile: 'dist/ng/index.ts',
+      }),
+      reactOutputTarget({
+        outDir: 'dist/react',
+        customElementsDir: 'components',
+        esModules: true,
+      }),
+      vueOutputTarget({
+        componentCorePackage: '@metztheolab/tei-component-suite',
+        proxiesFile: 'dist/vue/components.ts',
+        loaderDir: '/'
+      }),
+    ]),
     {
       type: 'docs-readme',
     },

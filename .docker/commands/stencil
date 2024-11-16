@@ -5,8 +5,17 @@ source "$(dirname $0)/../.env"
 
 TASK=$@
 
+# Check if args contain --dev
+if [[ "$*" == *--dev* ]]; then
+  DEV=1
+  echo "Running in dev mode"
+else
+  DEV=0
+fi
+
+
 docker exec -it ${PROJECT_NAME}_node /bin/bash -c "\
 umask g=rwx,u=rwx,o=rwx &&\
 cd /var/www &&\
-npx stencil $TASK"
+DEV=$DEV npx stencil $TASK"
 

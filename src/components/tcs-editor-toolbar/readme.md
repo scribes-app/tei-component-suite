@@ -54,13 +54,13 @@
 ### Graph
 ```mermaid
 graph TD;
-  tcs-toolbar --> tcs-button
-  tcs-toolbar --> tcs-dropdown
-  tcs-toolbar --> tcs-icon
+  tcs-editor-toolbar --> tcs-button
+  tcs-editor-toolbar --> tcs-dropdown
+  tcs-editor-toolbar --> tcs-icon
   tcs-button --> tcs-icon
   tcs-dropdown --> tcs-button
-  tcs-editor --> tcs-toolbar
-  style tcs-toolbar fill:#f9f,stroke:#333,stroke-width:4px
+  tcs-editor --> tcs-editor-toolbar
+  style tcs-editor-toolbar fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
 ----------------------------------------------

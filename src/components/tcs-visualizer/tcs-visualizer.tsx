@@ -17,6 +17,9 @@ export class TcsVisualizer {
   private contrastControlElement: HTMLDivElement;
   private brightnessButtonElement: HTMLTcsButtonElement;
   private contrastButtonElement: HTMLTcsButtonElement;
+  private brightnessRangeElement: HTMLTcsRangeElement;
+  private contrastRangeElement: HTMLTcsRangeElement;
+
   private _listeners: ReturnType<typeof onClickOutside>[] = [];
 
   @Prop({ mutable: true })
@@ -33,6 +36,9 @@ export class TcsVisualizer {
 
   @State()
   private contrast: number = 50;
+
+  @State()
+  private expand: boolean = false;
 
   @State()
   private rangeOpen: { brightness: boolean; contrast: boolean } = {
@@ -92,22 +98,49 @@ export class TcsVisualizer {
     }
   }
 
+  private onClickZoomOut(): void {
+    this.osViewer.viewport.zoomBy(.8);
+  }
+
+  private onClickZoomIn(): void {
+    this.osViewer.viewport.zoomBy(1.2);
+  }
+
+  private onClickUndo(): void {
+    this.osViewer.viewport.goHome(true);
+    this.brightness= 50;
+    this.contrast = 50;
+    const brigthnessValue = ((this.brightness - 50) / 100) + 1;
+    const contrastValue = ((this.contrast - 50) / 100) + 1;
+    this.osViewer.element.style.filter = `brightness(${brigthnessValue}) contrast(${contrastValue})`;
+    this.brightnessRangeElement.reset();
+    this.contrastRangeElement.reset();
+  }
+
+  private onClickExpand(): void {
+    this.expand = !this.expand;
+  }
+
   render() {
     const {
       onClickLayout,
       onClickCommentDropdown,
       onControlRangeChange,
       onClickControlRange,
+      onClickZoomOut,
+      onClickZoomIn,
+      onClickUndo,
+      onClickExpand,
       activeCommentTab,
       layoutType,
       toolbarConfig,
-      rangeOpen,
-      brightness,
-      contrast,
+      expand,
+      rangeOpen
     } = this;
     return (
       <Host class={classNames({
         [layoutType]: true,
+        expand
       })}>
         <div class="documentViewer">
           <div class="controls">
@@ -126,7 +159,8 @@ export class TcsVisualizer {
                 open: rangeOpen.brightness,
               })}>
               <tcs-range
-                defaultValue={brightness}
+                ref={el => this.brightnessRangeElement = el}
+                defaultValue={50}
                 onRangeChange={onControlRangeChange.bind(this, 'brightness')}
               />
             </div>
@@ -145,7 +179,8 @@ export class TcsVisualizer {
                 open: rangeOpen.contrast
               })}>
               <tcs-range
-                defaultValue={contrast}
+                ref={(el) => this.contrastRangeElement = el}
+                defaultValue={50}
                 onRangeChange={onControlRangeChange.bind(this, 'contrast')}
               />
             </div>
@@ -153,11 +188,19 @@ export class TcsVisualizer {
               icon="zoom-in"
               iconOnly
               outlined
+              onClick={onClickZoomIn.bind(this)}
             />
             <tcs-button
               icon="zoom-out"
               iconOnly
               outlined
+              onClick={onClickZoomOut.bind(this)}
+            />
+            <tcs-button
+              icon="undo"
+              iconOnly
+              outlined
+              onClick={onClickUndo.bind(this)}
             />
           </div>
           <div class="viewer" ref={ref => this.documentViewerElement = ref}></div>
@@ -168,6 +211,7 @@ export class TcsVisualizer {
             config={toolbarConfig}
             layoutType={layoutType}
             onClickLayout={onClickLayout.bind(this)}
+            onClickExpand={onClickExpand.bind(this)}
           />
           <div class="viewers">
             <div class={classNames({

@@ -43,7 +43,9 @@ Type: `Promise<void>`
 ### Used by
 
  - [tcs-editor](../tcs-editor)
- - [tcs-toolbar](../tcs-toolbar)
+ - [tcs-editor-toolbar](../tcs-editor-toolbar)
+ - [tcs-visualizer](../tcs-visualizer)
+ - [tcs-visualizer-toolbar](../tcs-visualizer-toolbar)
 
 ### Depends on
 
@@ -55,7 +57,9 @@ graph TD;
   tcs-dropdown --> tcs-button
   tcs-button --> tcs-icon
   tcs-editor --> tcs-dropdown
-  tcs-toolbar --> tcs-dropdown
+  tcs-editor-toolbar --> tcs-dropdown
+  tcs-visualizer --> tcs-dropdown
+  tcs-visualizer-toolbar --> tcs-dropdown
   style tcs-dropdown fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

@@ -7,11 +7,11 @@
 
 ## Properties
 
-| Property  | Attribute  | Description | Type                                                                                                                                                                                                                            | Default     |
-| --------- | ---------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
-| `icon`    | `icon`     |             | `"align-left" \| "align-right" \| "angle-down" \| "broom" \| "code-simple" \| "columns" \| "cross" \| "lock" \| "message-code" \| "paragraph-ltr" \| "paragraph-rtl" \| "settings" \| "text-size" \| "unlock" \| "white-space"` | `undefined` |
-| `library` | `library`  |             | `string`                                                                                                                                                                                                                        | `undefined` |
-| `viewBox` | `view-box` |             | `string`                                                                                                                                                                                                                        | `undefined` |
+| Property  | Attribute  | Description | Type                                                                                                                                                                                                                                                                                                                 | Default     |
+| --------- | ---------- | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| `icon`    | `icon`     |             | `"message-code" \| "code-simple" \| "align-left" \| "align-right" \| "text-size" \| "cross" \| "angle-down" \| "paragraph-rtl" \| "paragraph-ltr" \| "white-space" \| "broom" \| "columns" \| "settings" \| "lock" \| "unlock" \| "arrows-h" \| "brightness" \| "contrast" \| "zoom-in" \| "zoom-out" \| "compress"` | `undefined` |
+| `library` | `library`  |             | `string`                                                                                                                                                                                                                                                                                                             | `undefined` |
+| `viewBox` | `view-box` |             | `string`                                                                                                                                                                                                                                                                                                             | `undefined` |
 
 
 ## Events
@@ -26,15 +26,15 @@
 ### Used by
 
  - [tcs-button](../tcs-button)
+ - [tcs-editor-toolbar](../tcs-editor-toolbar)
  - [tcs-select](../tcs-select)
- - [tcs-toolbar](../tcs-toolbar)
 
 ### Graph
 ```mermaid
 graph TD;
   tcs-button --> tcs-icon
+  tcs-editor-toolbar --> tcs-icon
   tcs-select --> tcs-icon
-  tcs-toolbar --> tcs-icon
   style tcs-icon fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

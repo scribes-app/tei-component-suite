@@ -7,10 +7,10 @@
 
 ## Properties
 
-| Property        | Attribute | Description | Type                                                                                                                                                                                                                                                                                                                                                | Default                 |
-| --------------- | --------- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- |
-| `settings`      | --        |             | `{ manuscript?: { column?: string; folio?: string; book?: string; }; }`                                                                                                                                                                                                                                                                             | `defaultEditorSettings` |
-| `toolbarConfig` | --        |             | `{ controls: { settings?: boolean; reconstruction?: boolean; annotation?: boolean; layout?: boolean; remove?: boolean; structure?: boolean; blankSpace?: boolean; punctuation?: boolean; abbreviation?: boolean; deleted?: boolean; highlighted?: boolean; unclear?: boolean; viewRaw?: boolean; textDirection?: boolean; textSize?: boolean; }; }` | `defaultToolbarConfig`  |
+| Property        | Attribute | Description | Type                                                                                                                                                                                                                                                                                                                                                | Default                      |
+| --------------- | --------- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------- |
+| `settings`      | --        |             | `{ manuscript?: { column?: string; folio?: string; book?: string; }; }`                                                                                                                                                                                                                                                                             | `defaultEditorSettings`      |
+| `toolbarConfig` | --        |             | `{ controls: { settings?: boolean; reconstruction?: boolean; annotation?: boolean; layout?: boolean; remove?: boolean; structure?: boolean; blankSpace?: boolean; punctuation?: boolean; abbreviation?: boolean; deleted?: boolean; highlighted?: boolean; unclear?: boolean; viewRaw?: boolean; textDirection?: boolean; textSize?: boolean; }; }` | `defaultEditorToolbarConfig` |
 
 
 ## Methods
@@ -90,7 +90,7 @@ Type: `Promise<void>`
 - [tcs-structure-form](../forms/tcs-structure-form)
 - [tcs-settings-form](../forms/tcs-settings-form)
 - [tcs-annotation-form](../forms/tcs-annotation-form)
-- [tcs-toolbar](../tcs-toolbar)
+- [tcs-editor-toolbar](../tcs-editor-toolbar)
 - [tcs-dropdown](../tcs-dropdown)
 - [tcs-popup](../tcs-popup)
 
@@ -101,7 +101,7 @@ graph TD;
   tcs-editor --> tcs-structure-form
   tcs-editor --> tcs-settings-form
   tcs-editor --> tcs-annotation-form
-  tcs-editor --> tcs-toolbar
+  tcs-editor --> tcs-editor-toolbar
   tcs-editor --> tcs-dropdown
   tcs-editor --> tcs-popup
   tcs-blank-space-form --> tcs-select
@@ -116,9 +116,9 @@ graph TD;
   tcs-settings-form --> tcs-button
   tcs-annotation-form --> tcs-select
   tcs-annotation-form --> tcs-button
-  tcs-toolbar --> tcs-button
-  tcs-toolbar --> tcs-dropdown
-  tcs-toolbar --> tcs-icon
+  tcs-editor-toolbar --> tcs-button
+  tcs-editor-toolbar --> tcs-dropdown
+  tcs-editor-toolbar --> tcs-icon
   tcs-dropdown --> tcs-button
   tcs-popup --> tcs-button
   style tcs-editor fill:#f9f,stroke:#333,stroke-width:4px

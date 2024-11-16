@@ -12,6 +12,9 @@ export class TcsVisualizerToolbar {
   @Event()
   private readonly clickLayout: EventEmitter<UnionVisualizerLayoutType>;
 
+  @Event()
+  private readonly clickExpand: EventEmitter<void>;
+
   @Prop()
   public readonly config: VisualizerToolbarConfig;
 
@@ -20,7 +23,8 @@ export class TcsVisualizerToolbar {
 
   render() {
     const {
-      clickLayout
+      clickLayout,
+      clickExpand,
     } = this;
     return (
       <Host>
@@ -48,6 +52,11 @@ export class TcsVisualizerToolbar {
                   }
                 ]
               }}
+            />
+            <tcs-button
+              icon="expand"
+              iconOnly
+              onClick={clickExpand.emit.bind(this)}
             />
           </div>
         </div>

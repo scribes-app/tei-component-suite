@@ -103,6 +103,7 @@
     }
     .viewers {
       position: relative;
+      height: calc(100% - 35px);
       z-index: 1;
       .viewer {
         position: relative;
@@ -149,6 +150,7 @@
 :host(.rows) {
   .dataViewer .viewers {
     .viewer {
+      height: 33.33%;
       &:not(:last-child) {
         border-bottom: 1px solid var(--tcs-visualizer-border-color);
       }
@@ -161,6 +163,7 @@
     flex-direction: row;
     .viewer {
       flex: 0 0 33.33%;
+      height: 100%;
       &:not(:last-child) {
         border-right: 1px solid var(--tcs-visualizer-border-color);
       }
@@ -174,15 +177,25 @@
     flex-wrap: wrap;
     .viewer:first-child {
       flex: 0 0 50%;
+      height: 65%;
       border-right: 1px solid var(--tcs-visualizer-border-color);
     }
     .viewer:nth-child(2) {
       flex: 0 0 50%;
+      height: 65%;
     }
     .viewer:last-child {
       flex: 0 0 100%;
+      height: 35%;
       min-height: 150px;
       border-top: 1px solid var(--tcs-visualizer-border-color);
     }
   }
+}
+:host(.expand) {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
 }

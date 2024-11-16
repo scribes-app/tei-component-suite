@@ -25,6 +25,8 @@ export type UnionIcons = (
   'contrast'|
   'zoom-in'|
   'zoom-out'|
+  'undo'|
+  'expand'|
   'compress'
 )
 
