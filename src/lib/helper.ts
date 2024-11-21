@@ -60,6 +60,15 @@ export const delayed = async (fn: Function, ms: number) => {
   fn();
 }
 
+export const debounce = (fn: Function, ms: number) => {
+  let timeout: ReturnType<typeof setTimeout>;
+  return () => {
+    clearTimeout(timeout);
+    // @ts-ignore i don't know why it doesn't work as it should do
+    timeout = setTimeout(fn, ms);
+  }
+}
+
 /**
  * Add a listener to know whenever an element is clicked outside
  */

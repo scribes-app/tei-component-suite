@@ -1,7 +1,7 @@
 {
   "name": "@metztheolab/tei-component-suite",
-  "version": "0.1.7",
   "description": "Lorraine University TEI Component Suite (LU-TCS)",
+  "version": "0.2.0",
   "main": "dist/index.cjs.js",
   "module": "dist/index.js",
   "types": "dist/types/index.d.ts",

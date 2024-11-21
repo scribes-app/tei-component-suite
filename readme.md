@@ -116,6 +116,7 @@ const app = createApp(App)
 
 app
   .use(router)
+  // Import the plugin
   .use(ComponentLibrary).mount('#app')
 ```
 
