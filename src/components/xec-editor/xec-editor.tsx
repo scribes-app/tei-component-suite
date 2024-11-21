@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import Quill from 'quill';
 import { Delta, Range } from 'quill/core';
 import { XecBlankSpaceFormCustomEvent } from '../../components';
-import { BlotName, Punctuations, TagName, capitalize, delayed, generateId, registerBlots } from '../../lib/helper';
+import { BlotName, Punctuations, TagName, capitalize, debounce, delayed, generateId, registerBlots } from '../../lib/helper';
 import { EditorFormattedTEI, EditorSettings, EditorState, QuillInstance, ToolbarConfig, UnionAbbreviationType, UnionCommentType, UnionDeletedRend, UnionEditorType, UnionHighlightedRend, UnionLayoutType, UnionReconstructionReason, UnionUnclearReason, XecAnnotationFormValues, XecBlankSpaceFormValues, XecSettingsFormValues, XecStructureFormValues } from '../../lib/types';
 import { QuillService } from '../../services/quill.service';
 import { XMLTransformerService } from '../../services/xml-transformer.service';
@@ -34,6 +34,12 @@ export class XecEditor {
   private textareaElements: Map<UnionEditorType, HTMLTextAreaElement> = new Map();
   private popupElement: HTMLXecPopupElement;
   private concurrentTextChange: boolean = false;
+  private sanitizeWordsAndSpacesDebouncers = {
+    transcribe: () => {},
+    translate: () => {},
+    comment_line: () => {},
+    comment_verse: () => {},
+  };
 
   @Element()
   private element: HTMLElement;
@@ -65,7 +71,7 @@ export class XecEditor {
   private locked: boolean = false;
 
   @State()
-  private textSize: 's'|'m'|'l'|'xl' = 's';
+  private textSize: 's'|'m'|'l'|'xl'|'xxl' = 's';
 
   @Method()
   public async getQuillInstances(): Promise<Map<UnionEditorType, QuillInstance>> {
@@ -185,6 +191,19 @@ export class XecEditor {
       instance.on('text-change', this.onTextChange.bind(this, editorType));
       instance.clipboard.onPaste = this.onPaste.bind(this, editorType);
       this.editorInstances.set(editorType, instance);
+      this.sanitizeWordsAndSpacesDebouncers[editorType] = debounce(() => {
+        this.concurrentTextChange = true;
+        const { index } = instance.getSelection();
+
+        QuillService.sanitizeWordsAndSpaces(instance);
+        /**
+         * @issue Without a proper delay, the selection is not set properly
+         */
+        delayed(() => {
+          instance.setSelection({ index, length: 0 });
+          this.concurrentTextChange = false;
+        }, 0 /* Zero is enougth to wait as the call to the timeout api is already long */);
+      }, 500);
     }
 
     this.activeInstance = this.editorInstances.get(this.activeEditor);
@@ -234,7 +253,7 @@ export class XecEditor {
    */
   private onClickTextSize(): void {
     const sizes: (typeof XecEditor.prototype.textSize)[] = [
-      's', 'm', 'l', 'xl'
+      's', 'm', 'l', 'xl', 'xxl'
     ];
     const currentIndex = sizes.indexOf(this.textSize);
     const nextIndex = currentIndex === sizes.length - 1 ? 0 : currentIndex + 1;
@@ -260,9 +279,7 @@ export class XecEditor {
     QuillService.incomingText2Words(instance, range, content.text);
 
     // Check structure
-    if (editorType === 'transcribe') {
-      this.checkTranscribeStructure();
-    }
+    this.checkInstanceStructure(editorType);
 
     this.concurrentTextChange = false;
   }
@@ -272,9 +289,8 @@ export class XecEditor {
    */
   private onTextChange(editorType: UnionEditorType, delta: Delta): void {
     if (this.concurrentTextChange) return;
-
     const isNewBlock = delta.ops.at(0)?.attributes?.block || delta.ops.at(1)?.attributes?.block;
-    const isDelete = delta.ops.at(0)?.delete || delta.ops.at(1)?.delete;
+    const isDelete = Boolean(delta.ops.at(0)?.delete) || Boolean(delta.ops.at(1)?.delete);
     const isSpace = delta.ops.at(0)?.insert === ' ' || delta.ops.at(1)?.insert === ' ';
     const isCharacter = delta.ops.at(0)?.insert && delta.ops.at(0)?.insert !== ' ' || delta.ops.at(1)?.insert !== ' ';
     const instance = this.editorInstances.get(editorType);
@@ -297,55 +313,32 @@ export class XecEditor {
         const nextChar = instance.getText(new Range(retain + 1, 1))
         if (prevChar !== ' ' && nextChar !== ' ') {
           const prevSpaceIndex = instance.getText().lastIndexOf(' ', retain);
-          const nextSpaceIndex = instance.getText().indexOf(' ', retain);
+          let nextSpaceIndex = instance.getText().indexOf(' ', retain);
+          if (nextSpaceIndex === -1) nextSpaceIndex = instance.getLength();
           const length = nextSpaceIndex - prevSpaceIndex;
-          instance.formatText(prevSpaceIndex + 1, length, BlotName.WORD, generateId());
+          instance.formatText(prevSpaceIndex + 1, length, BlotName.WORD, generateId(), 'silent');
         }
       }
 
+      /**
+       * @issue Without a proper delay, the selection is not set properly
+       */
       delayed(() => {
         instance.setSelection({ index: nextPosition, length: 0 });
         this.concurrentTextChange = false;
-      }, 15)
-    }
+      }, 0 /* Zero is enougth to wait as the call to the timeout api is already long */);
+    } else if (isSpace || isCharacter) {
 
-    // Wrap words at each space
-    if (isSpace && !this.concurrentTextChange) {
-      this.concurrentTextChange = true;
-      const instance = this.editorInstances.get(editorType);
-      instance.formatText(range.index - 1, 1, BlotName.SPACE, generateId());
-      this.concurrentTextChange = false;
-    }
+      this.sanitizeWordsAndSpacesDebouncers[editorType]();
 
-    // Merge words while typing a character at the end or the beginning of a word
-    if (isCharacter && !this.concurrentTextChange) {
-      this.concurrentTextChange = true;
-      const retain = delta.ops.at(0)?.retain as number ?? 0;
-      const prevChar = instance.getText(new Range(retain - 1, 1))
-      const nextChar = instance.getText(new Range(retain + 1, 1))
-      if (prevChar === ' ' && nextChar !== ' ') {
-        let nextSpaceIndex = instance.getText().indexOf(' ', retain);
-        // Handle editing from the end of the text
-        if (nextSpaceIndex === -1) nextSpaceIndex = instance.getLength();
-        const nextWordLength = nextSpaceIndex - retain;
-        instance.formatText(retain, nextWordLength, BlotName.WORD, generateId());
-      }
-      if (nextChar === ' ' && prevChar !== ' ') {
-        const prevSpaceIndex = instance.getText().lastIndexOf(' ', retain);
-        const prevWordLength = retain - prevSpaceIndex;
-        instance.formatText(prevSpaceIndex, prevWordLength + 1, BlotName.WORD, generateId());
-      }
-      this.concurrentTextChange = false;
     }
 
     // Check structure
-    if (editorType === 'transcribe') {
-      this.checkTranscribeStructure();
-    }
+    this.checkInstanceStructure(editorType);
   }
 
-  private checkTranscribeStructure(): void {
-    const instance = this.editorInstances.get('transcribe');
+  private checkInstanceStructure(editorType: UnionEditorType): void {
+    const instance = this.editorInstances.get(editorType);
     const clean = Array.from(instance.root.querySelectorAll(TagName.BLOCK))
     .every(block => {
       const hasChild = Boolean(block.children.length);
@@ -394,7 +387,8 @@ export class XecEditor {
       const xmlContent = XMLTransformerService.editor2XML(this.activeInstance.root.innerHTML);
       this.activeTextarea.value = XMLTransformerService.removeClasses(xmlContent);
     }
-    this.concurrentTextChange = false;
+    // Avoid triggering a text change event (doen't without the timeout)
+    delayed(() => this.concurrentTextChange = false, 50);
     this.setActiveEditorState('viewType', editorState.viewType === 'raw' ? 'default' : 'raw');
   }
 
@@ -439,22 +433,30 @@ export class XecEditor {
 
   private onClickUnclear(event: CustomEvent<UnionUnclearReason>): void {
     const { detail: reason } = event;
+    this.concurrentTextChange = true;
     this.activeInstance.format(BlotName.UNCLEAR, reason);
+    this.concurrentTextChange = false;
   }
 
   private onClickHighlighted(event: CustomEvent<UnionHighlightedRend>): void {
     const { detail: rend } = event;
+    this.concurrentTextChange = true;
     this.activeInstance.format(BlotName.HIGHLIGHTED, rend);
+    this.concurrentTextChange = false;
   }
 
   private onClickDeleted(event: CustomEvent<UnionDeletedRend>): void {
     const { detail: rend } = event;
+    this.concurrentTextChange = true;
     this.activeInstance.format(BlotName.DELETED, rend);
+    this.concurrentTextChange = false;
   }
 
   private onClickAbbreviation(event: CustomEvent<UnionAbbreviationType>): void {
     const { detail: type } = event;
+    this.concurrentTextChange = true;
     this.activeInstance.format(BlotName.ABBREVIATION, type);
+    this.concurrentTextChange = false;
   }
 
   private onClickPunctuation(event: CustomEvent<typeof Punctuations[number]>): void {
@@ -477,13 +479,15 @@ export class XecEditor {
   }
 
   private onClickRemove(): void {
+    this.concurrentTextChange = true;
+
     // Should has the focus to get proper selection
     this.activeInstance.focus();
     const range = this.activeInstance.getSelection();
     const text = this.activeInstance.getText(range.index, range.length);
-    this.concurrentTextChange = true;
     this.activeInstance.deleteText(range);
     this.activeInstance.insertText(range.index, text);
+    QuillService.sanitizeWordsAndSpaces(this.activeInstance);
     this.concurrentTextChange = false;
   }
 
@@ -513,7 +517,7 @@ export class XecEditor {
       );
     } else {
       this.activeInstance.format(blot, params);
-      QuillService.existingText2Word(this.activeInstance, {
+      QuillService.existingText2Words(this.activeInstance, {
         index: 0,
         length: this.activeInstance.getLength(),
       });
@@ -523,7 +527,7 @@ export class XecEditor {
 
     delayed(() => {
       this.activeInstance.setSelection(range);
-      this.checkTranscribeStructure();
+      this.checkInstanceStructure(this.activeEditor);
       this.concurrentTextChange = false;
     }, 15);
   }
@@ -577,7 +581,9 @@ export class XecEditor {
 
   private onClickReconstruction(event: CustomEvent<UnionReconstructionReason>): void {
     const { detail: reason } = event;
+    this.concurrentTextChange = true;
     this.activeInstance.format(BlotName.RECONSTRUCTION, reason);
+    this.concurrentTextChange = false;
   }
 
   /**
@@ -674,7 +680,7 @@ export class XecEditor {
               ref={el => this.textareaElements.set('transcribe', el)}
             />
             <div class={classNames({
-              note: true,
+              footer: true,
               hidden: editorStates.get('transcribe').viewType === 'raw',
               warning: !editorStates.get('transcribe').clean,
             })}>
@@ -707,6 +713,18 @@ export class XecEditor {
               })}
               ref={el => this.textareaElements.set('translate', el)}
             />
+            <div class={classNames({
+              footer: true,
+              hidden: editorStates.get('translate').viewType === 'raw',
+              warning: !editorStates.get('translate').clean,
+            })}>
+              {!editorStates.get('translate').clean && (
+                '⚠️ Your document structure is not clean. Please check the structure and correct it (for example chapter is required at root).'
+              )}
+              {editorStates.get('translate').clean && (
+                '✅ Your document structure is clean.'
+              )}
+            </div>
           </div>
           <div class={classNames({
             editorWrapper: true,
@@ -745,6 +763,18 @@ export class XecEditor {
               })}
               ref={el => this.textareaElements.set('comment_line', el)}
             />
+            <div class={classNames({
+              footer: true,
+              hidden: editorStates.get('comment_line').viewType === 'raw' || activeCommentTab !== 'line',
+              warning: !editorStates.get('comment_line').clean,
+            })}>
+              {!editorStates.get('comment_line').clean && (
+                '⚠️ Your document structure is not clean. Please check the structure and correct it (for example chapter is required at root).'
+              )}
+              {editorStates.get('comment_line').clean && (
+                '✅ Your document structure is clean.'
+              )}
+            </div>
             <div
               class={classNames({
                 editor: true,
@@ -759,6 +789,18 @@ export class XecEditor {
               })}
               ref={el => this.textareaElements.set('comment_verse', el)}
             />
+            <div class={classNames({
+              footer: true,
+              hidden: editorStates.get('comment_verse').viewType === 'raw' || activeCommentTab !== 'verse',
+              warning: !editorStates.get('comment_verse').clean,
+            })}>
+              {!editorStates.get('comment_verse').clean && (
+                '⚠️ Your document structure is not clean. Please check the structure and correct it (for example chapter is required at root).'
+              )}
+              {editorStates.get('comment_verse').clean && (
+                '✅ Your document structure is clean.'
+              )}
+            </div>
           </div>
           {layoutType === 'tabs' && (
             <div class="tabs">

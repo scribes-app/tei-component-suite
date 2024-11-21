@@ -72,7 +72,78 @@ export class QuillService {
       }
   }
 
-  static existingText2Word(instance: QuillInstance, range: Range) {
+  /**
+   * @issue it is not possible to use Quill.format or formatText to properly format words and spaces
+   * Multiple tries has been done, when you try to format a letter or a group of letters in a space it result on nothing
+   */
+  static sanitizeWordsAndSpaces(instance: QuillInstance) {
+    // Create spaces and words in separate elements (without it some tags may contain undesired text such as text in space and vise versa)
+    instance.root.querySelectorAll([TagName.WORD, TagName.SPACE].join(',')).forEach((el) => {
+      const sanitizer = (el: Element) => {
+        const insertWord = (refEl: Element, word: string): Element => {
+          const element = document.createElement(TagName.WORD);
+          element.setAttribute('x', generateId());
+          element.textContent = word;
+          refEl.after(element);
+          return element;
+        };
+        const insertSpace = (refEl: Element): Element => {
+          const element = document.createElement(TagName.SPACE);
+          element.setAttribute('x', generateId());
+          element.textContent = ' ';
+          refEl.after(element);
+          return element;
+        };
+        const characters = el.textContent.split('');
+        let word = '';
+        let refEl = el;
+        for (const char of characters) {
+          if (char === ' ') {
+            if (word.length > 0) refEl = insertWord(refEl, word);
+            word = '';
+            refEl = insertSpace(refEl);
+          } else {
+            word += char;
+          }
+        }
+        if (word.length > 0) refEl = insertWord(refEl, word);
+        el.remove();
+      }
+
+      switch (el.tagName) {
+        case TagName.WORD: {
+          const shouldRun = el.textContent.includes(' ');
+          if (shouldRun) sanitizer(el);
+          break;
+        }
+        case TagName.SPACE: {
+          const shouldRun = el.textContent.match(/[\w\d]/);
+          if (shouldRun) sanitizer(el);
+          break;
+        }
+      }
+    });
+
+    // Merge words without space between them
+    instance.root.querySelectorAll([TagName.WORD, TagName.WORD].join('+')).forEach((el) => {
+      const word = el.textContent;
+      const prevWord = el.previousElementSibling.textContent;
+      el.textContent = `${prevWord}${word}`;
+      el.previousElementSibling.remove();
+    });
+
+    // Merge spaces without word between them
+    instance.root.querySelectorAll([TagName.SPACE, TagName.SPACE].join('+')).forEach((el) => {
+      el.previousElementSibling.remove();
+    });
+
+    // Only one space per space tag
+    instance.root.querySelectorAll(TagName.SPACE).forEach((el) => {
+      if (el.textContent.length > 1) el.textContent = ' ';
+    });
+  }
+
+  static existingText2Words(instance: QuillInstance, range: Range) {
     const characters = instance.getText(range).split('');
     const wordPositions: { index: number; length: number }[] = characters.reduce((acc, char, index) => {
       if (char === ' ') acc.push({ index: index + 1, length: 0 });
