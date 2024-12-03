@@ -2,7 +2,8 @@ import { Component, Host, Method, Prop, State, h } from '@stencil/core';
 import classNames from 'classnames';
 import OpenSeadragon from 'openseadragon';
 import { capitalize, onClickOutside, removeClickOutside } from '../../lib/helper';
-import { UnionCommentType, UnionVisualizerLayoutType, VisualizerToolbarConfig } from '../../lib/types';
+import { UnionCommentType, UnionVisualizerLayoutType, UnionVisualizerType, VisualizerFormattedTEI, VisualizerToolbarConfig } from '../../lib/types';
+import { XMLTransformerService } from '../../services/xml-transformer.service';
 
 @Component({
   tag: 'tcs-visualizer',
@@ -13,6 +14,7 @@ export class TcsVisualizer {
 
   private osViewer: OpenSeadragon.Viewer;
   private documentViewerElement: HTMLDivElement;
+  private viewerElements: Map<UnionVisualizerType, HTMLDivElement> = new Map();
   private brightnessControlElement: HTMLDivElement;
   private contrastControlElement: HTMLDivElement;
   private brightnessButtonElement: HTMLTcsButtonElement;
@@ -51,6 +53,21 @@ export class TcsVisualizer {
     this.osViewer.open(source);
   }
 
+  @Method()
+  public async setFormattedTEI(tei: VisualizerFormattedTEI): Promise<void> {
+    const transform = (content: string): string => {
+      return XMLTransformerService.addClasses(
+        XMLTransformerService.XML2Editor(
+          XMLTransformerService.TEI2XML(content)
+        )
+      );
+    };
+
+    for (const [editorType, element] of this.viewerElements.entries()) {
+      if (tei[editorType]) element.innerHTML = transform(tei[editorType]);
+    }
+  }
+
   public componentDidLoad(): void {
     this.osViewer = OpenSeadragon({
       element: this.documentViewerElement,
@@ -76,8 +93,10 @@ export class TcsVisualizer {
     ];
   }
 
-  private onClickLayout(event: CustomEvent<UnionVisualizerLayoutType>) {
-    this.layoutType = event.detail;
+  private onClickLayout() {
+    const layouts: (typeof this.layoutType)[] = ['rows', 'columns', 'mix'];
+    const index = layouts.indexOf(this.layoutType);
+    this.layoutType = layouts[(index + 1) % layouts.length];
   }
 
   private onClickCommentDropdown(type: UnionCommentType): void {
@@ -215,17 +234,29 @@ export class TcsVisualizer {
           />
           <div class="viewers">
             <div class={classNames({
-              viewer: true,
-              transcribe: true,
-            })} />
+                viewer: true,
+                transcribe: true,
+              })}>
+              <div class="viewerContent" ref={ref => this.viewerElements.set('transcribe', ref)} />
+            </div>
             <div class={classNames({
-              viewer: true,
-              translate: true,
-            })} />
+                viewer: true,
+                translate: true,
+              })}>
+              <div class="viewerContent" ref={ref => this.viewerElements.set('translate', ref)} />
+            </div>
             <div class={classNames({
-              viewer: true,
-              comment: true,
-            })}>
+                viewer: true,
+                comment: true,
+              })}>
+              <div
+                class={classNames({ viewerContent: true, hidden: activeCommentTab === 'line' })}
+                ref={ref => this.viewerElements.set('comment_verse', ref)}
+              />
+              <div
+                class={classNames({ viewerContent: true, hidden: activeCommentTab === 'verse' })}
+                ref={ref => this.viewerElements.set('comment_line', ref)}
+              />
               <tcs-dropdown
                 config={{
                   label: capitalize(activeCommentTab.replace('comment_', '')),

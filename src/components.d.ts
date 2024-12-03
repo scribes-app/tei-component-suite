@@ -5,9 +5,9 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { DropdownConfig, EditorFormattedTEI, EditorSettings, EditorToolbarConfig, QuillInstance, TcsAnnotationFormValues, TcsBlankSpaceFormValues, TcsSelectEntry, TcsSettingsFormValues, TcsStructureFormValues, UnionAbbreviationType, UnionDeletedRend, UnionEditorLayoutType, UnionEditorType, UnionHighlightedRend, UnionIcons, UnionReconstructionReason, UnionStructureType, UnionUnclearReason, UnionVisualizerLayoutType, VisualizerToolbarConfig } from "./lib/types";
+import { DropdownConfig, EditorFormattedTEI, EditorSettings, EditorToolbarConfig, QuillInstance, TcsAnnotationFormValues, TcsBlankSpaceFormValues, TcsSelectEntry, TcsSettingsFormValues, TcsStructureFormValues, UnionAbbreviationType, UnionDeletedRend, UnionEditorLayoutType, UnionEditorType, UnionHighlightedRend, UnionIcons, UnionReconstructionReason, UnionStructureType, UnionUnclearReason, UnionVisualizerLayoutType, VisualizerFormattedTEI, VisualizerToolbarConfig } from "./lib/types";
 import { VisualizerToolbarConfig as VisualizerToolbarConfig1 } from "./components";
-export { DropdownConfig, EditorFormattedTEI, EditorSettings, EditorToolbarConfig, QuillInstance, TcsAnnotationFormValues, TcsBlankSpaceFormValues, TcsSelectEntry, TcsSettingsFormValues, TcsStructureFormValues, UnionAbbreviationType, UnionDeletedRend, UnionEditorLayoutType, UnionEditorType, UnionHighlightedRend, UnionIcons, UnionReconstructionReason, UnionStructureType, UnionUnclearReason, UnionVisualizerLayoutType, VisualizerToolbarConfig } from "./lib/types";
+export { DropdownConfig, EditorFormattedTEI, EditorSettings, EditorToolbarConfig, QuillInstance, TcsAnnotationFormValues, TcsBlankSpaceFormValues, TcsSelectEntry, TcsSettingsFormValues, TcsStructureFormValues, UnionAbbreviationType, UnionDeletedRend, UnionEditorLayoutType, UnionEditorType, UnionHighlightedRend, UnionIcons, UnionReconstructionReason, UnionStructureType, UnionUnclearReason, UnionVisualizerLayoutType, VisualizerFormattedTEI, VisualizerToolbarConfig } from "./lib/types";
 export { VisualizerToolbarConfig as VisualizerToolbarConfig1 } from "./components";
 export namespace Components {
     interface TcsAnnotationForm {
@@ -113,6 +113,7 @@ export namespace Components {
     }
     interface TcsVisualizer {
         "setDocumentViewerImage": (source: OpenSeadragon.TileSourceOptions) => Promise<void>;
+        "setFormattedTEI": (tei: VisualizerFormattedTEI) => Promise<void>;
         "toolbarConfig": VisualizerToolbarConfig;
     }
     interface TcsVisualizerToolbar {

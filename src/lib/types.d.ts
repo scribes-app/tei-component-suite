@@ -37,6 +37,13 @@ export type UnionEditorType = (
   'comment_line'
 )
 
+export type UnionVisualizerType = (
+  'transcribe' |
+  'translate' |
+  'comment_verse' |
+  'comment_line'
+)
+
 export type UnionCommentType = (
   'verse' |
   'line'
@@ -199,6 +206,13 @@ export type EditorSettings = {
 }
 
 export type EditorFormattedTEI = {
+  transcribe?: string;
+  translate?: string;
+  comment_line?: string;
+  comment_verse?: string;
+}
+
+export type VisualizerFormattedTEI = {
   transcribe?: string;
   translate?: string;
   comment_line?: string;
