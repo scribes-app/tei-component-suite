@@ -37,6 +37,9 @@ export class TcsVisualizer {
   private brightness: number = 50;
 
   @State()
+  private textSize: 's'|'m'|'l'|'xl'|'xxl' = 's';
+
+  @State()
   private contrast: number = 50;
 
   @State()
@@ -99,6 +102,15 @@ export class TcsVisualizer {
     this.layoutType = layouts[(index + 1) % layouts.length];
   }
 
+  private onClickTextSize(): void {
+    const sizes: (typeof TcsVisualizer.prototype.textSize)[] = [
+      's', 'm', 'l', 'xl', 'xxl'
+    ];
+    const currentIndex = sizes.indexOf(this.textSize);
+    const nextIndex = currentIndex === sizes.length - 1 ? 0 : currentIndex + 1;
+    this.textSize = sizes[nextIndex];
+  }
+
   private onClickCommentDropdown(type: UnionCommentType): void {
     this.activeCommentTab = type;
   }
@@ -150,6 +162,8 @@ export class TcsVisualizer {
       onClickZoomIn,
       onClickUndo,
       onClickExpand,
+      onClickTextSize,
+      textSize,
       activeCommentTab,
       layoutType,
       toolbarConfig,
@@ -229,6 +243,7 @@ export class TcsVisualizer {
             class="toolbar"
             config={toolbarConfig}
             layoutType={layoutType}
+            onClickTextSize={onClickTextSize.bind(this)}
             onClickLayout={onClickLayout.bind(this)}
             onClickExpand={onClickExpand.bind(this)}
           />
@@ -236,18 +251,21 @@ export class TcsVisualizer {
             <div class={classNames({
                 viewer: true,
                 transcribe: true,
+                ['text-size-' + textSize]: true
               })}>
               <div class="viewerContent" ref={ref => this.viewerElements.set('transcribe', ref)} />
             </div>
             <div class={classNames({
                 viewer: true,
                 translate: true,
+                ['text-size-' + textSize]: true
               })}>
               <div class="viewerContent" ref={ref => this.viewerElements.set('translate', ref)} />
             </div>
             <div class={classNames({
                 viewer: true,
                 comment: true,
+                ['text-size-' + textSize]: true
               })}>
               <div
                 class={classNames({ viewerContent: true, hidden: activeCommentTab === 'line' })}

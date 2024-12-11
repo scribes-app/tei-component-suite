@@ -382,7 +382,7 @@ export class TcsEditorToolbar {
           )}
           <div class="alignRight">
             <tcs-icon icon={locked ? 'lock' : 'unlock'} />
-            {config.controls.settings && (
+            {config.controls.textSize && (
               <tcs-button
                 onClickButton={clickTextSize.emit.bind(this)}
                 iconOnly

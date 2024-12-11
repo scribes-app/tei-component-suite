@@ -382,6 +382,7 @@ declare global {
     interface HTMLTcsVisualizerToolbarElementEventMap {
         "clickLayout": UnionVisualizerLayoutType;
         "clickExpand": void;
+        "clickTextSize": void;
     }
     interface HTMLTcsVisualizerToolbarElement extends Components.TcsVisualizerToolbar, HTMLStencilElement {
         addEventListener<K extends keyof HTMLTcsVisualizerToolbarElementEventMap>(type: K, listener: (this: HTMLTcsVisualizerToolbarElement, ev: TcsVisualizerToolbarCustomEvent<HTMLTcsVisualizerToolbarElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -532,6 +533,7 @@ declare namespace LocalJSX {
         "layoutType"?: UnionVisualizerLayoutType;
         "onClickExpand"?: (event: TcsVisualizerToolbarCustomEvent<void>) => void;
         "onClickLayout"?: (event: TcsVisualizerToolbarCustomEvent<UnionVisualizerLayoutType>) => void;
+        "onClickTextSize"?: (event: TcsVisualizerToolbarCustomEvent<void>) => void;
     }
     interface IntrinsicElements {
         "tcs-annotation-form": TcsAnnotationForm;
