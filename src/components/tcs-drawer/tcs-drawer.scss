@@ -1,0 +1,26 @@
+@import 'manifest';
+
+:host {
+  @include component;
+  position: fixed;
+  width: 40vw;
+  min-width: 400px;
+  top: 0;
+  bottom: 0;
+  right: -100%;
+  overflow-y: scroll;
+  @include scrollbar;
+  transition: right 0.2s ease-in-out;
+  tcs-button {
+    position: absolute;
+    top: 40px;
+    right: 40px;
+    cursor: pointer;
+  }
+  .content {
+    @include wysiwyg;
+  }
+  &.open {
+    right: 0;
+  }
+}

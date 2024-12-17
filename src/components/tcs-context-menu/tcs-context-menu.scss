@@ -1,0 +1,21 @@
+@import 'manifest';
+
+:host {
+  @include component;
+  @include shadow;
+  position: fixed;
+  z-index: 100;
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+  width: 200px;
+  border-radius: 5px;
+  overflow: hidden;
+  transition: opacity .2s ease-in-out,
+              transform .2s ease-in-out;
+}
+:host(.open) {
+  pointer-events: initial;
+  opacity: 1;
+  transform: translateY(0);
+}

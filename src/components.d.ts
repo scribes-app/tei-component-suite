@@ -6,8 +6,10 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { DropdownConfig, EditorFormattedTEI, EditorSettings, EditorToolbarConfig, QuillInstance, TcsAnnotationFormValues, TcsBlankSpaceFormValues, TcsSelectEntry, TcsSettingsFormValues, TcsStructureFormValues, UnionAbbreviationType, UnionDeletedRend, UnionEditorLayoutType, UnionEditorType, UnionHighlightedRend, UnionIcons, UnionReconstructionReason, UnionStructureType, UnionUnclearReason, UnionVisualizerLayoutType, VisualizerFormattedTEI, VisualizerToolbarConfig } from "./lib/types";
+import { TcsButton } from "./components/tcs-button/tcs-button";
 import { VisualizerToolbarConfig as VisualizerToolbarConfig1 } from "./components";
 export { DropdownConfig, EditorFormattedTEI, EditorSettings, EditorToolbarConfig, QuillInstance, TcsAnnotationFormValues, TcsBlankSpaceFormValues, TcsSelectEntry, TcsSettingsFormValues, TcsStructureFormValues, UnionAbbreviationType, UnionDeletedRend, UnionEditorLayoutType, UnionEditorType, UnionHighlightedRend, UnionIcons, UnionReconstructionReason, UnionStructureType, UnionUnclearReason, UnionVisualizerLayoutType, VisualizerFormattedTEI, VisualizerToolbarConfig } from "./lib/types";
+export { TcsButton } from "./components/tcs-button/tcs-button";
 export { VisualizerToolbarConfig as VisualizerToolbarConfig1 } from "./components";
 export namespace Components {
     interface TcsAnnotationForm {
@@ -29,6 +31,21 @@ export namespace Components {
         "slimText"?: string;
         "stretched"?: boolean;
         "variation"?: 'default';
+    }
+    interface TcsContextMenu {
+        "close": () => Promise<void>;
+        "controls": {
+    label: string,
+    click: () => any,
+    icon?: TcsButton['icon'],
+  }[];
+        "open": (x: number, y: number) => Promise<void>;
+    }
+    interface TcsDrawer {
+        "close": () => Promise<void>;
+        "html"?: string;
+        "markdown"?: string;
+        "open": () => Promise<void>;
     }
     interface TcsDropdown {
         "close": () => Promise<void>;
@@ -219,6 +236,18 @@ declare global {
         prototype: HTMLTcsButtonElement;
         new (): HTMLTcsButtonElement;
     };
+    interface HTMLTcsContextMenuElement extends Components.TcsContextMenu, HTMLStencilElement {
+    }
+    var HTMLTcsContextMenuElement: {
+        prototype: HTMLTcsContextMenuElement;
+        new (): HTMLTcsContextMenuElement;
+    };
+    interface HTMLTcsDrawerElement extends Components.TcsDrawer, HTMLStencilElement {
+    }
+    var HTMLTcsDrawerElement: {
+        prototype: HTMLTcsDrawerElement;
+        new (): HTMLTcsDrawerElement;
+    };
     interface HTMLTcsDropdownElement extends Components.TcsDropdown, HTMLStencilElement {
     }
     var HTMLTcsDropdownElement: {
@@ -402,6 +431,8 @@ declare global {
         "tcs-annotation-form": HTMLTcsAnnotationFormElement;
         "tcs-blank-space-form": HTMLTcsBlankSpaceFormElement;
         "tcs-button": HTMLTcsButtonElement;
+        "tcs-context-menu": HTMLTcsContextMenuElement;
+        "tcs-drawer": HTMLTcsDrawerElement;
         "tcs-dropdown": HTMLTcsDropdownElement;
         "tcs-editor": HTMLTcsEditorElement;
         "tcs-editor-toolbar": HTMLTcsEditorToolbarElement;
@@ -439,6 +470,17 @@ declare namespace LocalJSX {
         "slimText"?: string;
         "stretched"?: boolean;
         "variation"?: 'default';
+    }
+    interface TcsContextMenu {
+        "controls"?: {
+    label: string,
+    click: () => any,
+    icon?: TcsButton['icon'],
+  }[];
+    }
+    interface TcsDrawer {
+        "html"?: string;
+        "markdown"?: string;
     }
     interface TcsDropdown {
         "config"?: DropdownConfig;
@@ -539,6 +581,8 @@ declare namespace LocalJSX {
         "tcs-annotation-form": TcsAnnotationForm;
         "tcs-blank-space-form": TcsBlankSpaceForm;
         "tcs-button": TcsButton;
+        "tcs-context-menu": TcsContextMenu;
+        "tcs-drawer": TcsDrawer;
         "tcs-dropdown": TcsDropdown;
         "tcs-editor": TcsEditor;
         "tcs-editor-toolbar": TcsEditorToolbar;
@@ -560,6 +604,8 @@ declare module "@stencil/core" {
             "tcs-annotation-form": LocalJSX.TcsAnnotationForm & JSXBase.HTMLAttributes<HTMLTcsAnnotationFormElement>;
             "tcs-blank-space-form": LocalJSX.TcsBlankSpaceForm & JSXBase.HTMLAttributes<HTMLTcsBlankSpaceFormElement>;
             "tcs-button": LocalJSX.TcsButton & JSXBase.HTMLAttributes<HTMLTcsButtonElement>;
+            "tcs-context-menu": LocalJSX.TcsContextMenu & JSXBase.HTMLAttributes<HTMLTcsContextMenuElement>;
+            "tcs-drawer": LocalJSX.TcsDrawer & JSXBase.HTMLAttributes<HTMLTcsDrawerElement>;
             "tcs-dropdown": LocalJSX.TcsDropdown & JSXBase.HTMLAttributes<HTMLTcsDropdownElement>;
             "tcs-editor": LocalJSX.TcsEditor & JSXBase.HTMLAttributes<HTMLTcsEditorElement>;
             "tcs-editor-toolbar": LocalJSX.TcsEditorToolbar & JSXBase.HTMLAttributes<HTMLTcsEditorToolbarElement>;

@@ -21,6 +21,7 @@ export class TcsVisualizer {
   private contrastButtonElement: HTMLTcsButtonElement;
   private brightnessRangeElement: HTMLTcsRangeElement;
   private contrastRangeElement: HTMLTcsRangeElement;
+  private contextMenuElement: HTMLTcsContextMenuElement;
 
   private _listeners: ReturnType<typeof onClickOutside>[] = [];
 
@@ -79,6 +80,7 @@ export class TcsVisualizer {
       showZoomControl: false,
     });
     this.setOnClickOutside();
+    this.setOnClickContextMenu();
   }
 
   public disconnectedCallback(): void {
@@ -96,10 +98,19 @@ export class TcsVisualizer {
     ];
   }
 
+  private setOnClickContextMenu(): void {
+    this.viewerElements.forEach(el => el.addEventListener('contextmenu', this.onClickContextMenu.bind(this, el)));
+  }
+
   private onClickLayout() {
     const layouts: (typeof this.layoutType)[] = ['rows', 'columns', 'mix'];
     const index = layouts.indexOf(this.layoutType);
     this.layoutType = layouts[(index + 1) % layouts.length];
+  }
+
+  private onClickContextMenu(_viewer: HTMLDivElement, e: MouseEvent): void {
+    e.preventDefault();
+    this.contextMenuElement.open(e.clientX, e.clientY);
   }
 
   private onClickTextSize(): void {
@@ -295,6 +306,21 @@ export class TcsVisualizer {
             </div>
           </div>
         </div>
+        <tcs-context-menu
+          ref={el => this.contextMenuElement = el}
+          controls={[
+            {
+              label: 'Copy selection',
+              icon: 'broom',
+              click: () => {}
+            },
+            {
+              label: 'Morphological analysis',
+              icon: 'broom',
+              click: () => {}
+            }
+          ]}
+        />
       </Host>
     );
   }

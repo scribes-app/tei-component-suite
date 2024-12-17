@@ -96,6 +96,7 @@
     "@types/html-escaper": "^3.0.2",
     "@types/openseadragon": "^3.0.10",
     "classnames": "^2.5.1",
+    "marked": "^15.0.4",
     "openseadragon": "^5.0.0",
     "parchment": "^3.0.0",
     "quill": "^2.0.2",
