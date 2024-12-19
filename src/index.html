@@ -97,6 +97,11 @@ The word "rehabilitate" is composed of the prefix "re-" meaning back to, the roo
         });
         visualizer.contextMenuLinks = [
           {
+            label: 'Download entire XML',
+            icon: 'file-download',
+            onClick: () => alert('Example of handler')
+          },
+          {
             label: 'Morphological analysis',
             icon: 'analysis',
             onClick: async () => {
@@ -112,7 +117,7 @@ The word "rehabilitate" is composed of the prefix "re-" meaning back to, the roo
       // UNCOMMENT TO SET THE EDITOR INTITAL TEI CONTENT
       // ------------------------------
       setTimeout(() => {
-        visualizer.setFormattedTEI({
+        visualizer.tei = {
           transcribe: `
             <?xml version="1.0" encoding="utf-8"?>
             <!DOCTYPE TEI>
@@ -263,7 +268,7 @@ The word "rehabilitate" is composed of the prefix "re-" meaning back to, the roo
                 </body>
               </text>
             </TEI>`
-        });
+        };
       }, 200);
 
 

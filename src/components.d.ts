@@ -38,7 +38,7 @@ export namespace Components {
         "close": () => Promise<void>;
         "controls": {
     label: string,
-    onClick?: (selection: Selection) => any,
+    onClick?: (selection: Selection, e: MouseEvent) => any,
     data?: Record<string, any>,
     icon?: TcsButton['icon'],
   }[];
@@ -135,7 +135,7 @@ export namespace Components {
         "contextMenuLinks": TcsContextMenu['controls'];
         "getDrawer": () => Promise<HTMLTcsDrawerElement>;
         "setDocumentViewerImage": (source: OpenSeadragon.TileSourceOptions) => Promise<void>;
-        "setFormattedTEI": (tei: VisualizerFormattedTEI) => Promise<void>;
+        "tei": VisualizerFormattedTEI;
         "toolbarConfig": VisualizerToolbarConfig;
     }
     interface TcsVisualizerToolbar {
@@ -479,7 +479,7 @@ declare namespace LocalJSX {
     interface TcsContextMenu {
         "controls"?: {
     label: string,
-    onClick?: (selection: Selection) => any,
+    onClick?: (selection: Selection, e: MouseEvent) => any,
     data?: Record<string, any>,
     icon?: TcsButton['icon'],
   }[];
@@ -575,6 +575,7 @@ declare namespace LocalJSX {
     }
     interface TcsVisualizer {
         "contextMenuLinks"?: TcsContextMenu['controls'];
+        "tei"?: VisualizerFormattedTEI;
         "toolbarConfig"?: VisualizerToolbarConfig;
     }
     interface TcsVisualizerToolbar {

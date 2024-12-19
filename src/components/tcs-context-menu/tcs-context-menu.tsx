@@ -17,7 +17,7 @@ export class TcsContextMenu {
   @Prop()
   public readonly controls: {
     label: string,
-    onClick?: (selection: Selection) => any,
+    onClick?: (selection: Selection, e: MouseEvent) => any,
     data?: Record<string, any>,
     icon?: TcsButton['icon'],
   }[];
@@ -59,7 +59,7 @@ export class TcsContextMenu {
   private onClickControl(control: typeof this.controls[number], e: MouseEvent): void {
     if (!control.onClick) return;
     e.preventDefault();
-    control.onClick(globalThis.getSelection());
+    control.onClick(globalThis.getSelection(), e);
     this.close();
   }
 

@@ -1,4 +1,4 @@
-import { Component, Host, Method, Prop, State, h } from '@stencil/core';
+import { Component, Host, Method, Prop, State, Watch, h } from '@stencil/core';
 import classNames from 'classnames';
 import OpenSeadragon from 'openseadragon';
 import { capitalize, onClickOutside, removeClickOutside } from '../../lib/helper';
@@ -16,6 +16,7 @@ export class TcsVisualizer {
   private osViewer: OpenSeadragon.Viewer;
   private documentViewerElement: HTMLDivElement;
   private viewerElements: Map<UnionVisualizerType, HTMLDivElement> = new Map();
+  private activeViewer: UnionVisualizerType = 'transcribe';
   private drawerElement: HTMLTcsDrawerElement;
   private brightnessControlElement: HTMLDivElement;
   private contrastControlElement: HTMLDivElement;
@@ -32,6 +33,9 @@ export class TcsVisualizer {
 
   @Prop()
   public contextMenuLinks: TcsContextMenu['controls'] = [];
+
+  @Prop()
+  public tei: VisualizerFormattedTEI;
 
   @State()
   private activeCommentTab: UnionCommentType = 'line';
@@ -67,8 +71,8 @@ export class TcsVisualizer {
     this.osViewer.open(source);
   }
 
-  @Method()
-  public async setFormattedTEI(tei: VisualizerFormattedTEI): Promise<void> {
+  @Watch('tei')
+  public async watchTEI(): Promise<void> {
     const transform = (content: string): string => {
       return XMLTransformerService.addClasses(
         XMLTransformerService.XML2Editor(
@@ -78,7 +82,7 @@ export class TcsVisualizer {
     };
 
     for (const [editorType, element] of this.viewerElements.entries()) {
-      if (tei[editorType]) element.innerHTML = transform(tei[editorType]);
+      if (this.tei[editorType]) element.innerHTML = transform(this.tei[editorType]);
     }
   }
 
@@ -275,14 +279,22 @@ export class TcsVisualizer {
                 transcribe: true,
                 ['text-size-' + textSize]: true
               })}>
-              <div class="viewerContent" ref={ref => this.viewerElements.set('transcribe', ref)} />
+              <div
+                class="viewerContent"
+                ref={ref => this.viewerElements.set('transcribe', ref)}
+                onMouseEnter={() => this.activeViewer = 'transcribe'}
+              />
             </div>
             <div class={classNames({
                 viewer: true,
                 translate: true,
                 ['text-size-' + textSize]: true
               })}>
-              <div class="viewerContent" ref={ref => this.viewerElements.set('translate', ref)} />
+              <div
+                class="viewerContent"
+                ref={ref => this.viewerElements.set('translate', ref)}
+                onMouseEnter={() => this.activeViewer = 'translate'}
+              />
             </div>
             <div class={classNames({
                 viewer: true,
@@ -292,10 +304,12 @@ export class TcsVisualizer {
               <div
                 class={classNames({ viewerContent: true, hidden: activeCommentTab === 'line' })}
                 ref={ref => this.viewerElements.set('comment_verse', ref)}
+                onMouseEnter={() => this.activeViewer = 'comment_verse'}
               />
               <div
                 class={classNames({ viewerContent: true, hidden: activeCommentTab === 'verse' })}
                 ref={ref => this.viewerElements.set('comment_line', ref)}
+                onMouseEnter={() => this.activeViewer = 'comment_line'}
               />
               <tcs-dropdown
                 config={{
@@ -323,7 +337,12 @@ export class TcsVisualizer {
             {
               label: 'Copy selection',
               icon: 'duplicate',
-              onClick: (selection: Selection) => globalThis.navigator.clipboard.writeText(selection.toString())
+              onClick: selection => globalThis.navigator.clipboard.writeText(selection.toString())
+            },
+            {
+              label: 'Copy entire XML',
+              icon: 'document',
+              onClick: () => globalThis.navigator.clipboard.writeText(this.tei[this.activeViewer] ?? '')
             },
             ...contextMenuLinks
           ]}
