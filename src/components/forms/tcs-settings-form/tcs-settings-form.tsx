@@ -71,16 +71,6 @@ export class TcsSettingsForm {
           onTextfieldChange={onChange.bind(this, 'book')}
         />
         <tcs-textfield
-          ref={el => this.fieldRefs.set('column', el)}
-          required
-          inputId="tcs-settings-form-column"
-          inputName="tcs-settings-form-column"
-          placeholder="Column"
-          defaultValue={defaultValues.column}
-          type="text"
-          onTextfieldChange={onChange.bind(this, 'column')}
-        />
-        <tcs-textfield
           ref={el => this.fieldRefs.set('folio', el)}
           required
           inputId="tcs-settings-form-folio"
@@ -89,6 +79,16 @@ export class TcsSettingsForm {
           defaultValue={defaultValues.folio}
           type="text"
           onTextfieldChange={onChange.bind(this, 'folio')}
+        />
+        <tcs-textfield
+          ref={el => this.fieldRefs.set('column', el)}
+          required
+          inputId="tcs-settings-form-column"
+          inputName="tcs-settings-form-column"
+          placeholder="Column"
+          defaultValue={defaultValues.column}
+          type="text"
+          onTextfieldChange={onChange.bind(this, 'column')}
         />
         <tcs-button
           outlined

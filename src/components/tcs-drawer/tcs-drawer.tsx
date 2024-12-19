@@ -15,13 +15,17 @@ export class TcsDrawer {
   public readonly html?: string;
 
   @State()
-  public readonly isOpen: boolean = false;
+  public isOpen: boolean = false;
 
   @Method()
-  async open(): Promise<void> {}
+  async open(): Promise<void> {
+    this.isOpen = true;
+  }
 
   @Method()
-  async close(): Promise<void> {}
+  async close(): Promise<void> {
+    this.isOpen = false;
+  }
 
   render() {
     const {
@@ -34,9 +38,9 @@ export class TcsDrawer {
       <Host class={{
         open: isOpen,
       }}>
-        <tcs-button class="close" icon="cross" onClickButton={close.bind(this)} rounded iconOnly />
-        <div class="content" innerHTML={html}>
-          {markdown && marked(markdown)}
+        <div class="scroller">
+          <tcs-button class="close" icon="cross" onClickButton={close.bind(this)} rounded iconOnly />
+          <div class="content" innerHTML={html ?? (markdown && marked(markdown) as string)} />
         </div>
       </Host>
     );

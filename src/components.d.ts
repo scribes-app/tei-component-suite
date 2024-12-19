@@ -7,9 +7,11 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { DropdownConfig, EditorFormattedTEI, EditorSettings, EditorToolbarConfig, QuillInstance, TcsAnnotationFormValues, TcsBlankSpaceFormValues, TcsSelectEntry, TcsSettingsFormValues, TcsStructureFormValues, UnionAbbreviationType, UnionDeletedRend, UnionEditorLayoutType, UnionEditorType, UnionHighlightedRend, UnionIcons, UnionReconstructionReason, UnionStructureType, UnionUnclearReason, UnionVisualizerLayoutType, VisualizerFormattedTEI, VisualizerToolbarConfig } from "./lib/types";
 import { TcsButton } from "./components/tcs-button/tcs-button";
+import { TcsContextMenu } from "./components/tcs-context-menu/tcs-context-menu";
 import { VisualizerToolbarConfig as VisualizerToolbarConfig1 } from "./components";
 export { DropdownConfig, EditorFormattedTEI, EditorSettings, EditorToolbarConfig, QuillInstance, TcsAnnotationFormValues, TcsBlankSpaceFormValues, TcsSelectEntry, TcsSettingsFormValues, TcsStructureFormValues, UnionAbbreviationType, UnionDeletedRend, UnionEditorLayoutType, UnionEditorType, UnionHighlightedRend, UnionIcons, UnionReconstructionReason, UnionStructureType, UnionUnclearReason, UnionVisualizerLayoutType, VisualizerFormattedTEI, VisualizerToolbarConfig } from "./lib/types";
 export { TcsButton } from "./components/tcs-button/tcs-button";
+export { TcsContextMenu } from "./components/tcs-context-menu/tcs-context-menu";
 export { VisualizerToolbarConfig as VisualizerToolbarConfig1 } from "./components";
 export namespace Components {
     interface TcsAnnotationForm {
@@ -36,7 +38,8 @@ export namespace Components {
         "close": () => Promise<void>;
         "controls": {
     label: string,
-    click: () => any,
+    onClick?: (selection: Selection) => any,
+    data?: Record<string, any>,
     icon?: TcsButton['icon'],
   }[];
         "open": (x: number, y: number) => Promise<void>;
@@ -129,6 +132,8 @@ export namespace Components {
         "type": 'text'|'password'|'number'|'email';
     }
     interface TcsVisualizer {
+        "contextMenuLinks": TcsContextMenu['controls'];
+        "getDrawer": () => Promise<HTMLTcsDrawerElement>;
         "setDocumentViewerImage": (source: OpenSeadragon.TileSourceOptions) => Promise<void>;
         "setFormattedTEI": (tei: VisualizerFormattedTEI) => Promise<void>;
         "toolbarConfig": VisualizerToolbarConfig;
@@ -474,7 +479,8 @@ declare namespace LocalJSX {
     interface TcsContextMenu {
         "controls"?: {
     label: string,
-    click: () => any,
+    onClick?: (selection: Selection) => any,
+    data?: Record<string, any>,
     icon?: TcsButton['icon'],
   }[];
     }
@@ -568,6 +574,7 @@ declare namespace LocalJSX {
         "type"?: 'text'|'password'|'number'|'email';
     }
     interface TcsVisualizer {
+        "contextMenuLinks"?: TcsContextMenu['controls'];
         "toolbarConfig"?: VisualizerToolbarConfig;
     }
     interface TcsVisualizerToolbar {

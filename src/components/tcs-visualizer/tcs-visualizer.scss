@@ -20,6 +20,10 @@
   border-radius: var(--tcs-visualizer-border-radius);
   width: 100%;
 
+  tcs-drawer {
+    z-index: 100;
+  }
+
   .documentViewer {
     position: relative;
     // You can't set the width of a flex item that use resize

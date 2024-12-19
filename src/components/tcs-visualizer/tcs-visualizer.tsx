@@ -4,6 +4,7 @@ import OpenSeadragon from 'openseadragon';
 import { capitalize, onClickOutside, removeClickOutside } from '../../lib/helper';
 import { UnionCommentType, UnionVisualizerLayoutType, UnionVisualizerType, VisualizerFormattedTEI, VisualizerToolbarConfig } from '../../lib/types';
 import { XMLTransformerService } from '../../services/xml-transformer.service';
+import { TcsContextMenu } from '../tcs-context-menu/tcs-context-menu';
 
 @Component({
   tag: 'tcs-visualizer',
@@ -15,6 +16,7 @@ export class TcsVisualizer {
   private osViewer: OpenSeadragon.Viewer;
   private documentViewerElement: HTMLDivElement;
   private viewerElements: Map<UnionVisualizerType, HTMLDivElement> = new Map();
+  private drawerElement: HTMLTcsDrawerElement;
   private brightnessControlElement: HTMLDivElement;
   private contrastControlElement: HTMLDivElement;
   private brightnessButtonElement: HTMLTcsButtonElement;
@@ -27,6 +29,9 @@ export class TcsVisualizer {
 
   @Prop({ mutable: true })
   public toolbarConfig: VisualizerToolbarConfig = defaultVisualizerToolbarConfig;
+
+  @Prop()
+  public contextMenuLinks: TcsContextMenu['controls'] = [];
 
   @State()
   private activeCommentTab: UnionCommentType = 'line';
@@ -50,6 +55,11 @@ export class TcsVisualizer {
   private rangeOpen: { brightness: boolean; contrast: boolean } = {
     brightness: false,
     contrast: false
+  }
+
+  @Method()
+  public async getDrawer(): Promise<HTMLTcsDrawerElement> {
+    return this.drawerElement;
   }
 
   @Method()
@@ -176,6 +186,7 @@ export class TcsVisualizer {
       onClickTextSize,
       textSize,
       activeCommentTab,
+      contextMenuLinks,
       layoutType,
       toolbarConfig,
       expand,
@@ -311,15 +322,14 @@ export class TcsVisualizer {
           controls={[
             {
               label: 'Copy selection',
-              icon: 'broom',
-              click: () => {}
+              icon: 'duplicate',
+              onClick: (selection: Selection) => globalThis.navigator.clipboard.writeText(selection.toString())
             },
-            {
-              label: 'Morphological analysis',
-              icon: 'broom',
-              click: () => {}
-            }
+            ...contextMenuLinks
           ]}
+        />
+        <tcs-drawer
+          ref={el => this.drawerElement = el}
         />
       </Host>
     );

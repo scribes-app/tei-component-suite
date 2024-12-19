@@ -34,12 +34,78 @@
       });
 
       // EXAMPLES VISUALIZER
+      const markdownContent = `
+# Morphological Text Analysis Example
+
+## Word: "unbelievable"
+
+### Breakdown:
+- **Prefix**: "un-"
+  - Meaning: Not
+- **Root/Stem**: "believ"
+  - Base form of the word: "believe"
+- **Suffix**: "-able"
+  - Affix meaning: capable of being
+
+### Analysis:
+The word "unbelievable" is formed by combining the prefix "un-", which negates the meaning, the root "believ", derived from the verb "to believe," and the suffix "-able," indicating capability or possibility.
+
+## Word: "incredulously"
+
+### Breakdown:
+- **Prefix**: "in-"
+  - Meaning: Not
+- **Root/Stem**: "credit"
+  - Base form of the word: "credit"
+- **Suffix**: "-ably"
+  - Affix meaning: in a certain way or manner
+
+### Analysis:
+The word "incredulously" is constructed by using the prefix "in-" to negate, the root "credit," which relates to belief or acceptance, and the suffix "-ably," indicating manner or method.
+
+## Word: "university"
+
+### Breakdown:
+- **Prefix**: "uni-"
+  - Meaning: One
+- **Root/Stem**: "versit"
+  - Base form of the word: "versity"
+- **Suffix**: "-y"
+  - Affix meaning: characteristic or relating to
+
+### Analysis:
+The word "university" is formed by combining the prefix "uni-" meaning one, the root "versit," derived from the Latin word for diversity or variety, and the suffix "-y," indicating a characteristic or relation.
+
+## Word: "rehabilitate"
+
+### Breakdown:
+- **Prefix**: "re-"
+  - Meaning: Back to
+- **Root/Stem**: "habilit"
+  - Base form of the word: "habilitate"
+- **Suffix**: "-ate"
+  - Affix indicating action or state
+
+### Analysis:
+The word "rehabilitate" is composed of the prefix "re-" meaning back to, the root "habilit," which relates to capability, and the suffix "-ate," indicating an action or process.
+      `;
       const visualizer = document.getElementById('visualizer');
       setTimeout(() => {
         visualizer.setDocumentViewerImage({
           type: 'image',
           url: '/assets/folio.jpg',
-        })
+        });
+        visualizer.contextMenuLinks = [
+          {
+            label: 'Morphological analysis',
+            icon: 'analysis',
+            onClick: async () => {
+              const drawer = (await visualizer.getDrawer());
+              drawer.markdown = markdownContent;
+              drawer.open();
+            }
+          }
+        ]
       }, 1000);
 
 

@@ -27,6 +27,8 @@ export type UnionIcons = (
   'zoom-out'|
   'undo'|
   'expand'|
+  'duplicate'|
+  'analysis'|
   'compress'
 )
 

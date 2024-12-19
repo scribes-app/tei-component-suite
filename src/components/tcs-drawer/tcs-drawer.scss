@@ -2,25 +2,36 @@
 
 :host {
   @include component;
+  @include shadow;
+
+  --tcs-drawer-width: var(--tcs-drawer-width, 40vw);
+  --tcs-drawer-background-color: var(--tcs-drawer-background-color, white);
+
   position: fixed;
-  width: 40vw;
+  width: var(--tcs-drawer-width);
+  height: 100vh;
   min-width: 400px;
   top: 0;
   bottom: 0;
   right: -100%;
-  overflow-y: scroll;
-  @include scrollbar;
   transition: right 0.2s ease-in-out;
+  background-color: var(--tcs-drawer-background-color);
   tcs-button {
     position: absolute;
     top: 40px;
     right: 40px;
     cursor: pointer;
   }
+  .scroller {
+    @include scrollbar;
+    overflow-y: scroll;
+    padding: 60px;
+    height: 100%;
+  }
   .content {
     @include wysiwyg;
   }
-  &.open {
-    right: 0;
-  }
+}
+:host(.open) {
+  right: 0;
 }

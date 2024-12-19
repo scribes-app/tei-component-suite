@@ -17,7 +17,8 @@ export class TcsContextMenu {
   @Prop()
   public readonly controls: {
     label: string,
-    click: () => any,
+    onClick?: (selection: Selection) => any,
+    data?: Record<string, any>,
     icon?: TcsButton['icon'],
   }[];
 
@@ -55,8 +56,10 @@ export class TcsContextMenu {
     this.isOpen = false;
   }
 
-  private onClickControl(control: typeof this.controls[number]): void {
-    control.click();
+  private onClickControl(control: typeof this.controls[number], e: MouseEvent): void {
+    if (!control.onClick) return;
+    e.preventDefault();
+    control.onClick(globalThis.getSelection());
     this.close();
   }
 
@@ -81,7 +84,8 @@ export class TcsContextMenu {
             stretched
             icon={control.icon}
             iconPosition="leading"
-            onClickButton={onClickControl.bind(this, control)}>
+            // Use this event to prevent unselection before the click is processed.
+            onMouseDown={onClickControl.bind(this, control)}>
             {control.label}
           </tcs-button>
         ))}
