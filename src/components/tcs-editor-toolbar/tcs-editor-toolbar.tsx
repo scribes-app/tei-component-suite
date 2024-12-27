@@ -62,6 +62,12 @@ export class TcsEditorToolbar {
   @Event()
   private readonly clickSettings: EventEmitter<void>;
 
+  @Event()
+  private readonly clickViewer: EventEmitter<void>;
+
+  @Event()
+  private readonly clickExpand: EventEmitter<void>;
+
   @Prop()
   public readonly config: EditorToolbarConfig;
 
@@ -103,7 +109,7 @@ export class TcsEditorToolbar {
   }
 
   private handleResize(): void {
-    this.display = this.element.clientWidth < 1050 ? 'slim' : 'default';
+    this.display = this.element.clientWidth < 1100 ? 'slim' : 'default';
   }
 
   public render(): JSX.Element {
@@ -124,6 +130,8 @@ export class TcsEditorToolbar {
       clickAnnotation,
       clickReconstruction,
       clickTextSize,
+      clickViewer,
+      clickExpand,
       textDirection,
       layoutType,
       viewRaw,
@@ -382,6 +390,14 @@ export class TcsEditorToolbar {
           )}
           <div class="alignRight">
             <tcs-icon icon={locked ? 'lock' : 'unlock'} />
+            {config.controls.viewer && (
+              <tcs-button
+                onClickButton={clickViewer.emit.bind(this)}
+                iconOnly
+                icon="sidebar"
+                disabled={locked}
+              />
+            )}
             {config.controls.textSize && (
               <tcs-button
                 onClickButton={clickTextSize.emit.bind(this)}
@@ -404,6 +420,14 @@ export class TcsEditorToolbar {
                 iconOnly
                 active={layoutType === 'columns'}
                 icon="columns"
+                disabled={locked}
+              />
+            )}
+            {config.controls.expand && (
+              <tcs-button
+                onClickButton={clickExpand.emit.bind(this)}
+                iconOnly
+                icon="expand"
                 disabled={locked}
               />
             )}

@@ -199,6 +199,8 @@ export type EditorToolbarConfig = {
     viewRaw?: boolean;
     textDirection?: boolean;
     textSize?: boolean;
+    viewer?: boolean;
+    expand?: boolean;
   }
 }
 

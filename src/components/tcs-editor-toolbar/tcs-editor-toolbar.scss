@@ -6,6 +6,8 @@
   --tcs-editor-toolbar-background-color: white;
   --tcs-editor-toolbar-border-color: #{$color-slate-400};
   --tcs-editor-toolbar-border-radius: 5px;
+  --tcs-editor-toolbar-border-top-left-radius: var(--tcs-editor-toolbar-border-radius);
+  --tcs-editor-toolbar-border-top-right-radius: var(--tcs-editor-toolbar-border-radius);
   --tcs-editor-toolbar-lock-color: #{$color-slate-500};
 
   display: flex;
@@ -16,8 +18,8 @@
     top: 1px solid var(--tcs-editor-toolbar-border-color);
     right: 1px solid var(--tcs-editor-toolbar-border-color);
     left: 1px solid var(--tcs-editor-toolbar-border-color);
-    top-left-radius: var(--tcs-editor-toolbar-border-radius);
-    top-right-radius: var(--tcs-editor-toolbar-border-radius);
+    top-left-radius: var(--tcs-editor-toolbar-border-top-left-radius);
+    top-right-radius: var(--tcs-editor-toolbar-border-top-right-radius);
   };
   background-color: var(--tcs-editor-toolbar-background-color);
 

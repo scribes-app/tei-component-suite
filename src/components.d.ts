@@ -63,6 +63,7 @@ export namespace Components {
         "getQuillInstances": () => Promise<Map<UnionEditorType, QuillInstance>>;
         "getSettings": () => Promise<EditorSettings>;
         "lock": () => Promise<void>;
+        "setDocumentViewerImage": (source: OpenSeadragon.TileSourceOptions) => Promise<void>;
         "setFormattedTEI": (tei: EditorFormattedTEI) => Promise<void>;
         "settings": EditorSettings;
         "toolbarConfig": EditorToolbarConfig;
@@ -285,6 +286,8 @@ declare global {
         "clickLayout": void;
         "clickRemove": void;
         "clickSettings": void;
+        "clickViewer": void;
+        "clickExpand": void;
     }
     interface HTMLTcsEditorToolbarElement extends Components.TcsEditorToolbar, HTMLStencilElement {
         addEventListener<K extends keyof HTMLTcsEditorToolbarElementEventMap>(type: K, listener: (this: HTMLTcsEditorToolbarElement, ev: TcsEditorToolbarCustomEvent<HTMLTcsEditorToolbarElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -518,6 +521,7 @@ declare namespace LocalJSX {
         "onClickAnnotation"?: (event: TcsEditorToolbarCustomEvent<void>) => void;
         "onClickBlankSpace"?: (event: TcsEditorToolbarCustomEvent<void>) => void;
         "onClickDeleted"?: (event: TcsEditorToolbarCustomEvent<UnionDeletedRend>) => void;
+        "onClickExpand"?: (event: TcsEditorToolbarCustomEvent<void>) => void;
         "onClickHighlighted"?: (event: TcsEditorToolbarCustomEvent<UnionHighlightedRend>) => void;
         "onClickLTR"?: (event: TcsEditorToolbarCustomEvent<void>) => void;
         "onClickLayout"?: (event: TcsEditorToolbarCustomEvent<void>) => void;
@@ -530,6 +534,7 @@ declare namespace LocalJSX {
         "onClickTextSize"?: (event: TcsEditorToolbarCustomEvent<void>) => void;
         "onClickUnclear"?: (event: TcsEditorToolbarCustomEvent<UnionUnclearReason>) => void;
         "onClickViewRaw"?: (event: TcsEditorToolbarCustomEvent<void>) => void;
+        "onClickViewer"?: (event: TcsEditorToolbarCustomEvent<void>) => void;
         "textDirection"?: 'LTR'|'RTL';
         "viewRaw"?: boolean;
     }

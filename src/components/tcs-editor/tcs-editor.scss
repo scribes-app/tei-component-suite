@@ -10,7 +10,7 @@ tcs-editor {
   --tcs-editor-line-number-color: #{$color-slate-400};
   --tcs-editor-border-color: #{$color-slate-400};
   --tcs-editor-border-radius: 5px;
-  --tcs-editor-height: 300px;
+  --tcs-editor-height: 600px;
 
   --tcs-editor-focus-border-color: #{$color-slate-700};
   --tcs-editor-focus-title-color: #{$color-slate-700};
@@ -27,444 +27,508 @@ tcs-editor {
 
   position: relative;
 
-  .toolbar {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  width: 100%;
+
+  .documentViewer {
     position: relative;
-    z-index: 20;
+    // You can't set the width of a flex item that use resize
+    flex: 0 0 auto;
+    // Resize control
+    resize: horizontal;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    // Define as initial width
+    width: 50%;
+    // Limit the minimum width when resizing
+    min-width: 200px;
+    max-width: calc(100% - 720px);
+
+    background: var(--tcs-visualizer-document-viewer-background-color);
+    border-right: 1px solid var(--tcs-visualizer-border-color);
   }
-  .editors {
+
+  .editorsViewer {
     position: relative;
-    z-index: 10;
-
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-content: stretch;
-    align-items: stretch;
-    height: var(--tcs-editor-height);
-    background-color: white;
-    border: {
-      bottom-left-radius: var(--tcs-editor-border-radius);
-      bottom-right-radius: var(--tcs-editor-border-radius);
-    };
-    &.tabs {
-      .editorWrapper {
-        flex: 0 0 calc(100% - 20px);
-        border-bottom-left-radius: var(--tcs-editor-border-radius);
-        &.comment {
-          border-bottom-right-radius: 0;
-        }
-      }
-      .tabs {
-        flex: 0 0 20px;
-        display: flex;
-        flex-direction: column;
-        button.tab {
-          cursor: pointer;
-          display: block;
-          flex: 1;
-          writing-mode: vertical-lr;
-          background-color: white;
-          color: var(--tcs-editor-tabs-button-color);
-          font-weight: 700;
-          font-size: 8px;
-          border: none;
-          text-transform: uppercase;
-          letter-spacing: 1px;
-          border-right: 1px solid var(--tcs-editor-border-color);
-          border-top: 1px solid var(--tcs-editor-border-color);
-          transition: border-color 0.2s ease,
-                      background-color 0.2s ease;
-          &:last-child {
-            border-bottom: 1px solid var(--tcs-editor-border-color);
-            border-bottom-right-radius: var(--tcs-editor-border-radius);
-          }
-          &:hover {
-            border-color: var(--tcs-editor-focus-border-color);
-            background-color: var(--tcs-editor-tabs-button-hover-background-color);
-          }
-        }
-      }
-      .editorWrapper:not(.active) {
-        display: none;
-      }
-    }
-    .editorWrapper {
+    // Auto resize to fill the remaining space
+    flex: 1 1 auto;
+    .toolbar {
       position: relative;
-      flex: 0 0 math.div(100%, 3);
+      z-index: 20;
+    }
+    .editors {
+      position: relative;
+      z-index: 10;
+
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-content: stretch;
+      align-items: stretch;
+      height: var(--tcs-editor-height);
+      background-color: white;
       border: {
-        width: 1px;
-        style: solid;
-        color: var(--tcs-editor-border-color);
-      }
-      transition: border-color 0.2s ease;
-      tcs-dropdown {
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 10;
-      }
-
-      &.active {
-        border-color: var(--tcs-editor-focus-border-color);
-        .footer::before {
-          color: var(--tcs-editor-focus-title-color);
-        }
-      }
-
-      &.transcribe {
-        border-bottom-left-radius: var(--tcs-editor-border-radius);
-        border-right-color: transparent;
-        &.active {
-          border-right-color: var(--tcs-editor-focus-border-color);
-          + .editorWrapper {
-            border-left-color: transparent;
+        bottom-left-radius: var(--tcs-editor-border-radius);
+        bottom-right-radius: var(--tcs-editor-border-radius);
+      };
+      &.tabs {
+        .editorWrapper {
+          flex: 0 0 calc(100% - 20px);
+          border-bottom-left-radius: var(--tcs-editor-border-radius);
+          &.comment {
+            border-bottom-right-radius: 0;
           }
         }
-        .footer::before {
-          content: 'Transcribe';
-        }
-      }
-
-      &.translate {
-        border-right-color: transparent;
-        &.active {
-          border-right-color: var(--tcs-editor-focus-border-color);;
-          border-left-color: var(--tcs-editor-focus-border-color);
-          + .editorWrapper {
-            border-left-color: transparent;
-          }
-        }
-        .footer::before {
-          content: 'Translate';
-        }
-      }
-
-      &.comment {
-        border-bottom-right-radius: var(--tcs-editor-border-radius);
-        &.active {
-          border-left-color: var(--tcs-editor-focus-border-color);
-        }
-        .footer::before {
-          content: 'Comment';
-        }
-      }
-      .editor {
-        &.text-size {
-          &-s {
-            font-size: 12px;
-          }
-          &-m {
-            font-size: 14px;
-          }
-          &-l {
-            font-size: 16px;
-          }
-          &-xl {
-            font-size: 18px;
-          }
-          &-xxl {
-            font-size: 20px;
-          }
-        }
-        font: {
-          weight: 400;
-          family: $font-default;
-        }
-        color: var(--tcs-editor-text-color);
-
-        &.textarea {
-          display: block;
-          outline: none;
-          border: none;
-          resize: none;
-          position: relative;
-          padding: 40px 30px 30px;
-          height: 100%;
-          width: 100%;
-        }
-
-        &.hidden {
-          display: none;
-        }
-
-        // Quill Editor override
-        .ql-editor {
-          position: relative;
-          padding: 40px 30px 30px;
-          counter-set: line 0;
-          &.direction-rtl {
-            direction: rtl;
-            text-align: right;
-            line {
-              &::before {
-                right: -20px;
-                left: unset;
-              }
-            }
-          }
-          &.direction-ltr {
-            direction: ltr;
-            text-align: right;
-          }
-          div {
-            display: inline;
-          }
-          // Custom tags
-          line {
-            position: relative;
+        .tabs {
+          flex: 0 0 20px;
+          display: flex;
+          flex-direction: column;
+          button.tab {
+            cursor: pointer;
             display: block;
-            counter-increment: line;
-            &, * { line-height: 2; }
-            &::before {
-              content: counter(line);
-              position: absolute;
-              left: -20px;
-              top: 3px;
-              display: block;
-              text-align: right;
-              color: var(--tcs-editor-line-number-color);
-              font-size: .9em;
-              font-weight: 700;
-            }
-          }
-          // Text elements
-          w {
-            display: inline;
-          }
-          unclear,
-          del:not([rend=erased]),
-          h,
-          space,
-          seg,
-          // supplied,
-          pc,
-          abbr {
-            position: relative;
-            &::before {
-              @include shadow;
-              z-index: 20;
-              position: absolute;
-              pointer-events: none;
-              left: 50%;
-              transform: translateX(-50%);
-              bottom: 10px;
-              background-color: white;
-              padding: 2px 5px;
-              border-radius: 5px;
-              transition: bottom 0.2s ease;
-              white-space: nowrap;
-              text-emphasis: none;
-              text-decoration: none;
-              text-emphasis-color: none;
-              color: var(--tcs-editor-tooltip-color);
+            flex: 1;
+            writing-mode: vertical-lr;
+            background-color: white;
+            color: var(--tcs-editor-tabs-button-color);
+            font-weight: 700;
+            font-size: 8px;
+            border: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-right: 1px solid var(--tcs-editor-border-color);
+            border-top: 1px solid var(--tcs-editor-border-color);
+            transition: border-color 0.2s ease,
+                        background-color 0.2s ease;
+            &:last-child {
+              border-bottom: 1px solid var(--tcs-editor-border-color);
+              border-bottom-right-radius: var(--tcs-editor-border-radius);
             }
             &:hover {
+              border-color: var(--tcs-editor-focus-border-color);
+              background-color: var(--tcs-editor-tabs-button-hover-background-color);
+            }
+          }
+        }
+        .editorWrapper:not(.active) {
+          display: none;
+        }
+      }
+      .editorWrapper {
+        position: relative;
+        flex: 0 0 math.div(100%, 3);
+        border: {
+          width: 1px;
+          style: solid;
+          color: var(--tcs-editor-border-color);
+        }
+        transition: border-color 0.2s ease;
+        tcs-dropdown {
+          position: absolute;
+          top: 0;
+          left: 0;
+          z-index: 10;
+        }
+
+        &.active {
+          border-color: var(--tcs-editor-focus-border-color);
+          .footer::before {
+            color: var(--tcs-editor-focus-title-color);
+          }
+        }
+
+        &.transcribe {
+          border-bottom-left-radius: var(--tcs-editor-border-radius);
+          border-right-color: transparent;
+          &.active {
+            border-right-color: var(--tcs-editor-focus-border-color);
+            + .editorWrapper {
+              border-left-color: transparent;
+            }
+          }
+          .footer::before {
+            content: 'Transcribe';
+          }
+        }
+
+        &.translate {
+          border-right-color: transparent;
+          &.active {
+            border-right-color: var(--tcs-editor-focus-border-color);;
+            border-left-color: var(--tcs-editor-focus-border-color);
+            + .editorWrapper {
+              border-left-color: transparent;
+            }
+          }
+          .footer::before {
+            content: 'Translate';
+          }
+        }
+
+        &.comment {
+          border-bottom-right-radius: var(--tcs-editor-border-radius);
+          &.active {
+            border-left-color: var(--tcs-editor-focus-border-color);
+          }
+          .footer::before {
+            content: 'Comment';
+          }
+        }
+        .editor {
+          &.text-size {
+            &-s {
+              font-size: 12px;
+            }
+            &-m {
+              font-size: 14px;
+            }
+            &-l {
+              font-size: 16px;
+            }
+            &-xl {
+              font-size: 18px;
+            }
+            &-xxl {
+              font-size: 20px;
+            }
+          }
+          font: {
+            weight: 400;
+            family: $font-default;
+          }
+          color: var(--tcs-editor-text-color);
+
+          &.textarea {
+            display: block;
+            outline: none;
+            border: none;
+            resize: none;
+            position: relative;
+            padding: 40px 30px 30px;
+            height: 100%;
+            width: 100%;
+          }
+
+          &.hidden {
+            display: none;
+          }
+
+          // Quill Editor override
+          .ql-editor {
+            position: relative;
+            padding: 40px 30px 30px;
+            counter-set: line 0;
+            &.direction-rtl {
+              direction: rtl;
+              text-align: right;
+              line {
+                &::before {
+                  right: -20px;
+                  left: unset;
+                }
+              }
+            }
+            &.direction-ltr {
+              direction: ltr;
+              text-align: right;
+            }
+            div {
+              display: inline;
+            }
+            // Custom tags
+            line {
+              position: relative;
+              display: block;
+              counter-increment: line;
+              &, * { line-height: 2; }
               &::before {
-                bottom: 20px;
+                content: counter(line);
+                position: absolute;
+                left: -20px;
+                top: 3px;
+                display: block;
+                text-align: right;
+                color: var(--tcs-editor-line-number-color);
+                font-size: .9em;
+                font-weight: 700;
+              }
+            }
+            // Text elements
+            w {
+              display: inline;
+            }
+            unclear,
+            del:not([rend=erased]),
+            h,
+            space,
+            seg,
+            // supplied,
+            pc,
+            abbr {
+              position: relative;
+              &::before {
+                @include shadow;
+                z-index: 20;
+                position: absolute;
+                pointer-events: none;
+                left: 50%;
+                transform: translateX(-50%);
+                bottom: 10px;
+                background-color: white;
+                padding: 2px 5px;
+                border-radius: 5px;
+                transition: bottom 0.2s ease;
+                white-space: nowrap;
+                text-emphasis: none;
+                text-decoration: none;
+                text-emphasis-color: none;
+                color: var(--tcs-editor-tooltip-color);
+              }
+              &:hover {
+                &::before {
+                  bottom: 20px;
+                }
+              }
+            }
+            unclear:hover::before {
+              content: 'unclear: (' attr(reason) ')';
+            }
+            seg:hover::before {
+              content: 'annotation: (' attr(type) ', ' attr(rend) ', ' attr(hand) ')';
+            }
+            // supplied:hover::before {
+            //   content: 'reconstruction: (' attr(reason) ')';
+            // }
+            del:not([rend=erased]):hover::before {
+              content: 'deleted: (' attr(rend) ')';
+            }
+            h:hover::before {
+              content: 'highlighted: (' attr(rend) ')';
+            }
+            abbr:hover::before {
+              content: 'abbreviation: (' attr(rend) ')';
+            }
+            space:hover::before {
+              content: 'blank space: (' attr(value) attr(unit) ')';
+            }
+            pc:hover::before {
+              content: 'punctuation';
+            }
+
+            seg {
+              border: 1px solid var(--tcs-editor-text-element-border-color);
+              background-color: var(--tcs-editor-text-element-background-color);
+            }
+
+            space {
+              text-align: center;
+              display: inline-block;
+              width: 20px;
+            }
+
+            unclear[reason=legible_incomplete] {
+              text-emphasis: circle;
+            }
+
+            unclear[reason=uncertain] {
+              text-emphasis: open;
+            }
+
+            unclear[reason=faded] {
+              text-emphasis: open;
+              color: var(--tcs-editor-high-faded-text-color);
+            }
+
+            unclear[reason=background_noise] {
+              text-emphasis: open;
+              color: var(--tcs-editor-faded-text-color);
+            }
+
+            supplied {
+              color: var(--tcs-editor-faded-text-color);
+              &::before {
+                color: var(--tcs-editor-text-color);
+                display: inline;
+                content: '[';
+              }
+              &::after {
+                color: var(--tcs-editor-text-color);
+                display: inline;
+                content: ']';
+              }
+            }
+
+            del[rend=erased] {
+              color: var(--tcs-editor-faded-text-color);
+              &::before {
+                color: var(--tcs-editor-text-color);
+                display: inline;
+                content: '{';
+              }
+              &::after {
+                color: var(--tcs-editor-text-color);
+                display: inline;
+                content: '}';
+              }
+            }
+
+            del[rend=dotted] {
+              text-emphasis: dot;
+              text-emphasis-position: under;
+            }
+
+            del[rend=underline] {
+              text-decoration: underline;
+            }
+
+            abbr {
+              color: var(--tcs-editor-danger-text-color);
+            }
+
+            h[rend=enlarged],
+            h[rend=bigger] {
+              display: inline-block;
+              font-size: 1.2em;
+              margin: 0 .2ch;
+              &:before {
+                font-size: .85em;
+              }
+            }
+
+            h[rend=supralinear],
+            h[rend=displaced-above] {
+              vertical-align: super;
+            }
+
+            h[rend=infralinear],
+            h[rend=displaced-below] {
+              vertical-align: sub;
+            }
+
+            h[rend=doted] {
+              text-emphasis: dot;
+              text-emphasis-position: under;
+            }
+
+
+            div.first {
+              &[type="part"]::before {
+                content: '[p]: ' attr(n) ' ';
+              }
+              &[type="chapter"]::before {
+                content: '[c]: ' attr(n) ' ';
+              }
+              &::before {
+                font-weight: 700;
+                font-size: .85em;
+              }
+            }
+            ab.first {
+              &::before {
+                content: '[ab]: ' attr(n) ' ';
+                font-weight: 700;
+                font-size: .85em;
+              }
+            }
+            div.last {
+              &[type="part"]::after {
+                content: ' [/p]';
+              }
+              &[type="chapter"]::after {
+                content: ' [/c]';
+              }
+              &::after {
+                font-weight: 700;
+                font-size: .85em;
+              }
+            }
+            ab.last {
+              &::after {
+                content: ' [/ab]';
+                font-weight: 700;
+                font-size: .85em;
               }
             }
           }
-          unclear:hover::before {
-            content: 'unclear: (' attr(reason) ')';
-          }
-          seg:hover::before {
-            content: 'annotation: (' attr(type) ', ' attr(rend) ', ' attr(hand) ')';
-          }
-          // supplied:hover::before {
-          //   content: 'reconstruction: (' attr(reason) ')';
-          // }
-          del:not([rend=erased]):hover::before {
-            content: 'deleted: (' attr(rend) ')';
-          }
-          h:hover::before {
-            content: 'highlighted: (' attr(rend) ')';
-          }
-          abbr:hover::before {
-            content: 'abbreviation: (' attr(rend) ')';
-          }
-          space:hover::before {
-            content: 'blank space: (' attr(value) attr(unit) ')';
-          }
-          pc:hover::before {
-            content: 'punctuation';
-          }
 
-          seg {
-            border: 1px solid var(--tcs-editor-text-element-border-color);
-            background-color: var(--tcs-editor-text-element-background-color);
+        }
+        .footer {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          padding: 5px 120px 5px 5px;
+          background-color: white;
+          border: {
+            top: 1px solid var(--tcs-editor-border-color);
+            bottom-left-radius: var(--tcs-editor-border-radius);
+            bottom-right-radius: var(--tcs-editor-border-radius);
+          };
+          &::before {
+            position: absolute;
+            pointer-events: none;
+            bottom: 50%;
+            right: 30px;
+            color: var(--tcs-editor-title-color);
+            font-weight: 700;
+            font-size: 8px;
+            transform: translateY(50%);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.2s ease;
+            z-index: 10;
           }
-
-          space {
-            text-align: center;
-            display: inline-block;
-            width: 20px;
+          font: {
+            size: 10px;
+            weight: 400;
           }
-
-          unclear[reason=legible_incomplete] {
-            text-emphasis: circle;
-          }
-
-          unclear[reason=uncertain] {
-            text-emphasis: open;
-          }
-
-          unclear[reason=faded] {
-            text-emphasis: open;
-            color: var(--tcs-editor-high-faded-text-color);
-          }
-
-          unclear[reason=background_noise] {
-            text-emphasis: open;
-            color: var(--tcs-editor-faded-text-color);
-          }
-
-          supplied {
-            color: var(--tcs-editor-faded-text-color);
-            &::before {
-              color: var(--tcs-editor-text-color);
-              display: inline;
-              content: '[';
-            }
-            &::after {
-              color: var(--tcs-editor-text-color);
-              display: inline;
-              content: ']';
-            }
-          }
-
-          del[rend=erased] {
-            color: var(--tcs-editor-faded-text-color);
-            &::before {
-              color: var(--tcs-editor-text-color);
-              display: inline;
-              content: '{';
-            }
-            &::after {
-              color: var(--tcs-editor-text-color);
-              display: inline;
-              content: '}';
-            }
-          }
-
-          del[rend=dotted] {
-            text-emphasis: dot;
-            text-emphasis-position: under;
-          }
-
-          del[rend=underline] {
-            text-decoration: underline;
-          }
-
-          abbr {
+          color: var(--tcs-editor-text-color);
+          &.warning {
             color: var(--tcs-editor-danger-text-color);
           }
-
-          h[rend=enlarged],
-          h[rend=bigger] {
-            display: inline-block;
-            font-size: 1.2em;
-            margin: 0 .2ch;
-            &:before {
-              font-size: .85em;
-            }
+          &.hidden {
+            display: none;
           }
-
-          h[rend=supralinear],
-          h[rend=displaced-above] {
-            vertical-align: super;
-          }
-
-          h[rend=infralinear],
-          h[rend=displaced-below] {
-            vertical-align: sub;
-          }
-
-          h[rend=doted] {
-            text-emphasis: dot;
-            text-emphasis-position: under;
-          }
-
-
-          div.first {
-            &[type="part"]::before {
-              content: '[p]: ' attr(n) ' ';
-            }
-            &[type="chapter"]::before {
-              content: '[c]: ' attr(n) ' ';
-            }
-            &::before {
-              font-weight: 700;
-              font-size: .85em;
-            }
-          }
-          ab.first {
-            &::before {
-              content: '[ab]: ' attr(n) ' ';
-              font-weight: 700;
-              font-size: .85em;
-            }
-          }
-          div.last {
-            &[type="part"]::after {
-              content: ' [/p]';
-            }
-            &[type="chapter"]::after {
-              content: ' [/c]';
-            }
-            &::after {
-              font-weight: 700;
-              font-size: .85em;
-            }
-          }
-          ab.last {
-            &::after {
-              content: ' [/ab]';
-              font-weight: 700;
-              font-size: .85em;
-            }
-          }
-        }
-
-      }
-      .footer {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        padding: 5px 120px 5px 5px;
-        background-color: white;
-        border: {
-          top: 1px solid var(--tcs-editor-border-color);
-          bottom-left-radius: var(--tcs-editor-border-radius);
-          bottom-right-radius: var(--tcs-editor-border-radius);
-        };
-        &::before {
-          position: absolute;
-          pointer-events: none;
-          bottom: 50%;
-          right: 30px;
-          color: var(--tcs-editor-title-color);
-          font-weight: 700;
-          font-size: 8px;
-          transform: translateY(50%);
-          text-transform: uppercase;
-          letter-spacing: 1px;
-          transition: color 0.2s ease;
-          z-index: 10;
-        }
-        font: {
-          size: 10px;
-          weight: 400;
-        }
-        color: var(--tcs-editor-text-color);
-        &.warning {
-          color: var(--tcs-editor-danger-text-color);
-        }
-        &.hidden {
-          display: none;
         }
       }
     }
   }
+}
+tcs-editor:not(.documentViewerOpen) {
+  .documentViewer {
+    display: none;
+  }
+}
+tcs-editor.documentViewerOpen {
+  .documentViewer {
+    border: {
+      top-left-radius: var(--tcs-editor-border-radius);
+      bottom-left-radius: var(--tcs-editor-border-radius);
+    }
+  }
+  .editorsViewer {
+    min-width: 720px;
+    max-width: calc(100% - 200px);
+    .toolbar {
+      --tcs-editor-toolbar-border-top-left-radius: 0;
+    }
+    .editors.columns .editorWrapper {
+      border-bottom-left-radius: 0;
+    }
+    .editors.tabs .editorWrapper {
+      border-bottom-left-radius: 0;
+    }
+  }
+}
 
+tcs-editor.expand {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  .editors {
+    height: calc(100vh - 33px);
+  }
 }

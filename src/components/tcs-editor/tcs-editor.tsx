@@ -33,6 +33,7 @@ export class TcsEditor {
   private editorElements: Map<UnionEditorType, HTMLDivElement> = new Map();
   private textareaElements: Map<UnionEditorType, HTMLTextAreaElement> = new Map();
   private popupElement: HTMLTcsPopupElement;
+  private viewerElement: HTMLTcsViewerElement;
   private concurrentTextChange: boolean = false;
   private sanitizeWordsAndSpacesDebouncers = {
     transcribe: () => {},
@@ -71,7 +72,13 @@ export class TcsEditor {
   private locked: boolean = false;
 
   @State()
+  private expand: boolean = false;
+
+  @State()
   private textSize: 's'|'m'|'l'|'xl'|'xxl' = 's';
+
+  @State()
+  private documentViewerOpen = true;
 
   @Method()
   public async getQuillInstances(): Promise<Map<UnionEditorType, QuillInstance>> {
@@ -94,6 +101,11 @@ export class TcsEditor {
       .forEach(textarea => textarea.removeAttribute('disabled'));
     Array.from(this.editorInstances.values())
       .forEach(instance => instance.enable());
+  }
+
+  @Method()
+  public async setDocumentViewerImage(source: OpenSeadragon.TileSourceOptions): Promise<void> {
+    this.viewerElement.setDocumentViewerImage(source);
   }
 
   @Method()
@@ -246,6 +258,14 @@ export class TcsEditor {
     this.activeInstance = this.editorInstances.get(editorType);
     this.activeTextarea = this.textareaElements.get(editorType);
     this.activeEditor = editorType;
+  }
+
+  private onClickViewer() {
+    this.documentViewerOpen = !this.documentViewerOpen;
+  }
+
+  private onClickExpand(): void {
+    this.expand = !this.expand;
   }
 
   /**
@@ -622,197 +642,212 @@ export class TcsEditor {
       onClickReconstruction,
       onClickAnnotation,
       onClickCommentDropdown,
+      onClickViewer,
+      onClickExpand,
+      expand,
       toolbarConfig,
       activeEditor,
       editorStates,
       activeCommentTab,
       locked,
-      layoutType
+      layoutType,
+      documentViewerOpen
     } = this;
     return (
-      <Host>
-        <tcs-editor-toolbar
-          class="toolbar"
-          config={toolbarConfig}
-          onClickViewRaw={onClickViewRaw.bind(this)}
-          onClickRTL={onClickRTL.bind(this)}
-          onClickLTR={onClickLTR.bind(this)}
-          onClickUnclear={onClickUnclear.bind(this)}
-          onClickHighlighted={onClickHighlighted.bind(this)}
-          onClickDeleted={onClickDeleted.bind(this)}
-          onClickAbbreviation={onClickAbbreviation.bind(this)}
-          onClickBlankSpace={onClickBlankSpace.bind(this)}
-          onClickPunctuation={onClickPunctuation.bind(this)}
-          onClickStructure={onClickStructure.bind(this)}
-          onClickLayout={onClickLayout.bind(this)}
-          onClickRemove={onClickRemove.bind(this)}
-          onClickSettings={onClickSettings.bind(this)}
-          onClickReconstruction={onClickReconstruction.bind(this)}
-          onClickAnnotation={onClickAnnotation.bind(this)}
-          onClickTextSize={onClickTextSize.bind(this)}
-          layoutType={layoutType}
-          textDirection={editorStates.get(activeEditor).textDirection}
-          viewRaw={editorStates.get(activeEditor).viewType === 'raw'}
-          locked={locked}
+      <Host class={classNames({
+        documentViewerOpen,
+        expand
+      })}>
+        <tcs-viewer
+          class="documentViewer"
+          ref={ref => this.viewerElement = ref}
         />
-        <div class={classNames({
-          editors: true,
-          [layoutType]: true,
-        })}>
+        <div class="editorsViewer">
+          <tcs-editor-toolbar
+            class="toolbar"
+            config={toolbarConfig}
+            onClickViewRaw={onClickViewRaw.bind(this)}
+            onClickRTL={onClickRTL.bind(this)}
+            onClickLTR={onClickLTR.bind(this)}
+            onClickUnclear={onClickUnclear.bind(this)}
+            onClickHighlighted={onClickHighlighted.bind(this)}
+            onClickDeleted={onClickDeleted.bind(this)}
+            onClickAbbreviation={onClickAbbreviation.bind(this)}
+            onClickBlankSpace={onClickBlankSpace.bind(this)}
+            onClickPunctuation={onClickPunctuation.bind(this)}
+            onClickStructure={onClickStructure.bind(this)}
+            onClickLayout={onClickLayout.bind(this)}
+            onClickRemove={onClickRemove.bind(this)}
+            onClickSettings={onClickSettings.bind(this)}
+            onClickReconstruction={onClickReconstruction.bind(this)}
+            onClickAnnotation={onClickAnnotation.bind(this)}
+            onClickTextSize={onClickTextSize.bind(this)}
+            onClickViewer={onClickViewer.bind(this)}
+            onClickExpand={onClickExpand.bind(this)}
+            layoutType={layoutType}
+            textDirection={editorStates.get(activeEditor).textDirection}
+            viewRaw={editorStates.get(activeEditor).viewType === 'raw'}
+            locked={locked}
+          />
           <div class={classNames({
-            editorWrapper: true,
-            transcribe: true,
-            active: activeEditor === 'transcribe'
+            editors: true,
+            [layoutType]: true,
           })}>
-            <div
-              class={classNames({
-                editor: true,
-                hidden: editorStates.get('transcribe').viewType === 'raw',
-              })}
-              ref={el => this.editorElements.set('transcribe', el)}
+            <div class={classNames({
+              editorWrapper: true,
+              transcribe: true,
+              active: activeEditor === 'transcribe'
+            })}>
+              <div
+                class={classNames({
+                  editor: true,
+                  hidden: editorStates.get('transcribe').viewType === 'raw',
+                })}
+                ref={el => this.editorElements.set('transcribe', el)}
+                />
+              <textarea
+                class={classNames({
+                  editor: true,
+                  hidden: editorStates.get('transcribe').viewType === 'default',
+                  textarea: true,
+                })}
+                ref={el => this.textareaElements.set('transcribe', el)}
               />
-            <textarea
-              class={classNames({
-                editor: true,
-                hidden: editorStates.get('transcribe').viewType === 'default',
-                textarea: true,
-              })}
-              ref={el => this.textareaElements.set('transcribe', el)}
-            />
-            <div class={classNames({
-              footer: true,
-              hidden: editorStates.get('transcribe').viewType === 'raw',
-              warning: !editorStates.get('transcribe').clean,
-            })}>
-              {!editorStates.get('transcribe').clean && (
-                '⚠️ Your document structure is not clean. Please check the structure and correct it (for example chapter is required at root).'
-              )}
-              {editorStates.get('transcribe').clean && (
-                '✅ Your document structure is clean.'
-              )}
+              <div class={classNames({
+                footer: true,
+                hidden: editorStates.get('transcribe').viewType === 'raw',
+                warning: !editorStates.get('transcribe').clean,
+              })}>
+                {!editorStates.get('transcribe').clean && (
+                  '⚠️ Your document structure is not clean. Please check the structure and correct it (for example chapter is required at root).'
+                )}
+                {editorStates.get('transcribe').clean && (
+                  '✅ Your document structure is clean.'
+                )}
+              </div>
             </div>
-          </div>
 
-          <div class={classNames({
-            editorWrapper: true,
-            translate: true,
-            active: activeEditor === 'translate'
-          })}>
-            <div
-              class={classNames({
-                editor: true,
+            <div class={classNames({
+              editorWrapper: true,
+              translate: true,
+              active: activeEditor === 'translate'
+            })}>
+              <div
+                class={classNames({
+                  editor: true,
+                  hidden: editorStates.get('translate').viewType === 'raw',
+                })}
+                ref={el => this.editorElements.set('translate', el)}
+              />
+              <textarea
+                class={classNames({
+                  editor: true,
+                  hidden: editorStates.get('translate').viewType === 'default',
+                  textarea: true,
+                })}
+                ref={el => this.textareaElements.set('translate', el)}
+              />
+              <div class={classNames({
+                footer: true,
                 hidden: editorStates.get('translate').viewType === 'raw',
-              })}
-              ref={el => this.editorElements.set('translate', el)}
-            />
-            <textarea
-              class={classNames({
-                editor: true,
-                hidden: editorStates.get('translate').viewType === 'default',
-                textarea: true,
-              })}
-              ref={el => this.textareaElements.set('translate', el)}
-            />
-            <div class={classNames({
-              footer: true,
-              hidden: editorStates.get('translate').viewType === 'raw',
-              warning: !editorStates.get('translate').clean,
-            })}>
-              {!editorStates.get('translate').clean && (
-                '⚠️ Your document structure is not clean. Please check the structure and correct it (for example chapter is required at root).'
-              )}
-              {editorStates.get('translate').clean && (
-                '✅ Your document structure is clean.'
-              )}
+                warning: !editorStates.get('translate').clean,
+              })}>
+                {!editorStates.get('translate').clean && (
+                  '⚠️ Your document structure is not clean. Please check the structure and correct it (for example chapter is required at root).'
+                )}
+                {editorStates.get('translate').clean && (
+                  '✅ Your document structure is clean.'
+                )}
+              </div>
             </div>
-          </div>
-          <div class={classNames({
-            editorWrapper: true,
-            comment: true,
-            active: activeEditor.includes('comment')
-          })}>
-            <tcs-dropdown
-              disabled={locked}
-              config={{
-                label: capitalize(activeCommentTab.replace('comment_', '')),
-                items: [
-                  {
-                    id: 'line',
-                    label: 'Line',
-                    onClick: onClickCommentDropdown.bind(this, 'line')
-                  },
-                  {
-                    id: 'verse',
-                    label: 'Verse',
-                    onClick: onClickCommentDropdown.bind(this, 'verse')
-                  }
-                ]
-              }}
-            />
-            <div
-              class={classNames({
-                editor: true,
+            <div class={classNames({
+              editorWrapper: true,
+              comment: true,
+              active: activeEditor.includes('comment')
+            })}>
+              <tcs-dropdown
+                disabled={locked}
+                config={{
+                  label: capitalize(activeCommentTab.replace('comment_', '')),
+                  items: [
+                    {
+                      id: 'line',
+                      label: 'Line',
+                      onClick: onClickCommentDropdown.bind(this, 'line')
+                    },
+                    {
+                      id: 'verse',
+                      label: 'Verse',
+                      onClick: onClickCommentDropdown.bind(this, 'verse')
+                    }
+                  ]
+                }}
+              />
+              <div
+                class={classNames({
+                  editor: true,
+                  hidden: editorStates.get('comment_line').viewType === 'raw' || activeCommentTab !== 'line',
+                })}
+                ref={el => this.editorElements.set('comment_line', el)}
+              />
+              <textarea class={classNames({
+                  editor: true,
+                  hidden: editorStates.get('comment_line').viewType === 'default' || activeCommentTab !== 'line',
+                  textarea: true,
+                })}
+                ref={el => this.textareaElements.set('comment_line', el)}
+              />
+              <div class={classNames({
+                footer: true,
                 hidden: editorStates.get('comment_line').viewType === 'raw' || activeCommentTab !== 'line',
-              })}
-              ref={el => this.editorElements.set('comment_line', el)}
-            />
-            <textarea class={classNames({
-                editor: true,
-                hidden: editorStates.get('comment_line').viewType === 'default' || activeCommentTab !== 'line',
-                textarea: true,
-              })}
-              ref={el => this.textareaElements.set('comment_line', el)}
-            />
-            <div class={classNames({
-              footer: true,
-              hidden: editorStates.get('comment_line').viewType === 'raw' || activeCommentTab !== 'line',
-              warning: !editorStates.get('comment_line').clean,
-            })}>
-              {!editorStates.get('comment_line').clean && (
-                '⚠️ Your document structure is not clean. Please check the structure and correct it (for example chapter is required at root).'
-              )}
-              {editorStates.get('comment_line').clean && (
-                '✅ Your document structure is clean.'
-              )}
-            </div>
-            <div
-              class={classNames({
-                editor: true,
+                warning: !editorStates.get('comment_line').clean,
+              })}>
+                {!editorStates.get('comment_line').clean && (
+                  '⚠️ Your document structure is not clean. Please check the structure and correct it (for example chapter is required at root).'
+                )}
+                {editorStates.get('comment_line').clean && (
+                  '✅ Your document structure is clean.'
+                )}
+              </div>
+              <div
+                class={classNames({
+                  editor: true,
+                  hidden: editorStates.get('comment_verse').viewType === 'raw' || activeCommentTab !== 'verse',
+                })}
+                ref={el => this.editorElements.set('comment_verse', el)}
+              />
+              <textarea class={classNames({
+                  editor: true,
+                  hidden: editorStates.get('comment_verse').viewType === 'default' || activeCommentTab !== 'verse',
+                  textarea: true,
+                })}
+                ref={el => this.textareaElements.set('comment_verse', el)}
+              />
+              <div class={classNames({
+                footer: true,
                 hidden: editorStates.get('comment_verse').viewType === 'raw' || activeCommentTab !== 'verse',
-              })}
-              ref={el => this.editorElements.set('comment_verse', el)}
-            />
-            <textarea class={classNames({
-                editor: true,
-                hidden: editorStates.get('comment_verse').viewType === 'default' || activeCommentTab !== 'verse',
-                textarea: true,
-              })}
-              ref={el => this.textareaElements.set('comment_verse', el)}
-            />
-            <div class={classNames({
-              footer: true,
-              hidden: editorStates.get('comment_verse').viewType === 'raw' || activeCommentTab !== 'verse',
-              warning: !editorStates.get('comment_verse').clean,
-            })}>
-              {!editorStates.get('comment_verse').clean && (
-                '⚠️ Your document structure is not clean. Please check the structure and correct it (for example chapter is required at root).'
-              )}
-              {editorStates.get('comment_verse').clean && (
-                '✅ Your document structure is clean.'
-              )}
+                warning: !editorStates.get('comment_verse').clean,
+              })}>
+                {!editorStates.get('comment_verse').clean && (
+                  '⚠️ Your document structure is not clean. Please check the structure and correct it (for example chapter is required at root).'
+                )}
+                {editorStates.get('comment_verse').clean && (
+                  '✅ Your document structure is clean.'
+                )}
+              </div>
             </div>
+            {layoutType === 'tabs' && (
+              <div class="tabs">
+                {['transcribe', 'translate', `comment_${activeCommentTab}`]
+                  .filter(editorType => editorType !== activeEditor)
+                  .map(editorType => (
+                    <button class="tab" key={editorType} onClick={onClickTab.bind(this, editorType)}>
+                      {editorType.replace(/(_line|_verse)/, '')}
+                    </button>
+                ))}
+              </div>
+            )}
           </div>
-          {layoutType === 'tabs' && (
-            <div class="tabs">
-              {['transcribe', 'translate', `comment_${activeCommentTab}`]
-                .filter(editorType => editorType !== activeEditor)
-                .map(editorType => (
-                  <button class="tab" key={editorType} onClick={onClickTab.bind(this, editorType)}>
-                    {editorType.replace(/(_line|_verse)/, '')}
-                  </button>
-              ))}
-            </div>
-          )}
         </div>
         <tcs-popup ref={el => this.popupElement = el} />
       </Host>
@@ -828,6 +863,8 @@ const defaultEditorToolbarConfig: EditorToolbarConfig = {
     reconstruction: true,
     annotation: true,
     layout: true,
+    viewer: true,
+    expand: true,
     remove: true,
     structure: true,
     punctuation: true,

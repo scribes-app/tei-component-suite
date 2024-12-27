@@ -44,9 +44,9 @@
         color: var(--tcs-visualizer-toolbar-lock-color);
         margin-right: 8px;
       }
-      tcs-dropdown {
+      tcs-button {
         &:last-child {
-          --tcs-dropdown-border-top-right-radius: var(--tcs-visualizer-toolbar-border-radius);
+          --tcs-button-border-top-right-radius: var(--tcs-visualizer-toolbar-border-radius);
         }
       }
     }

@@ -275,6 +275,12 @@ The word "rehabilitate" is composed of the prefix "re-" meaning back to, the roo
       // EXAMPLES EDITOR
 
       const editor = document.getElementById('editor');
+      setTimeout(() => {
+        editor.setDocumentViewerImage({
+          type: 'image',
+          url: '/assets/folio.jpg',
+        });
+      }, 200)
       // UNCOMMENT TO SEE THE TEI OUTPUT IN THE CONSOLE EVERY 3 SECONDS
       // ------------------------------
       // setInterval(() => {
