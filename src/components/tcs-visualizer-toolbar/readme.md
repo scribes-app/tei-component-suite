@@ -15,9 +15,12 @@
 
 ## Events
 
-| Event         | Description | Type                                        |
-| ------------- | ----------- | ------------------------------------------- |
-| `clickLayout` |             | `CustomEvent<"columns" \| "mix" \| "rows">` |
+| Event           | Description | Type                                        |
+| --------------- | ----------- | ------------------------------------------- |
+| `clickExpand`   |             | `CustomEvent<void>`                         |
+| `clickLayout`   |             | `CustomEvent<"columns" \| "mix" \| "rows">` |
+| `clickTextSize` |             | `CustomEvent<void>`                         |
+| `clickViewer`   |             | `CustomEvent<void>`                         |
 
 
 ## Dependencies
@@ -28,13 +31,12 @@
 
 ### Depends on
 
-- [tcs-dropdown](../tcs-dropdown)
+- [tcs-button](../tcs-button)
 
 ### Graph
 ```mermaid
 graph TD;
-  tcs-visualizer-toolbar --> tcs-dropdown
-  tcs-dropdown --> tcs-button
+  tcs-visualizer-toolbar --> tcs-button
   tcs-button --> tcs-icon
   tcs-visualizer --> tcs-visualizer-toolbar
   style tcs-visualizer-toolbar fill:#f9f,stroke:#333,stroke-width:4px

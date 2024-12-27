@@ -7,10 +7,10 @@
 
 ## Properties
 
-| Property        | Attribute | Description | Type                                                                                                                                                                                                                                                                                                                                                | Default                      |
-| --------------- | --------- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------- |
-| `settings`      | --        |             | `{ manuscript?: { column?: string; folio?: string; book?: string; }; }`                                                                                                                                                                                                                                                                             | `defaultEditorSettings`      |
-| `toolbarConfig` | --        |             | `{ controls: { settings?: boolean; reconstruction?: boolean; annotation?: boolean; layout?: boolean; remove?: boolean; structure?: boolean; blankSpace?: boolean; punctuation?: boolean; abbreviation?: boolean; deleted?: boolean; highlighted?: boolean; unclear?: boolean; viewRaw?: boolean; textDirection?: boolean; textSize?: boolean; }; }` | `defaultEditorToolbarConfig` |
+| Property        | Attribute | Description | Type                                                                                                                                                                                                                                                                                                                                                                                    | Default                      |
+| --------------- | --------- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------- |
+| `settings`      | --        |             | `{ manuscript?: { column?: string; folio?: string; book?: string; }; }`                                                                                                                                                                                                                                                                                                                 | `defaultEditorSettings`      |
+| `toolbarConfig` | --        |             | `{ controls: { settings?: boolean; reconstruction?: boolean; annotation?: boolean; layout?: boolean; remove?: boolean; structure?: boolean; blankSpace?: boolean; punctuation?: boolean; abbreviation?: boolean; deleted?: boolean; highlighted?: boolean; unclear?: boolean; viewRaw?: boolean; textDirection?: boolean; textSize?: boolean; viewer?: boolean; expand?: boolean; }; }` | `defaultEditorToolbarConfig` |
 
 
 ## Methods
@@ -55,6 +55,22 @@ Type: `Promise<void>`
 
 
 
+### `setDocumentViewerImage(source: OpenSeadragon.TileSourceOptions) => Promise<void>`
+
+
+
+#### Parameters
+
+| Name     | Type                | Description |
+| -------- | ------------------- | ----------- |
+| `source` | `TileSourceOptions` |             |
+
+#### Returns
+
+Type: `Promise<void>`
+
+
+
 ### `setFormattedTEI(tei: EditorFormattedTEI) => Promise<void>`
 
 
@@ -90,6 +106,7 @@ Type: `Promise<void>`
 - [tcs-structure-form](../forms/tcs-structure-form)
 - [tcs-settings-form](../forms/tcs-settings-form)
 - [tcs-annotation-form](../forms/tcs-annotation-form)
+- [tcs-viewer](../tcs-viewer)
 - [tcs-editor-toolbar](../tcs-editor-toolbar)
 - [tcs-dropdown](../tcs-dropdown)
 - [tcs-popup](../tcs-popup)
@@ -101,6 +118,7 @@ graph TD;
   tcs-editor --> tcs-structure-form
   tcs-editor --> tcs-settings-form
   tcs-editor --> tcs-annotation-form
+  tcs-editor --> tcs-viewer
   tcs-editor --> tcs-editor-toolbar
   tcs-editor --> tcs-dropdown
   tcs-editor --> tcs-popup
@@ -116,6 +134,8 @@ graph TD;
   tcs-settings-form --> tcs-button
   tcs-annotation-form --> tcs-select
   tcs-annotation-form --> tcs-button
+  tcs-viewer --> tcs-button
+  tcs-viewer --> tcs-range
   tcs-editor-toolbar --> tcs-button
   tcs-editor-toolbar --> tcs-dropdown
   tcs-editor-toolbar --> tcs-icon

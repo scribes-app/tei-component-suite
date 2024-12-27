@@ -44,12 +44,12 @@ Type: `Promise<void>`
 
 ### Used by
 
- - [tcs-visualizer](../tcs-visualizer)
+ - [tcs-viewer](../tcs-viewer)
 
 ### Graph
 ```mermaid
 graph TD;
-  tcs-visualizer --> tcs-range
+  tcs-viewer --> tcs-range
   style tcs-range fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

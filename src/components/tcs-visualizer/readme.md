@@ -7,12 +7,24 @@
 
 ## Properties
 
-| Property        | Attribute | Description | Type                                   | Default                          |
-| --------------- | --------- | ----------- | -------------------------------------- | -------------------------------- |
-| `toolbarConfig` | --        |             | `{ controls: { layout?: boolean; }; }` | `defaultVisualizerToolbarConfig` |
+| Property           | Attribute | Description | Type                                                                                                                          | Default                          |
+| ------------------ | --------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------- | -------------------------------- |
+| `contextMenuLinks` | --        |             | `{ label: string; onClick?: (selection: Selection, e: MouseEvent) => any; data?: Record<string, any>; icon?: UnionIcons; }[]` | `[]`                             |
+| `tei`              | --        |             | `{ transcribe?: string; translate?: string; comment_line?: string; comment_verse?: string; }`                                 | `undefined`                      |
+| `toolbarConfig`    | --        |             | `{ controls: { layout?: boolean; }; }`                                                                                        | `defaultVisualizerToolbarConfig` |
 
 
 ## Methods
+
+### `getDrawer() => Promise<HTMLTcsDrawerElement>`
+
+
+
+#### Returns
+
+Type: `Promise<HTMLTcsDrawerElement>`
+
+
 
 ### `setDocumentViewerImage(source: OpenSeadragon.TileSourceOptions) => Promise<void>`
 
@@ -35,21 +47,27 @@ Type: `Promise<void>`
 
 ### Depends on
 
-- [tcs-button](../tcs-button)
-- [tcs-range](../tcs-range)
+- [tcs-viewer](../tcs-viewer)
 - [tcs-visualizer-toolbar](../tcs-visualizer-toolbar)
 - [tcs-dropdown](../tcs-dropdown)
+- [tcs-context-menu](../tcs-context-menu)
+- [tcs-drawer](../tcs-drawer)
 
 ### Graph
 ```mermaid
 graph TD;
-  tcs-visualizer --> tcs-button
-  tcs-visualizer --> tcs-range
+  tcs-visualizer --> tcs-viewer
   tcs-visualizer --> tcs-visualizer-toolbar
   tcs-visualizer --> tcs-dropdown
+  tcs-visualizer --> tcs-context-menu
+  tcs-visualizer --> tcs-drawer
+  tcs-viewer --> tcs-button
+  tcs-viewer --> tcs-range
   tcs-button --> tcs-icon
-  tcs-visualizer-toolbar --> tcs-dropdown
+  tcs-visualizer-toolbar --> tcs-button
   tcs-dropdown --> tcs-button
+  tcs-context-menu --> tcs-button
+  tcs-drawer --> tcs-button
   style tcs-visualizer fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
