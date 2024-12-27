@@ -31,6 +31,7 @@ export type UnionIcons = (
   'analysis'|
   'document'|
   'file-download'|
+  'sidebar'|
   'compress'
 )
 

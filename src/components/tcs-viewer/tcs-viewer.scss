@@ -1,0 +1,65 @@
+@import 'manifest';
+
+:host {
+  @include component;
+
+  --tcs-visualizer-document-viewer-background-color: #{$color-slate-900};
+  --tcs-visualizer-range-control-background-color: white;
+  --tcs-visualizer-range-control-border-color: #{$color-slate-300};
+
+  position: relative;
+
+  .controls {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    z-index: 2;
+    gap: 4px;
+    tcs-button {
+      --tcs-button-border-top-right-radius: 3px;
+      --tcs-button-border-top-left-radius: 3px;
+      --tcs-button-border-bottom-right-radius: 3px;
+      --tcs-button-border-bottom-left-radius: 3px;
+    }
+
+    .rangeControl {
+      position: absolute;
+      right: calc(100% + 10px);
+      width: 200px;
+      padding: 10px;
+      border-radius: 3px;
+      background-color: var(--tcs-visualizer-range-control-background-color);
+      opacity: 0;
+      pointer-events: none;
+      border: 1px solid var(--tcs-visualizer-range-control-border-color);
+      transition: opacity 0.2s ease,
+      top 0.2s ease;
+      &.open {
+        opacity: 1;
+        pointer-events: all;
+      }
+      &.brightness {
+        top: 10px;
+        &.open {
+          top: 0;
+        }
+      }
+      &.contrast {
+        top: 48px;
+        &.open {
+          top: 38px;
+        }
+      }
+    }
+  }
+
+  .viewer {
+    position: absolute;
+    z-index: 1;
+    inset: 10px;
+  }
+}

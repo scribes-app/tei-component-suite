@@ -131,6 +131,9 @@ export namespace Components {
         "setValue": (value: string) => Promise<void>;
         "type": 'text'|'password'|'number'|'email';
     }
+    interface TcsViewer {
+        "setDocumentViewerImage": (source: OpenSeadragon.TileSourceOptions) => Promise<void>;
+    }
     interface TcsVisualizer {
         "contextMenuLinks": TcsContextMenu['controls'];
         "getDrawer": () => Promise<HTMLTcsDrawerElement>;
@@ -407,6 +410,12 @@ declare global {
         prototype: HTMLTcsTextfieldElement;
         new (): HTMLTcsTextfieldElement;
     };
+    interface HTMLTcsViewerElement extends Components.TcsViewer, HTMLStencilElement {
+    }
+    var HTMLTcsViewerElement: {
+        prototype: HTMLTcsViewerElement;
+        new (): HTMLTcsViewerElement;
+    };
     interface HTMLTcsVisualizerElement extends Components.TcsVisualizer, HTMLStencilElement {
     }
     var HTMLTcsVisualizerElement: {
@@ -416,6 +425,7 @@ declare global {
     interface HTMLTcsVisualizerToolbarElementEventMap {
         "clickLayout": UnionVisualizerLayoutType;
         "clickExpand": void;
+        "clickViewer": void;
         "clickTextSize": void;
     }
     interface HTMLTcsVisualizerToolbarElement extends Components.TcsVisualizerToolbar, HTMLStencilElement {
@@ -448,6 +458,7 @@ declare global {
         "tcs-settings-form": HTMLTcsSettingsFormElement;
         "tcs-structure-form": HTMLTcsStructureFormElement;
         "tcs-textfield": HTMLTcsTextfieldElement;
+        "tcs-viewer": HTMLTcsViewerElement;
         "tcs-visualizer": HTMLTcsVisualizerElement;
         "tcs-visualizer-toolbar": HTMLTcsVisualizerToolbarElement;
     }
@@ -573,6 +584,8 @@ declare namespace LocalJSX {
         "required"?: boolean;
         "type"?: 'text'|'password'|'number'|'email';
     }
+    interface TcsViewer {
+    }
     interface TcsVisualizer {
         "contextMenuLinks"?: TcsContextMenu['controls'];
         "tei"?: VisualizerFormattedTEI;
@@ -584,6 +597,7 @@ declare namespace LocalJSX {
         "onClickExpand"?: (event: TcsVisualizerToolbarCustomEvent<void>) => void;
         "onClickLayout"?: (event: TcsVisualizerToolbarCustomEvent<UnionVisualizerLayoutType>) => void;
         "onClickTextSize"?: (event: TcsVisualizerToolbarCustomEvent<void>) => void;
+        "onClickViewer"?: (event: TcsVisualizerToolbarCustomEvent<void>) => void;
     }
     interface IntrinsicElements {
         "tcs-annotation-form": TcsAnnotationForm;
@@ -601,6 +615,7 @@ declare namespace LocalJSX {
         "tcs-settings-form": TcsSettingsForm;
         "tcs-structure-form": TcsStructureForm;
         "tcs-textfield": TcsTextfield;
+        "tcs-viewer": TcsViewer;
         "tcs-visualizer": TcsVisualizer;
         "tcs-visualizer-toolbar": TcsVisualizerToolbar;
     }
@@ -624,6 +639,7 @@ declare module "@stencil/core" {
             "tcs-settings-form": LocalJSX.TcsSettingsForm & JSXBase.HTMLAttributes<HTMLTcsSettingsFormElement>;
             "tcs-structure-form": LocalJSX.TcsStructureForm & JSXBase.HTMLAttributes<HTMLTcsStructureFormElement>;
             "tcs-textfield": LocalJSX.TcsTextfield & JSXBase.HTMLAttributes<HTMLTcsTextfieldElement>;
+            "tcs-viewer": LocalJSX.TcsViewer & JSXBase.HTMLAttributes<HTMLTcsViewerElement>;
             "tcs-visualizer": LocalJSX.TcsVisualizer & JSXBase.HTMLAttributes<HTMLTcsVisualizerElement>;
             "tcs-visualizer-toolbar": LocalJSX.TcsVisualizerToolbar & JSXBase.HTMLAttributes<HTMLTcsVisualizerToolbarElement>;
         }

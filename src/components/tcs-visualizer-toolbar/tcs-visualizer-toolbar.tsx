@@ -16,6 +16,9 @@ export class TcsVisualizerToolbar {
   private readonly clickExpand: EventEmitter<void>;
 
   @Event()
+  private readonly clickViewer: EventEmitter<void>;
+
+  @Event()
   private readonly clickTextSize: EventEmitter<void>;
 
   @Prop()
@@ -28,12 +31,18 @@ export class TcsVisualizerToolbar {
     const {
       clickLayout,
       clickExpand,
+      clickViewer,
       clickTextSize
     } = this;
     return (
       <Host>
         <div class="controls">
           <div class="alignRight">
+            <tcs-button
+              onClickButton={clickViewer.emit.bind(this)}
+              iconOnly
+              icon="sidebar"
+            />
             <tcs-button
               onClickButton={clickTextSize.emit.bind(this)}
               iconOnly
