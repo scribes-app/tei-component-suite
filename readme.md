@@ -4,11 +4,38 @@
 
 This project is a web component library that provide a main component `TcsEditor` to edit XML TEI files. It is designed to be used in the [Scribes app](https://github.com/scribes-app).
 
+## References
+
+### Component documentation
+
+StencilJS creates a documentation page for each component. You can find it in the `docs` folder.
+
+- [forms/tcs-annotation-form](https://github.com/scribes-app/tei-component-suite/blob/main/src/components/forms/tcs-annotation-form/readme.md)
+- [forms/tcs-blank-space-form](https://github.com/scribes-app/tei-component-suite/blob/main/src/components/forms/tcs-blank-space-form/readme.md)
+- [forms/tcs-settings-form](https://github.com/scribes-app/tei-component-suite/blob/main/src/components/forms/tcs-settings-form/readme.md)
+- [forms/tcs-structure-form](https://github.com/scribes-app/tei-component-suite/blob/main/src/components/forms/tcs-structure-form/readme.md)
+- [tcs-button](https://github.com/scribes-app/tei-component-suite/blob/main/src/components/tcs-button/readme.md)
+- [tcs-context-menu](https://github.com/scribes-app/tei-component-suite/blob/main/src/components/tcs-context-menu/readme.md)
+- [tcs-drawer](https://github.com/scribes-app/tei-component-suite/blob/main/src/components/tcs-drawer/readme.md)
+- [tcs-dropdown](https://github.com/scribes-app/tei-component-suite/blob/main/src/components/tcs-dropdown/readme.md)
+- [tcs-editor](https://github.com/scribes-app/tei-component-suite/blob/main/src/components/tcs-editor/readme.md)
+- [tcs-editor-toolbar](https://github.com/scribes-app/tei-component-suite/blob/main/src/components/tcs-editor-toolbar/readme.md)
+- [tcs-icon](https://github.com/scribes-app/tei-component-suite/blob/main/src/components/tcs-icon/readme.md)
+- [tcs-popup](https://github.com/scribes-app/tei-component-suite/blob/main/src/components/tcs-popup/readme.md)
+- [tcs-range](https://github.com/scribes-app/tei-component-suite/blob/main/src/components/tcs-range/readme.md)
+- [tcs-select](https://github.com/scribes-app/tei-component-suite/blob/main/src/components/tcs-select/readme.md)
+- [tcs-textfield](https://github.com/scribes-app/tei-component-suite/blob/main/src/components/tcs-textfield/readme.md)
+- [tcs-viewer](https://github.com/scribes-app/tei-component-suite/blob/main/src/components/tcs-viewer/readme.md)
+- [tcs-visualizer](https://github.com/scribes-app/tei-component-suite/blob/main/src/components/tcs-visualizer/readme.md)
+- [tcs-visualizer-toolbar](https://github.com/scribes-app/tei-component-suite/blob/main/src/components/tcs-visualizer-toolbar/readme.md)
+- [tcs-editor](https://github.com/scribes-app/tei-component-suite/blob/main/src/components/tcs-editor/readme.md)
+
+### Related projects
+
+- [TEI](https://www.tei-c.org/)
+- [Scribes](https://github.com/scribes-app)
+
 ## Usage
-
-### NPM Package
-
-[https://www.npmjs.com/package/@metztheolab/tei-component-suite]()
 
 ### Installation
 
@@ -134,7 +161,7 @@ Use components in your Vue app:
 ```vue
 <template>
   <!-- ... -->
-  <Tcs-editor />
+  <tcs-editor />
   <!-- ... -->
 </template>
 ```
@@ -310,7 +337,7 @@ Use components in your Angular template files:
 
 ```html
 <body>
-  <!-- You can use attributes such as toolbarConfig or settings, see the appropriate readme for more information -->
+  <!-- You can use attributes such as toolbarConfig or settings, see the component readme for more information -->
   <Tcs-editor id="editor"></Tcs-editor>
   <script>
     const editor = document.querySelector('#editor');
