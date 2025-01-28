@@ -25,12 +25,16 @@
       // Create a switch to toggle between the editor and the visualizer
       document.querySelector('#button-editor').addEventListener('clickButton', () => {
         document.getElementById('editor').style.removeProperty('display');
+        document.querySelector('#button-editor').setAttribute('active', true);
+        document.querySelector('#button-visualizer').removeAttribute('active');
         document.getElementById('visualizer').style.display = 'none';
       });
 
       document.querySelector('#button-visualizer').addEventListener('clickButton', () => {
-        document.getElementById('editor').style.display = 'none';
         document.getElementById('visualizer').style.removeProperty('display');
+        document.querySelector('#button-visualizer').setAttribute('active', true);
+        document.querySelector('#button-editor').removeAttribute('active');
+        document.getElementById('editor').style.display = 'none';
       });
 
       // EXAMPLES VISUALIZER
