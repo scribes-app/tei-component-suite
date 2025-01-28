@@ -10,7 +10,7 @@ echo "Finalize vue output..."
 # Create file with the contents of the output
 cat <<EOF > "$DIRECTORY/plugin.ts"
 import { type Plugin } from 'vue';
-import { defineCustomElements } from '@metztheolab/xml-editor-library';
+import { defineCustomElements } from '@metztheolab/tei-component-suite';
 
 export const ComponentLibrary: Plugin = {
   async install() {
