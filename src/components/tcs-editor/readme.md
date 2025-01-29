@@ -7,17 +7,17 @@
 
 ## Properties
 
-| Property        | Attribute | Description | Type                                                                                                                                                                                                                                                                                                                                                                                    | Default                      |
-| --------------- | --------- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------- |
-| `settings`      | --        |             | `{ manuscript?: { column?: string; folio?: string; book?: string; }; }`                                                                                                                                                                                                                                                                                                                 | `defaultEditorSettings`      |
-| `toolbarConfig` | --        |             | `{ controls: { settings?: boolean; reconstruction?: boolean; annotation?: boolean; layout?: boolean; remove?: boolean; structure?: boolean; blankSpace?: boolean; punctuation?: boolean; abbreviation?: boolean; deleted?: boolean; highlighted?: boolean; unclear?: boolean; viewRaw?: boolean; textDirection?: boolean; textSize?: boolean; viewer?: boolean; expand?: boolean; }; }` | `defaultEditorToolbarConfig` |
+| Property        | Attribute | Description             | Type                                                                                                                                                                                                                                                                                                                                                                                    | Default                      |
+| --------------- | --------- | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------- |
+| `settings`      | --        | Initial editor settings | `{ manuscript?: { column?: string; folio?: string; book?: string; }; }`                                                                                                                                                                                                                                                                                                                 | `defaultEditorSettings`      |
+| `toolbarConfig` | --        | Toolbar configuration   | `{ controls: { settings?: boolean; reconstruction?: boolean; annotation?: boolean; layout?: boolean; remove?: boolean; structure?: boolean; blankSpace?: boolean; punctuation?: boolean; abbreviation?: boolean; deleted?: boolean; highlighted?: boolean; unclear?: boolean; viewRaw?: boolean; textDirection?: boolean; textSize?: boolean; viewer?: boolean; expand?: boolean; }; }` | `defaultEditorToolbarConfig` |
 
 
 ## Methods
 
 ### `getFormattedTEI() => Promise<EditorFormattedTEI>`
 
-
+Get the current formatted TEI for each editor
 
 #### Returns
 
@@ -27,7 +27,7 @@ Type: `Promise<EditorFormattedTEI>`
 
 ### `getQuillInstances() => Promise<Map<UnionEditorType, QuillInstance>>`
 
-
+Get all editors Quill instances
 
 #### Returns
 
@@ -37,7 +37,7 @@ Type: `Promise<Map<UnionEditorType, Quill>>`
 
 ### `getSettings() => Promise<EditorSettings>`
 
-
+Get editor settings
 
 #### Returns
 
@@ -47,7 +47,7 @@ Type: `Promise<EditorSettings>`
 
 ### `lock() => Promise<void>`
 
-
+Lock the editor, the user can't edit the text anymore
 
 #### Returns
 
@@ -57,7 +57,7 @@ Type: `Promise<void>`
 
 ### `setDocumentViewerImage(source: OpenSeadragon.TileSourceOptions) => Promise<void>`
 
-
+Set the document viewer image
 
 #### Parameters
 
@@ -73,7 +73,7 @@ Type: `Promise<void>`
 
 ### `setFormattedTEI(tei: EditorFormattedTEI) => Promise<void>`
 
-
+Set formatted TEI for each editor
 
 #### Parameters
 
@@ -89,7 +89,7 @@ Type: `Promise<void>`
 
 ### `unlock() => Promise<void>`
 
-
+Unlock the editor, the user can edit the text again
 
 #### Returns
 

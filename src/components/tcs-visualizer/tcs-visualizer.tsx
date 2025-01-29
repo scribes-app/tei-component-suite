@@ -19,12 +19,21 @@ export class TcsVisualizer {
   private viewerElement: HTMLTcsViewerElement;
   private contextMenuElement: HTMLTcsContextMenuElement;
 
+  /**
+   * Toolbar configuration
+   */
   @Prop({ mutable: true })
   public toolbarConfig: VisualizerToolbarConfig = defaultVisualizerToolbarConfig;
 
+  /**
+   * Links to add to the context menu
+   */
   @Prop()
   public contextMenuLinks: TcsContextMenu['controls'] = [];
 
+  /**
+   * TEI to display for each editor
+   */
   @Prop()
   public tei: VisualizerFormattedTEI;
 
@@ -43,12 +52,17 @@ export class TcsVisualizer {
   @State()
   private documentViewerOpen = true;
 
-
+  /**
+   * Get the drawer element
+   */
   @Method()
   public async getDrawer(): Promise<HTMLTcsDrawerElement> {
     return this.drawerElement;
   }
 
+  /**
+   * Set the document viewer image
+   */
   @Method()
   public async setDocumentViewerImage(source: OpenSeadragon.TileSourceOptions): Promise<void> {
     this.viewerElement.setDocumentViewerImage(source);

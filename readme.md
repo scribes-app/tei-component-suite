@@ -68,7 +68,8 @@ Use components in your HTML file:
 
 ```html
 <body>
-  <Tcs-editor></Tcs-editor>
+  <tcs-editor></tcs-editor>
+  <tcs-visualizer></tcs-visualizer>
 </body>
 ```
 
@@ -162,6 +163,7 @@ Use components in your Vue app:
 <template>
   <!-- ... -->
   <tcs-editor />
+  <tcs-visualizer />
   <!-- ... -->
 </template>
 ```
@@ -236,6 +238,7 @@ function App() {
   return (
     <div className="App">
       <TcsEditor />
+      <TcsVisualizer />
     </div>
   );
 }
@@ -330,17 +333,52 @@ Use components in your Angular template files:
 
 ```html
 <!-- ... -->
-<Tcs-editor></Tcs-editor>
+<tcs-editor></tcs-editor>
+<tcs-visualizer></tcs-visualizer>
 ```
 
-### Main component usage
+### Main components usage
+
+Quick examples, for more information or available methods and properties refer to components readme files.
 
 ```html
 <body>
   <!-- You can use attributes such as toolbarConfig or settings, see the component readme for more information -->
-  <Tcs-editor id="editor"></Tcs-editor>
+  <tcs-editor id="editor"></tcs-editor>
+  <tcs-visualizer id="visualizer"></tcs-visualizer>
   <script>
     const editor = document.querySelector('#editor');
+    const visualizer = document.querySelector('#visualizer');
+
+    // Set image to display in the viewer
+    editor.setDocumentViewerImage({
+      type: 'image',
+      url: '/assets/folio.jpg',
+    });
+
+    visualizer.setDocumentViewerImage({
+      type: 'image',
+      url: '/assets/folio.jpg',
+    });
+
+    // Set contextual menu links (only available in the visualizer)
+    visualizer.contextMenuLinks = [
+      {
+        label: 'Download entire XML',
+        icon: 'file-download',
+        onClick: () => alert('Example of handler')
+      },
+      {
+        label: 'Morphological analysis',
+        icon: 'analysis',
+        onClick: async () => {
+          const drawer = (await visualizer.getDrawer());
+          drawer.markdown = markdownContent;
+          drawer.open();
+        }
+      }
+    ]
+
     // Get the current formatted TEI content
     // {transcribe: '{XML TEI string}', translate: '{XML TEI string}', comment_line: '{XML TEI string}', comment_verse: '{XML TEI string}'}
     editor.getFormattedTEI();

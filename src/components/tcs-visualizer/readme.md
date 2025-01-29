@@ -7,18 +7,18 @@
 
 ## Properties
 
-| Property           | Attribute | Description | Type                                                                                                                          | Default                          |
-| ------------------ | --------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------- | -------------------------------- |
-| `contextMenuLinks` | --        |             | `{ label: string; onClick?: (selection: Selection, e: MouseEvent) => any; data?: Record<string, any>; icon?: UnionIcons; }[]` | `[]`                             |
-| `tei`              | --        |             | `{ transcribe?: string; translate?: string; comment_line?: string; comment_verse?: string; }`                                 | `undefined`                      |
-| `toolbarConfig`    | --        |             | `{ controls: { layout?: boolean; }; }`                                                                                        | `defaultVisualizerToolbarConfig` |
+| Property           | Attribute | Description                      | Type                                                                                                                          | Default                          |
+| ------------------ | --------- | -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | -------------------------------- |
+| `contextMenuLinks` | --        | Links to add to the context menu | `{ label: string; onClick?: (selection: Selection, e: MouseEvent) => any; data?: Record<string, any>; icon?: UnionIcons; }[]` | `[]`                             |
+| `tei`              | --        | TEI to display for each editor   | `{ transcribe?: string; translate?: string; comment_line?: string; comment_verse?: string; }`                                 | `undefined`                      |
+| `toolbarConfig`    | --        | Toolbar configuration            | `{ controls: { layout?: boolean; }; }`                                                                                        | `defaultVisualizerToolbarConfig` |
 
 
 ## Methods
 
 ### `getDrawer() => Promise<HTMLTcsDrawerElement>`
 
-
+Get the drawer element
 
 #### Returns
 
@@ -28,7 +28,7 @@ Type: `Promise<HTMLTcsDrawerElement>`
 
 ### `setDocumentViewerImage(source: OpenSeadragon.TileSourceOptions) => Promise<void>`
 
-
+Set the document viewer image
 
 #### Parameters
 

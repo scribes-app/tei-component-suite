@@ -59,14 +59,41 @@ export namespace Components {
         "slimText"?: string;
     }
     interface TcsEditor {
+        /**
+          * Get the current formatted TEI for each editor
+         */
         "getFormattedTEI": () => Promise<EditorFormattedTEI>;
+        /**
+          * Get all editors Quill instances
+         */
         "getQuillInstances": () => Promise<Map<UnionEditorType, QuillInstance>>;
+        /**
+          * Get editor settings
+         */
         "getSettings": () => Promise<EditorSettings>;
+        /**
+          * Lock the editor, the user can't edit the text anymore
+         */
         "lock": () => Promise<void>;
+        /**
+          * Set the document viewer image
+         */
         "setDocumentViewerImage": (source: OpenSeadragon.TileSourceOptions) => Promise<void>;
+        /**
+          * Set formatted TEI for each editor
+         */
         "setFormattedTEI": (tei: EditorFormattedTEI) => Promise<void>;
+        /**
+          * Initial editor settings
+         */
         "settings": EditorSettings;
+        /**
+          * Toolbar configuration
+         */
         "toolbarConfig": EditorToolbarConfig;
+        /**
+          * Unlock the editor, the user can edit the text again
+         */
         "unlock": () => Promise<void>;
     }
     interface TcsEditorToolbar {
@@ -136,10 +163,25 @@ export namespace Components {
         "setDocumentViewerImage": (source: OpenSeadragon.TileSourceOptions) => Promise<void>;
     }
     interface TcsVisualizer {
+        /**
+          * Links to add to the context menu
+         */
         "contextMenuLinks": TcsContextMenu['controls'];
+        /**
+          * Get the drawer element
+         */
         "getDrawer": () => Promise<HTMLTcsDrawerElement>;
+        /**
+          * Set the document viewer image
+         */
         "setDocumentViewerImage": (source: OpenSeadragon.TileSourceOptions) => Promise<void>;
+        /**
+          * TEI to display for each editor
+         */
         "tei": VisualizerFormattedTEI;
+        /**
+          * Toolbar configuration
+         */
         "toolbarConfig": VisualizerToolbarConfig;
     }
     interface TcsVisualizerToolbar {
@@ -509,7 +551,13 @@ declare namespace LocalJSX {
         "slimText"?: string;
     }
     interface TcsEditor {
+        /**
+          * Initial editor settings
+         */
         "settings"?: EditorSettings;
+        /**
+          * Toolbar configuration
+         */
         "toolbarConfig"?: EditorToolbarConfig;
     }
     interface TcsEditorToolbar {
@@ -592,8 +640,17 @@ declare namespace LocalJSX {
     interface TcsViewer {
     }
     interface TcsVisualizer {
+        /**
+          * Links to add to the context menu
+         */
         "contextMenuLinks"?: TcsContextMenu['controls'];
+        /**
+          * TEI to display for each editor
+         */
         "tei"?: VisualizerFormattedTEI;
+        /**
+          * Toolbar configuration
+         */
         "toolbarConfig"?: VisualizerToolbarConfig;
     }
     interface TcsVisualizerToolbar {

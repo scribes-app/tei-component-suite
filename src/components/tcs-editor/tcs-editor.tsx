@@ -45,9 +45,15 @@ export class TcsEditor {
   @Element()
   private element: HTMLElement;
 
+  /**
+   * Toolbar configuration
+   */
   @Prop({ mutable: true })
   public toolbarConfig: EditorToolbarConfig = defaultEditorToolbarConfig;
 
+  /**
+   * Initial editor settings
+   */
   @Prop({ mutable: true })
   public settings: EditorSettings = defaultEditorSettings;
 
@@ -80,11 +86,17 @@ export class TcsEditor {
   @State()
   private documentViewerOpen = true;
 
+  /**
+   * Get all editors Quill instances
+   */
   @Method()
   public async getQuillInstances(): Promise<Map<UnionEditorType, QuillInstance>> {
     return this.editorInstances;
   }
 
+  /**
+   * Lock the editor, the user can't edit the text anymore
+   */
   @Method()
   public async lock(): Promise<void> {
     this.locked = true;
@@ -94,6 +106,9 @@ export class TcsEditor {
       .forEach(instance => instance.disable());
   }
 
+  /**
+   * Unlock the editor, the user can edit the text again
+   */
   @Method()
   public async unlock(): Promise<void> {
     this.locked = false;
@@ -103,16 +118,25 @@ export class TcsEditor {
       .forEach(instance => instance.enable());
   }
 
+  /**
+   * Set the document viewer image
+   */
   @Method()
   public async setDocumentViewerImage(source: OpenSeadragon.TileSourceOptions): Promise<void> {
     this.viewerElement.setDocumentViewerImage(source);
   }
 
+  /**
+   * Get editor settings
+   */
   @Method()
   public async getSettings(): Promise<EditorSettings> {
     return this.settings;
   }
 
+  /**
+   * Get the current formatted TEI for each editor
+   */
   @Method()
   public async getFormattedTEI(): Promise<EditorFormattedTEI> {
     const tei: EditorFormattedTEI = {};
@@ -129,6 +153,9 @@ export class TcsEditor {
     return tei;
   }
 
+  /**
+   * Set formatted TEI for each editor
+   */
   @Method()
   public async setFormattedTEI(tei: EditorFormattedTEI): Promise<void> {
     const transform = (content: string): string => {
