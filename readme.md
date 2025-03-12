@@ -437,3 +437,6 @@ This project rely on the following tools:
 | `make npm` | Run npm commands |
 | `make shell` | Open a shell in the container |
 | `make publish` | Publish the package |
+
+<img width="870" alt="IMG_2861" src="https://github.com/user-attachments/assets/deee440f-33c6-4f75-8239-4957167d9032" />
+
