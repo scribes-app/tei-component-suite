@@ -67,7 +67,7 @@ export class TcsStructureForm {
           entries={[
             { id: 'part', label: 'Part' },
             { id: 'chapter', label: 'Chapter' },
-            { id: 'anonymous-block', label: 'Anonymous block' },
+            { id: 'anonymous-block', label: 'Anonymous block / Verse' },
           ]}
         />
         <tcs-textfield
