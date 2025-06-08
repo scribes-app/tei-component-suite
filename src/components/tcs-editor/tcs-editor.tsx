@@ -405,8 +405,7 @@ export class TcsEditor {
     const ln = this.editorInstances.get('transcribe').getLines().length;
     const instances = [
       this.editorInstances.get('translate'),
-      this.editorInstances.get('comment_line'),
-      this.editorInstances.get('comment_verse')
+      this.editorInstances.get('comment_line'), // Verse are independant of the rest, lines does not have to be synced
     ];
     for (const instance of instances) {
       instance.root.querySelectorAll(TagName.BLOCK).forEach((block, index) => {
