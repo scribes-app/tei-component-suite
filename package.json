@@ -38,9 +38,9 @@
       "import": "./dist/components/tcs-context-menu.js",
       "types": "./dist/components/tcs-context-menu.d.ts"
     },
-    "./components/tcs-drawer-menu": {
-      "import": "./dist/components/tcs-drawer-menu.js",
-      "types": "./dist/components/tcs-drawer-menu.d.ts"
+    "./components/tcs-drawer": {
+      "import": "./dist/components/tcs-drawer.js",
+      "types": "./dist/components/tcs-drawer.d.ts"
     },
     "./components/tcs-dropdown": {
       "import": "./dist/components/tcs-dropdown.js",
