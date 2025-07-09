@@ -22,9 +22,25 @@
       "import": "./dist/components/tcs-blank-space-form.js",
       "types": "./dist/components/tcs-blank-space-form.d.ts"
     },
+    "./components/tcs-settings-form": {
+      "import": "./dist/components/tcs-settings-form.js",
+      "types": "./dist/components/tcs-settings-form.d.ts"
+    },
+    "./components/tcs-structure-form": {
+      "import": "./dist/components/tcs-structure-form.js",
+      "types": "./dist/components/tcs-structure-form.d.ts"
+    },
     "./components/tcs-button": {
       "import": "./dist/components/tcs-button.js",
       "types": "./dist/components/tcs-button.d.ts"
+    },
+    "./components/tcs-context-menu": {
+      "import": "./dist/components/tcs-context-menu.js",
+      "types": "./dist/components/tcs-context-menu.d.ts"
+    },
+    "./components/tcs-drawer-menu": {
+      "import": "./dist/components/tcs-drawer-menu.js",
+      "types": "./dist/components/tcs-drawer-menu.d.ts"
     },
     "./components/tcs-dropdown": {
       "import": "./dist/components/tcs-dropdown.js",
@@ -34,6 +50,10 @@
       "import": "./dist/components/tcs-editor.js",
       "types": "./dist/components/tcs-editor.d.ts"
     },
+    "./components/tcs-editor-toolbar": {
+      "import": "./dist/components/tcs-editor-toolbar.js",
+      "types": "./dist/components/tcs-editor-toolbar.d.ts"
+    },
     "./components/tcs-icon": {
       "import": "./dist/components/tcs-icon.js",
       "types": "./dist/components/tcs-icon.d.ts"
@@ -42,25 +62,29 @@
       "import": "./dist/components/tcs-popup.js",
       "types": "./dist/components/tcs-popup.d.ts"
     },
+    "./components/tcs-range": {
+      "import": "./dist/components/tcs-range.js",
+      "types": "./dist/components/tcs-range.d.ts"
+    },
     "./components/tcs-select": {
       "import": "./dist/components/tcs-select.js",
       "types": "./dist/components/tcs-select.d.ts"
-    },
-    "./components/tcs-settings-form": {
-      "import": "./dist/components/tcs-settings-form.js",
-      "types": "./dist/components/tcs-settings-form.d.ts"
-    },
-    "./components/tcs-structure-form": {
-      "import": "./dist/components/tcs-structure-form.js",
-      "types": "./dist/components/tcs-structure-form.d.ts"
     },
     "./components/tcs-textfield": {
       "import": "./dist/components/tcs-textfield.js",
       "types": "./dist/components/tcs-textfield.d.ts"
     },
-    "./components/tcs-toolbar": {
-      "import": "./dist/components/tcs-toolbar.js",
-      "types": "./dist/components/tcs-toolbar.d.ts"
+    "./components/tcs-viewer": {
+      "import": "./dist/components/tcs-viewer.js",
+      "types": "./dist/components/tcs-viewer.d.ts"
+    },
+    "./components/tcs-visualizer": {
+      "import": "./dist/components/tcs-visualizer.js",
+      "types": "./dist/components/tcs-visualizer.d.ts"
+    },
+    "./components/tcs-visualizer-toolbar": {
+      "import": "./dist/components/tcs-visualizer-toolbar.js",
+      "types": "./dist/components/tcs-visualizer-toolbar.d.ts"
     }
   },
   "repository": {
