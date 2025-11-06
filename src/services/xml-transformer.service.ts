@@ -57,7 +57,7 @@ export class XMLTransformerService {
   static TEI2Settings(html: string): EditorSettings {
     const root = document.createElement(TagName.ROOT);
     root.innerHTML = html
-      .replace(/<\/?\??(xml|TEI|!DOCTYPE|text|body|cb|pb).*>/gm, '');
+      .replace(/<\/?\??(xml|TEI|!DOCTYPE|text|body|cb|pb).*?>/gm, '');
     return {
       manuscript: {
         folio: root.querySelector(TagName.FOLIO)?.getAttribute('n'),
@@ -71,7 +71,7 @@ export class XMLTransformerService {
     const root = document.createElement(TagName.ROOT);
     root.innerHTML = html
       // Remove wrappers
-      .replace(/<\/?\??(xml|TEI|!DOCTYPE|text|body|cb|pb).*>/gm, '')
+      .replace(/<\/?\??(xml|TEI|!DOCTYPE|text|body|cb|pb).*?>/gm, '')
       // Replace autoclosing tags
       .replace(/<([A-z]+)( [\w\"\=]*)?\/>/gm, '<$1 $2><\/$1>');
 
