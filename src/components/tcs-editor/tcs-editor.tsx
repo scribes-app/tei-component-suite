@@ -1,5 +1,5 @@
 import { Component, Host, h } from '@stencil/core';
-import { Element, JSX, Method, Prop, State, Watch } from '@stencil/core/internal';
+import { Element, Event, EventEmitter, JSX, Method, Prop, State, Watch } from '@stencil/core/internal';
 import classNames from 'classnames';
 import Quill from 'quill';
 import { Delta, Range } from 'quill/core';
@@ -44,6 +44,12 @@ export class TcsEditor {
 
   @Element()
   private element: HTMLElement;
+
+  /**
+   * Whether the editor is expanded or not
+   */
+  @Event()
+  public expandChange: EventEmitter<boolean>;
 
   /**
    * Toolbar configuration
@@ -293,6 +299,7 @@ export class TcsEditor {
 
   private onClickExpand(): void {
     this.expand = !this.expand;
+    this.expandChange.emit(this.expand);
   }
 
   /**

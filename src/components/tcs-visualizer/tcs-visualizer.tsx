@@ -1,4 +1,4 @@
-import { Component, Host, Method, Prop, State, Watch, h } from '@stencil/core';
+import { Component, Event, EventEmitter, Host, Method, Prop, State, Watch, h } from '@stencil/core';
 import classNames from 'classnames';
 import OpenSeadragon from 'openseadragon';
 import { capitalize } from '../../lib/helper';
@@ -18,6 +18,13 @@ export class TcsVisualizer {
   private drawerElement: HTMLTcsDrawerElement;
   private viewerElement: HTMLTcsViewerElement;
   private contextMenuElement: HTMLTcsContextMenuElement;
+
+
+  /**
+   * Whether the visualizer is expanded or not
+   */
+  @Event()
+  public expandChange: EventEmitter<boolean>;
 
   /**
    * Toolbar configuration
@@ -121,6 +128,7 @@ export class TcsVisualizer {
 
   private onClickExpand(): void {
     this.expand = !this.expand;
+    this.expandChange.emit(this.expand);
   }
 
   render() {
