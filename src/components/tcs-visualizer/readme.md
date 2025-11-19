@@ -14,6 +14,13 @@
 | `toolbarConfig`    | --        | Toolbar configuration            | `{ controls: { layout?: boolean; }; }`                                                                                        | `defaultVisualizerToolbarConfig` |
 
 
+## Events
+
+| Event          | Description                               | Type                   |
+| -------------- | ----------------------------------------- | ---------------------- |
+| `expandChange` | Whether the visualizer is expanded or not | `CustomEvent<boolean>` |
+
+
 ## Methods
 
 ### `getDrawer() => Promise<HTMLTcsDrawerElement>`

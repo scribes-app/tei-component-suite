@@ -13,6 +13,13 @@
 | `toolbarConfig` | --        | Toolbar configuration   | `{ controls: { settings?: boolean; reconstruction?: boolean; annotation?: boolean; layout?: boolean; remove?: boolean; structure?: boolean; blankSpace?: boolean; punctuation?: boolean; abbreviation?: boolean; deleted?: boolean; highlighted?: boolean; unclear?: boolean; viewRaw?: boolean; textDirection?: boolean; textSize?: boolean; viewer?: boolean; expand?: boolean; }; }` | `defaultEditorToolbarConfig` |
 
 
+## Events
+
+| Event          | Description                           | Type                   |
+| -------------- | ------------------------------------- | ---------------------- |
+| `expandChange` | Whether the editor is expanded or not | `CustomEvent<boolean>` |
+
+
 ## Methods
 
 ### `getFormattedTEI() => Promise<EditorFormattedTEI>`

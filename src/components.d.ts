@@ -201,6 +201,10 @@ export interface TcsButtonCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLTcsButtonElement;
 }
+export interface TcsEditorCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLTcsEditorElement;
+}
 export interface TcsEditorToolbarCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLTcsEditorToolbarElement;
@@ -228,6 +232,10 @@ export interface TcsStructureFormCustomEvent<T> extends CustomEvent<T> {
 export interface TcsTextfieldCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLTcsTextfieldElement;
+}
+export interface TcsVisualizerCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLTcsVisualizerElement;
 }
 export interface TcsVisualizerToolbarCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -305,7 +313,18 @@ declare global {
         prototype: HTMLTcsDropdownElement;
         new (): HTMLTcsDropdownElement;
     };
+    interface HTMLTcsEditorElementEventMap {
+        "expandChange": boolean;
+    }
     interface HTMLTcsEditorElement extends Components.TcsEditor, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLTcsEditorElementEventMap>(type: K, listener: (this: HTMLTcsEditorElement, ev: TcsEditorCustomEvent<HTMLTcsEditorElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLTcsEditorElementEventMap>(type: K, listener: (this: HTMLTcsEditorElement, ev: TcsEditorCustomEvent<HTMLTcsEditorElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLTcsEditorElement: {
         prototype: HTMLTcsEditorElement;
@@ -461,7 +480,18 @@ declare global {
         prototype: HTMLTcsViewerElement;
         new (): HTMLTcsViewerElement;
     };
+    interface HTMLTcsVisualizerElementEventMap {
+        "expandChange": boolean;
+    }
     interface HTMLTcsVisualizerElement extends Components.TcsVisualizer, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLTcsVisualizerElementEventMap>(type: K, listener: (this: HTMLTcsVisualizerElement, ev: TcsVisualizerCustomEvent<HTMLTcsVisualizerElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLTcsVisualizerElementEventMap>(type: K, listener: (this: HTMLTcsVisualizerElement, ev: TcsVisualizerCustomEvent<HTMLTcsVisualizerElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLTcsVisualizerElement: {
         prototype: HTMLTcsVisualizerElement;
@@ -551,6 +581,10 @@ declare namespace LocalJSX {
         "slimText"?: string;
     }
     interface TcsEditor {
+        /**
+          * Whether the editor is expanded or not
+         */
+        "onExpandChange"?: (event: TcsEditorCustomEvent<boolean>) => void;
         /**
           * Initial editor settings
          */
@@ -644,6 +678,10 @@ declare namespace LocalJSX {
           * Links to add to the context menu
          */
         "contextMenuLinks"?: TcsContextMenu['controls'];
+        /**
+          * Whether the visualizer is expanded or not
+         */
+        "onExpandChange"?: (event: TcsVisualizerCustomEvent<boolean>) => void;
         /**
           * TEI to display for each editor
          */
