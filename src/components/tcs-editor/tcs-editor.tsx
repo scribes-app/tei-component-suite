@@ -238,7 +238,7 @@ export class TcsEditor {
       this.editorInstances.set(editorType, instance);
       this.sanitizeWordsAndSpacesDebouncers[editorType] = debounce(() => {
         this.concurrentTextChange = true;
-        const { index } = instance.getSelection();
+        const { index } = instance.getSelection() ?? { index: 0 };
 
         QuillService.sanitizeWordsAndSpaces(instance);
         /**
