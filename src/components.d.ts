@@ -315,6 +315,10 @@ declare global {
     };
     interface HTMLTcsEditorElementEventMap {
         "expandChange": boolean;
+        "teiChange": {
+    type: UnionEditorType,
+    text: string
+  };
     }
     interface HTMLTcsEditorElement extends Components.TcsEditor, HTMLStencilElement {
         addEventListener<K extends keyof HTMLTcsEditorElementEventMap>(type: K, listener: (this: HTMLTcsEditorElement, ev: TcsEditorCustomEvent<HTMLTcsEditorElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -585,6 +589,13 @@ declare namespace LocalJSX {
           * Whether the editor is expanded or not
          */
         "onExpandChange"?: (event: TcsEditorCustomEvent<boolean>) => void;
+        /**
+          * Whenever the tei change
+         */
+        "onTeiChange"?: (event: TcsEditorCustomEvent<{
+    type: UnionEditorType,
+    text: string
+  }>) => void;
         /**
           * Initial editor settings
          */

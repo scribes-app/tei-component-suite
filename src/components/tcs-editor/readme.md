@@ -15,9 +15,10 @@
 
 ## Events
 
-| Event          | Description                           | Type                   |
-| -------------- | ------------------------------------- | ---------------------- |
-| `expandChange` | Whether the editor is expanded or not | `CustomEvent<boolean>` |
+| Event          | Description                           | Type                                                    |
+| -------------- | ------------------------------------- | ------------------------------------------------------- |
+| `expandChange` | Whether the editor is expanded or not | `CustomEvent<boolean>`                                  |
+| `teiChange`    | Whenever the tei change               | `CustomEvent<{ type: UnionEditorType; text: string; }>` |
 
 
 ## Methods
