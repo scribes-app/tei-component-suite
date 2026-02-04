@@ -52,6 +52,15 @@ export class TcsEditor {
   public expandChange: EventEmitter<boolean>;
 
   /**
+   * Whenever the tei change
+   */
+  @Event()
+  public teiChange: EventEmitter<{
+    type: UnionEditorType,
+    text: string
+  }>;
+
+  /**
    * Toolbar configuration
    */
   @Prop({ mutable: true })
@@ -389,6 +398,12 @@ export class TcsEditor {
 
     // Check structure
     this.checkInstanceStructure(editorType);
+
+    // Emit event
+    this.teiChange.emit({
+      type: editorType,
+      text: instance.getText(),
+    });
   }
 
   private checkInstanceStructure(editorType: UnionEditorType): void {
